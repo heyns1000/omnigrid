@@ -13,7 +13,7 @@ Features:
 
 import asyncio
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Any
 
@@ -55,7 +55,7 @@ class SponsorGratitude:
         """Generate daily gratitude logs in SPONSORS_HONOR_ROLL.md"""
         content = f"""# 🌟 Sponsors Honor Roll
 
-**Last Updated**: {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')}
+**Last Updated**: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}
 
 ## 💚 Ubuntu Philosophy: "I am because we are"
 
@@ -136,7 +136,7 @@ Every grain counted includes your generosity.
     async def flow_through_banimal(self):
         """Ensure sponsor contributions flow through banimal loop"""
         flow_data = {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "sponsors_count": len(self.sponsors),
             "priority_access_enabled": sum(1 for s in self.sponsors if s.get('priority_access')),
             "ecosystem_impact": {
@@ -153,7 +153,7 @@ Every grain counted includes your generosity.
         Generate monthly recognition for ecosystem newsletter
         """
         recognition = {
-            "month": datetime.utcnow().strftime('%B %Y'),
+            "month": datetime.now(timezone.utc).strftime('%B %Y'),
             "total_sponsors": len(self.sponsors),
             "message": "Thank you for supporting the OmniGrid ecosystem!",
             "highlights": [
@@ -168,7 +168,7 @@ Every grain counted includes your generosity.
     
     async def gratitude_pulse(self):
         """Execute single gratitude pulse"""
-        print(f"\n💚 Gratitude Pulse - {datetime.utcnow().strftime('%H:%M:%S')}")
+        print(f"\n💚 Gratitude Pulse - {datetime.now(timezone.utc).strftime('%H:%M:%S')}")
         
         # Detect sponsors
         self.sponsors = await self.detect_sponsors()

@@ -14,7 +14,7 @@ Quality Gates:
 
 import asyncio
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Any
 import subprocess
@@ -197,7 +197,7 @@ class MetaflowCleaner:
     
     async def metaflow_pulse(self):
         """Execute single metaflow cleaning pulse"""
-        print(f"\n🧹 Metaflow Cleaning Pulse - {datetime.utcnow().strftime('%H:%M:%S')}")
+        print(f"\n🧹 Metaflow Cleaning Pulse - {datetime.now(timezone.utc).strftime('%H:%M:%S')}")
         
         # Lint Python
         python_result = await self.lint_python()

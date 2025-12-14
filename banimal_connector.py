@@ -13,7 +13,7 @@ Integration Points:
 
 import asyncio
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Any
 import hashlib
@@ -41,7 +41,7 @@ class BanimalConnector:
         Aggregates data from all repositories
         """
         pulse_data = {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "pulse_count": self.pulse_count,
             "protocol": self.config['protocol'],
             "grid_name": self.config['grid_name'],
@@ -61,7 +61,7 @@ class BanimalConnector:
             pulse_data['repositories'][repo_name] = {
                 "url": repo_url,
                 "status": "active",
-                "last_pulse": datetime.utcnow().isoformat(),
+                "last_pulse": datetime.now(timezone.utc).isoformat(),
                 "metadata_hash": hashlib.sha256(f"{repo_name}{self.pulse_count}".encode()).hexdigest()[:16]
             }
         
@@ -78,7 +78,7 @@ class BanimalConnector:
         # Simulate API call
         response = {
             "status": "received",
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "pulse_id": pulse_data['pulse_count']
         }
         
@@ -94,7 +94,7 @@ class BanimalConnector:
             "core_repos": len(self.config['repositories']),
             "sectors": len(self.config['sectors']),
             "total_brands": sum(s.get('brands', 0) for s in self.config['sectors'].values()),
-            "aggregation_timestamp": datetime.utcnow().isoformat()
+            "aggregation_timestamp": datetime.now(timezone.utc).isoformat()
         }
         
         print(f"   🏗️  CodeNest: Aggregated {enrichment['total_repos']} repos")
@@ -110,7 +110,7 @@ class BanimalConnector:
             "edges": [],
             "metadata": {
                 "total_nodes": len(self.config['repositories']),
-                "timestamp": datetime.utcnow().isoformat()
+                "timestamp": datetime.now(timezone.utc).isoformat()
             }
         }
         
@@ -145,7 +145,7 @@ class BanimalConnector:
         
         response = {
             "status": "acknowledged",
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
         return response
@@ -158,7 +158,7 @@ class BanimalConnector:
         """
         dashboard = {
             "pulse_count": self.pulse_count,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "status": "ACTIVE",
             "pulse_data": pulse_data,
             "codenest_enrichment": enrichment,
@@ -175,7 +175,7 @@ class BanimalConnector:
         """Execute single banimal loop pulse"""
         self.pulse_count += 1
         
-        print(f"\n🐾 Banimal Pulse #{self.pulse_count} - {datetime.utcnow().strftime('%H:%M:%S')}")
+        print(f"\n🐾 Banimal Pulse #{self.pulse_count} - {datetime.now(timezone.utc).strftime('%H:%M:%S')}")
         
         # Generate metadata pulse
         pulse_data = await self.generate_metadata_pulse()

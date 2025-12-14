@@ -17,7 +17,7 @@ Each audit checks: IP integrity, rhino tail detection, treaty compliance, grain 
 import asyncio
 import json
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Any
 
@@ -47,7 +47,7 @@ class PulseEngine:
             "rhino_tail_detection": True,
             "treaty_compliance": True,
             "grain_count_accuracy": True,
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.now(timezone.utc).isoformat()
         }
         return checks
     
@@ -103,7 +103,7 @@ class PulseEngine:
         cycle_start = time.time()
         self.cycle_count += 1
         
-        print(f"\n🌍 Cycle {self.cycle_count} - {datetime.utcnow().isoformat()}")
+        print(f"\n🌍 Cycle {self.cycle_count} - {datetime.now(timezone.utc).isoformat()}")
         
         # Run audit loop in background
         audit_task = asyncio.create_task(self.audit_loop())

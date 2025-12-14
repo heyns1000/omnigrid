@@ -12,7 +12,7 @@ Implementation:
 
 import asyncio
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Any
 
@@ -44,7 +44,7 @@ class ElderWisdom:
             "preserves_legacy": True,
             "documents_reasoning": True,
             "maintains_baobab": True,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "change": change_description
         }
         
@@ -114,7 +114,7 @@ the foundation we stand upon.
         
         if legacy_code_path:
             # Archive before any deletion
-            archive_path = Path("archive") / "legacy" / f"{datetime.utcnow().strftime('%Y%m%d')}"
+            archive_path = Path("archive") / "legacy" / f"{datetime.now(timezone.utc).strftime('%Y%m%d')}"
             archive_path.mkdir(parents=True, exist_ok=True)
             print(f"      📦 Archive created: {archive_path}")
         
@@ -123,7 +123,7 @@ the foundation we stand upon.
             "archived": True,
             "documented": True,
             "respect_paid": True,
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
         return ritual_complete['archived'] and ritual_complete['respect_paid']
@@ -136,7 +136,7 @@ the foundation we stand upon.
         memory_entry = {
             "decision": decision,
             "reasoning": reasoning,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "committed_by": "Elder Wisdom Protocol"
         }
         

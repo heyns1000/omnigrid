@@ -46,7 +46,7 @@ class IPSentinel:
         """
         detection = {
             "repository": repo_name,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "commit_pattern_anomaly": False,
             "unusual_access": False,
             "unauthorized_fork": False,
@@ -87,7 +87,7 @@ class IPSentinel:
         Synchronizes threat intelligence globally
         """
         feedback = {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "timezone": "SAST",
             "total_threats": len([t for t in self.threat_log if t['threat_level'] != 'CLEAR']),
             "monitored_repos": len(self.config['repositories']),
@@ -115,7 +115,7 @@ class IPSentinel:
         """Perform single IP sweep across all repositories"""
         sweep_start = time.time()
         
-        print(f"🦏 IP Sweep: {datetime.utcnow().strftime('%H:%M:%S')}")
+        print(f"🦏 IP Sweep: {datetime.now(timezone.utc).strftime('%H:%M:%S')}")
         
         # Monitor all repositories
         detections = []

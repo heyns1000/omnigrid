@@ -19,7 +19,7 @@ vaultmesh ←→ omnigrid ←→  [ALL_SECTORS]
 
 import asyncio
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Any, Tuple
 import itertools
@@ -146,7 +146,7 @@ class SimunyeLattice:
     
     async def lattice_pulse(self):
         """Single lattice synchronization pulse"""
-        print(f"\n🔗 Lattice Pulse: {datetime.utcnow().strftime('%H:%M:%S')}")
+        print(f"\n🔗 Lattice Pulse: {datetime.now(timezone.utc).strftime('%H:%M:%S')}")
         
         # Ubuntu synchronization
         support = await self.ubuntu_sync()
