@@ -123,7 +123,7 @@ class SimunyeLattice:
         """
         for repo_name, node in self.lattice.items():
             # Update dimensional coordinates based on connections
-            for i, (conn_name) in enumerate(node['connections']):
+            for i, conn_name in enumerate(node['connections']):
                 if conn_name in self.lattice:
                     # Strengthen dimension based on connection
                     dim_idx = i % self.dimensions

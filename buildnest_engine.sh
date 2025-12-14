@@ -71,7 +71,8 @@ ELDER_PID=$!
 echo "   PID: $ELDER_PID"
 
 echo ""
-echo "=" * 60
+printf '=%.0s' {1..60}
+echo ""
 echo "✅ All engines running"
 echo ""
 echo "🐘 Elephant memory: ONLINE"
@@ -84,7 +85,7 @@ echo "⏱️  Pulse cycle: 9s | Audit loop: 0.08s"
 echo ""
 echo "🚂 Shosholoza! The donkey cart departs the spaza shop!"
 echo ""
-echo "=" * 60
+printf '=%.0s' {1..60}
 echo ""
 echo "📊 Process IDs:"
 echo "   Pulse Engine:      $PULSE_PID"

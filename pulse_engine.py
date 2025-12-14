@@ -126,6 +126,11 @@ class PulseEngine:
         
         # RESET: Zero-downtime quantum state refresh
         cycle_duration = time.time() - cycle_start
+        
+        # Check for performance issues
+        if cycle_duration > self.pulse_cycle:
+            print(f"  ⚠️  WARNING: Cycle exceeded target ({cycle_duration:.3f}s > {self.pulse_cycle}s)")
+        
         print(f"  🔄 RESET: Cycle completed in {cycle_duration:.3f}s")
         print(f"  📊 Grain count: {self.grain_count:,}")
         

@@ -185,7 +185,7 @@ the foundation we stand upon.
         """Execute single wisdom protocol pulse"""
         self.commit_count += 1
         
-        print(f"\n🧓 Elder Wisdom Pulse - Commit #{self.commit_count}")
+        print(f"\n🧓 Elder Wisdom Pulse - Simulated Commit #{self.commit_count}")
         
         # Perform wisdom check
         await self.wisdom_check(f"Commit #{self.commit_count}")

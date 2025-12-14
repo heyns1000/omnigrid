@@ -103,12 +103,17 @@ class IPSentinel:
         Returns True if surveillance threat detected
         """
         # Check for centralized surveillance patterns
+        # Could check: centralized logging, single-point monitoring, non-distributed control
         surveillance_detected = False
         
-        # Collapse 1984 mode: INJECT_RESPECT
-        if surveillance_detected:
-            print("⚠️  1984 SURVEILLANCE DETECTED - INJECTING RESPECT PROTOCOL")
-            
+        # In production, this would check for actual surveillance patterns:
+        # - Centralized authority tracking all nodes
+        # - Single point of control/monitoring
+        # - Non-transparent data collection
+        # - Lack of distributed consensus
+        
+        # For now, respect-based architecture prevents surveillance by design
+        
         return surveillance_detected
     
     async def ip_sweep(self):
