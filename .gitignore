@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Logs
+logs/
+*.log
+
+# Elder Wisdom generated files
+ELDER_WISDOM_LOG.md
+ELEPHANT_MEMORY.json
+SPONSORS_HONOR_ROLL.md
+
+# Archives
+archive/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
