@@ -24,6 +24,10 @@ archive/
 metdata/*.json
 metdata/*.zip
 
+# Temporary project extraction directories
+toynest_project/
+scroll_sealed_temp/
+
 # IDE
 .vscode/
 .idea/
