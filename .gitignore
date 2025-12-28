@@ -20,6 +20,9 @@ SPONSORS_HONOR_ROLL.md
 # Archives
 archive/
 
+# Claude Profile Data - Exclude large raw files
+metdata/*.json
+
 # IDE
 .vscode/
 .idea/
