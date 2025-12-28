@@ -1,0 +1,98 @@
+{
+  "total_repositories": 12,
+  "repositories": [
+    {
+      "name": "Fruitful-Global-Planet/FruitfulPlanetChange.git",
+      "brands": [
+        "FRUITFUL",
+        "Fruitful",
+        "GLOBAL",
+        "Global",
+        "Planet"
+      ]
+    },
+    {
+      "name": "fruitful-global-planet/fruitfulplanetchange",
+      "brands": [
+        "FRUITFUL",
+        "Fruitful",
+        "GLOBAL",
+        "Global",
+        "Planet"
+      ]
+    },
+    {
+      "name": "heyns1000/banimal",
+      "brands": [
+        "BANIMAL",
+        "Banimal"
+      ]
+    },
+    {
+      "name": "heyns1000/buildnest",
+      "brands": [
+        "BuildNest"
+      ]
+    },
+    {
+      "name": "heyns1000/codenest",
+      "brands": [
+        "Code",
+        "CodeNest"
+      ]
+    },
+    {
+      "name": "heyns1000/faa.zone",
+      "brands": [
+        "FAA",
+        "ONE",
+        "ZONE",
+        "zone"
+      ]
+    },
+    {
+      "name": "heyns1000/hotstack",
+      "brands": [
+        "HotStack"
+      ]
+    },
+    {
+      "name": "heyns1000/hotstack.",
+      "brands": [
+        "HotStack"
+      ]
+    },
+    {
+      "name": "heyns1000/nexus-nair",
+      "brands": [
+        "AI",
+        "NEXUS",
+        "Nexus"
+      ]
+    },
+    {
+      "name": "heyns1000/omnigrid",
+      "brands": [
+        "Grid",
+        "OMNI",
+        "OmniGrid"
+      ]
+    },
+    {
+      "name": "heyns1000/seedwave",
+      "brands": [
+        "SEED",
+        "SEEDWAVE",
+        "Seed",
+        "Seedwave",
+        "seed"
+      ]
+    },
+    {
+      "name": "heyns1000/vaultmesh",
+      "brands": [
+        "VaultMesh"
+      ]
+    }
+  ]
+}

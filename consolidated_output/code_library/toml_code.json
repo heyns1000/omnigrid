@@ -1,0 +1,51 @@
+[
+  {
+    "conversation": "Omnigrid GitHub issue reference",
+    "language": "toml",
+    "code": "name = \"nexus-nair\"\nmain = \"src/index.js\"\ncompatibility_date = \"2024-12-12\"\naccount_id = \"ad41fcfe1a84b27c62cc5cc9d590720e\"\n\n[vars]\nENVIRONMENT = \"production\"\nPULSE_INTERVAL = \"9000\"\nCARE_PERCENTAGE = \"0.15\"\nGRAIN_PRECISION = \"0.01\"\n\n[[d1_databases]]\nbinding = \"DB\"\ndatabase_name = \"nexus_nair_40d\"\ndatabase_id = \"YOUR_D1_DATABASE_ID\"\n\n[[r2_buckets]]\nbinding = \"VAULT_STORAGE\"\nbucket_name = \"nexus-vault-mesh\"\n\n[[kv_namespaces]]\nbinding = \"NEXUS_KV\"\nid = \"YOUR_KV_NAMESPACE_ID\"\n\n[build]\ncommand = \"npm run build\"\n\n[site]\nbucket = \"./dist\"\n\n[[routes]]\npattern = \"fruitfulglobalplanet.com/*\"\nzone_name = \"fruitfulglobalplanet.com\"\n",
+    "length": 629,
+    "created_at": "2025-12-12T20:06:50.710314Z"
+  },
+  {
+    "conversation": "Universal integrator for 82 repositories",
+    "language": "toml",
+    "code": "name = \"buildnest-orchestrator\"\nmain = \"src/index.ts\"\ncompatibility_date = \"2024-11-01\"\naccount_id = \"ad41fcfe1a84b27c62cc5cc9d590720e\"\n\n# KV Namespace for build metadata\n[[kv_namespaces]]\nbinding = \"BUILDNEST_KV\"\nid = \"44b81a3e54fb4099ad3139b0024a7342\"\n\n# R2 Bucket for file storage\n[[r2_buckets]]\nbinding = \"HOTSTACK_BUCKET\"\nbucket_name = \"hotstack-intake-bucket\"\n\n# Routes\n[[routes]]\npattern = \"buildnest-orchestrator.heynsschoeman.workers.dev/*\"\nzone_name = \"heynsschoeman.workers.dev\"\n\n[vars]\nLICENSEVAULT_URL = \"https://license-vault-sepia.vercel.app\"\nSYSTEM_VERSION = \"4.0-unified\"\n",
+    "length": 589,
+    "created_at": "2025-11-22T02:08:50.254779Z"
+  },
+  {
+    "conversation": "\ud83c\udfaf Immediate Next Action",
+    "language": "toml",
+    "code": "name = \"buildnest-orchestrator\"\nmain = \"src/index.ts\"\ncompatibility_date = \"2024-11-01\"\naccount_id = \"ad41fcfe1a84b27c62cc5cc9d590720e\"\n\n# KV Namespace for build metadata\n[[kv_namespaces]]\nbinding = \"BUILDNEST_KV\"\nid = \"44b81a3e54fb4099ad3139b0024a7342\"\n\n# R2 Bucket for file storage\n[[r2_buckets]]\nbinding = \"HOTSTACK_BUCKET\"\nbucket_name = \"hotstack-intake-bucket\"\n\n# Routes\n[[routes]]\npattern = \"buildnest-orchestrator.heynsschoeman.workers.dev/*\"\nzone_name = \"heynsschoeman.workers.dev\"\n\n[vars]\nLICENSEVAULT_URL = \"https://license-vault-sepia.vercel.app\"\nSYSTEM_VERSION = \"4.0-unified\"\n",
+    "length": 589,
+    "created_at": "2025-11-22T02:45:21.449479Z"
+  },
+  {
+    "conversation": "\ud83e\udd8d SCROLL SEALED | \ud83d\udcdc LATTICE SYNCED | \ud83d\udd25 GORILLA APPROVED",
+    "language": "toml",
+    "code": "# Add to wrangler.toml:\n[[routes]]\npattern = \"*.toynest.faa.zone/*\"\n",
+    "length": 68,
+    "created_at": "2025-12-03T10:29:54.875137Z"
+  },
+  {
+    "conversation": "\ud83d\udd25 CodeNest Platform - Download Instructions",
+    "language": "toml",
+    "code": "[[r2_buckets]]\nbinding = \"HOTSTACK_BUCKET\"\nbucket_name = \"hotstack-storage\"\n\n[[queues.producers]]\nbinding = \"HOTSTACK_QUEUE\"\nqueue = \"hotstack-queue\"\n\n[[d1_databases]]\nbinding = \"CODENEST_DB\"\ndatabase_name = \"codenest-production\"\ndatabase_id = \"your-database-id\"\n",
+    "length": 263,
+    "created_at": "2025-11-06T09:37:35.782929Z"
+  },
+  {
+    "conversation": "\ud83d\udd25 CodeNest Platform - Download Instructions",
+    "language": "toml",
+    "code": "   account_id = \"YOUR_ACCOUNT_ID\"\n   ",
+    "length": 37,
+    "created_at": "2025-11-06T09:37:35.782929Z"
+  },
+  {
+    "conversation": "HotStack GitHub deployment setup guide",
+    "language": "toml",
+    "code": "name = \"hotstack-worker\"\nmain = \"src/index.js\"\ncompatibility_date = \"2024-11-01\"\naccount_id = \"ad41fcfe1a84b27c62cc5cc9d590720e\"\n\n[[r2_buckets]]\nbinding = \"HOTSTACK_BUCKET\"\nbucket_name = \"hotstack-bucket\"\n",
+    "length": 205,
+    "created_at": "2025-11-03T12:30:54.490036Z"
+  }
+]

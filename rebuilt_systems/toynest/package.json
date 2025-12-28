@@ -1,0 +1,43 @@
+{
+  "name": "toynest-three-cube-banking",
+  "version": "1.0.0",
+  "description": "ToyNest Three-Cube Lattice Banking System - Fruitful Holdings",
+  "main": "three-cube-banking-backend.js",
+  "scripts": {
+    "start": "node three-cube-banking-backend.js",
+    "dev": "concurrently \"node three-cube-banking-backend.js\" \"node three-cube-sync-service.js\"",
+    "backend": "node three-cube-banking-backend.js",
+    "websocket": "node three-cube-sync-service.js",
+    "deploy": "npm install && npm run dev"
+  },
+  "keywords": [
+    "toynest",
+    "banking",
+    "fcu",
+    "three-cube",
+    "lattice",
+    "seedwave",
+    "faa"
+  ],
+  "author": "Heyns Schoeman / Fruitful Holdings",
+  "license": "PROPRIETARY",
+  "dependencies": {
+    "express": "^4.18.2",
+    "pg": "^8.11.3",
+    "ws": "^8.14.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "helmet": "^7.1.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/heyns1000/omnigrid.git"
+  },
+  "homepage": "https://toynest.seedwave.faa.zone"
+}

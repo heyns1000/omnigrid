@@ -20,6 +20,14 @@ SPONSORS_HONOR_ROLL.md
 # Archives
 archive/
 
+# Claude Profile Data - Exclude large raw files
+metdata/*.json
+metdata/*.zip
+
+# Temporary project extraction directories
+toynest_project/
+scroll_sealed_temp/
+
 # IDE
 .vscode/
 .idea/

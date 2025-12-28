@@ -1,0 +1,9 @@
+[
+  {
+    "conversation": "HotStack sovereign hub deployment plan",
+    "language": "dockerfile",
+    "code": "# Multi-stage build for optimal image size\nFROM node:20-alpine AS builder\n\nWORKDIR /app\n\n# Copy package files\nCOPY package*.json ./\nCOPY tsconfig.json ./\n\n# Install dependencies\nRUN npm ci --only=production\n\n# Copy source code\nCOPY client ./client\nCOPY server ./server\nCOPY shared ./shared\nCOPY api ./api\n\n# Build the application\nRUN npm run build\n\n# Production stage\nFROM node:20-alpine\n\nWORKDIR /app\n\n# Copy built application\nCOPY --from=builder /app/dist ./dist\nCOPY --from=builder /app/node_modules ./node_modules\nCOPY --from=builder /app/package.json ./\n\n# Expose port\nEXPOSE 3000\n\n# Health check\nHEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \\\n  CMD node -e \"require('http').get('http://localhost:3000/health', (r) => { process.exit(r.statusCode === 200 ? 0 : 1); })\"\n\n# Start application\nCMD [\"node\", \"dist/server/index.js\"]\n",
+    "length": 858,
+    "created_at": "2025-11-15T01:13:53.867866Z"
+  }
+]

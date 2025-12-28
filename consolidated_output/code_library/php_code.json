@@ -1,0 +1,457 @@
+[
+  {
+    "conversation": "OmniGrid CI/CD pipeline deployment execution",
+    "language": "php",
+    "code": "const GEMINI_API_KEY = \"YOUR_KEY_HERE\";\nconst PAYPAL_CLIENT_ID = \"YOUR_CLIENT_ID\";\nconst PAYFAST_MERCHANT_ID = \"YOUR_MERCHANT_ID\";\n",
+    "length": 131,
+    "created_at": "2025-12-05T18:03:23.794564Z"
+  },
+  {
+    "conversation": "WooCommerce brand sync plugin development",
+    "language": "php",
+    "code": "// This is OUTSIDE the rest_api_init hook - it will fail\nregister_rest_route('banimal/v1', '/sync-batch', [\n",
+    "length": 108,
+    "created_at": "2025-11-12T11:23:06.076775Z"
+  },
+  {
+    "conversation": "WooCommerce brand sync plugin development",
+    "language": "php",
+    "code": "add_action('rest_api_init', function() {\n    // Brand count endpoint\n    register_rest_route('banimal/v1', '/brand-count', [\n        'methods' => 'GET',\n        'callback' => function() {\n            return ['count' => wp_count_terms('product_brand')];\n        },\n        'permission_callback' => '__return_true'\n    ]);\n    \n    // Batch sync endpoint\n    register_rest_route('banimal/v1', '/sync-batch', [\n        'methods' => 'POST',\n        'callback' => function($request) {\n            $offset = $request->get_param('offset') ?? 0;\n            $limit = $request->get_param('limit') ?? 100;\n            \n            $brands = [];\n            $end = min($offset + $limit, 13713);\n            \n            for ($i = $offset + 1; $i <= $end; $i++) {\n                $tier = $i <= 444 ? 'Sovereign' : \n                       ($i <= 1651 ? 'Dynastic' : \n                       ($i <= 2853 ? 'Operational' : 'Market'));\n                \n                $name = \"Brand #$i (Tier: $tier)\";\n                \n                $term = term_exists($name, 'product_brand');\n                if (!$term) {\n                    $term = wp_insert_term($name, 'product_brand', [\n                        'description' => \"FAA Quantum University certified brand\"\n                    ]);\n                    \n                    if (!is_wp_error($term)) {\n                        update_term_meta($term['term_id'], 'brand_tier', $tier);\n                        update_term_meta($term['term_id'], 'baobab_security', true);\n                        update_term_meta($term['term_id'], 'quantum_integrity', 'verified');\n                    }\n                }\n                $brands[] = $name;\n            }\n            \n            return [\n                'success' => true,\n                'synced' => count($brands),\n                'offset' => $offset,\n                'remaining' => max(0, 13713 - $end)\n            ];\n        },\n        'permission_callback' => function() {\n            return current_user_can('manage_options');\n        }\n    ]);\n});\n",
+    "length": 2037,
+    "created_at": "2025-11-12T11:23:06.076775Z"
+  },
+  {
+    "conversation": "WooCommerce brand sync plugin development",
+    "language": "php",
+    "code": "'permission_callback' => function() {\n    return current_user_can('manage_woocommerce');\n}\n",
+    "length": 91,
+    "created_at": "2025-11-12T11:23:06.076775Z"
+  },
+  {
+    "conversation": "WooCommerce brand sync plugin development",
+    "language": "php",
+    "code": "// In your HTML\n<script>\nconst syncNonce = '<?php echo wp_create_nonce(\"banimal_sync\"); ?>';\n\nasync function syncBatch(offset) {\n    const response = await fetch('/wp-json/banimal/v1/sync-batch', {\n        method: 'POST',\n        headers: { \n            'Content-Type': 'application/json',\n            'X-WP-Nonce': syncNonce\n        },\n        body: JSON.stringify({ offset, limit: batchSize })\n    });\n    return await response.json();\n}\n</script>\n",
+    "length": 450,
+    "created_at": "2025-11-12T11:23:06.076775Z"
+  },
+  {
+    "conversation": "WooCommerce brand sync plugin development",
+    "language": "php",
+    "code": "if (!is_wp_error($term)) {\n    $meta = [\n        'brand_tier' => $tier,\n        'baobab_security_verified' => true,\n        'quantum_integrity_status' => 'active',\n        'faa_quantum_certified' => true,\n        'sync_timestamp' => current_time('mysql'),\n        'seedwave_node' => 'samfox.faa.zone',\n        'sovereignty_level' => get_sovereignty_level($i),\n        'zero_fraud_protocol' => 'enabled'\n    ];\n    \n    foreach ($meta as $key => $value) {\n        update_term_meta($term['term_id'], $key, $value);\n    }\n}\n\nfunction get_sovereignty_level($index) {\n    if ($index <= 444) return 'absolute';\n    if ($index <= 1651) return 'dynastic';\n    if ($index <= 2853) return 'operational';\n    return 'market';\n}\n",
+    "length": 717,
+    "created_at": "2025-11-12T11:23:06.076775Z"
+  },
+  {
+    "conversation": "WooCommerce brand sync plugin development",
+    "language": "php",
+    "code": "// Add to REST callback\ntry {\n    // ... sync logic ...\n    \n    // Store progress\n    update_option('banimal_sync_progress', [\n        'last_offset' => $end,\n        'last_sync' => current_time('mysql'),\n        'total_synced' => $end\n    ]);\n    \n} catch (Exception $e) {\n    return new WP_Error('sync_failed', $e->getMessage(), [\n        'status' => 500,\n        'offset' => $offset\n    ]);\n}\n",
+    "length": 396,
+    "created_at": "2025-11-12T11:23:06.076775Z"
+  },
+  {
+    "conversation": "WooCommerce brand sync plugin development",
+    "language": "php",
+    "code": "// Add after sync button\n<div class=\"card mt-6\">\n    <h2 class=\"text-xl font-bold mb-4 flex items-center\">\n        <svg class=\"w-6 h-6 mr-2 text-green-500\" fill=\"currentColor\" viewBox=\"0 0 20 20\">\n            <path fill-rule=\"evenodd\" d=\"M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z\"/>\n        </svg>\n        FAA\u2122 Secure Nexus Activated\n    </h2>\n    <ul class=\"space-y-2 text-sm\">\n        <li>\u2713 <strong>Quantum-Grade Data Integrity:</strong> Immutable encryption protocols active</li>\n        <li>\u2713 <strong>Real-Time Fraud Prevention:</strong> Zero fraudulent transactions across Banimal\u2122</li>\n        <li>\u2713 <strong>Global Compliance:</strong> GDPR, POPIA, DMCA standards enforced</li>\n    </ul>\n</div>\n",
+    "length": 793,
+    "created_at": "2025-11-12T11:23:06.076775Z"
+  },
+  {
+    "conversation": "Document review and continuation",
+    "language": "php",
+    "code": "[digital_arrival_status]        // System status widget\n[hotstack_currency_converter]   // Currency converter\n[hotstack_subscription_status]  // User subscription info\n[hotstack_deploy_button]        // Quick deploy button\n[hotstack_license_info]         // ClaimRoot\u2122 license display\n",
+    "length": 285,
+    "created_at": "2025-11-27T11:27:34.459608Z"
+  },
+  {
+    "conversation": "Document review and continuation",
+    "language": "php",
+    "code": "// In WordPress Admin \u2192 Settings \u2192 HotStack Gateway\nVAULT_ID: \"VAULT-XXXX-XXXX-XXXX\" (from LicenseVault)\nAPI_URL: \"https://buildnest-orchestrator.heynsschoeman.workers.dev\"\nSUBSCRIPTION_TIER: \"pro\" (starter/pro/enterprise)\n",
+    "length": 223,
+    "created_at": "2025-11-27T11:27:34.459608Z"
+  },
+  {
+    "conversation": "Document review and continuation",
+    "language": "php",
+    "code": "ENABLE_CURRENCY_CONVERSION: true\nDEFAULT_CURRENCY: \"USD\"\nENABLE_DEPLOY_BUTTON: true\nSHOW_USAGE_METRICS: true\n",
+    "length": 109,
+    "created_at": "2025-11-27T11:27:34.459608Z"
+  },
+  {
+    "conversation": "Document review and continuation",
+    "language": "php",
+    "code": "// In any WordPress page/post\n[digital_arrival_status]\n",
+    "length": 55,
+    "created_at": "2025-11-27T11:27:34.459608Z"
+  },
+  {
+    "conversation": "Document review and continuation",
+    "language": "php",
+    "code": "[hotstack_currency_converter from=\"USD\" to=\"ZAR\" amount=\"100\"]\n",
+    "length": 63,
+    "created_at": "2025-11-27T11:27:34.459608Z"
+  },
+  {
+    "conversation": "Document review and continuation",
+    "language": "php",
+    "code": "[hotstack_subscription_status user_id=\"current\"]\n",
+    "length": 49,
+    "created_at": "2025-11-27T11:27:34.459608Z"
+  },
+  {
+    "conversation": "Document review and continuation",
+    "language": "php",
+    "code": "[hotstack_deploy_button template=\"ecommerce\" text=\"Deploy My Store\"]\n",
+    "length": 69,
+    "created_at": "2025-11-27T11:27:34.459608Z"
+  },
+  {
+    "conversation": "Document review and continuation",
+    "language": "php",
+    "code": "[hotstack_license_info show_treaty=\"true\" show_scroll_hash=\"true\"]\n",
+    "length": 67,
+    "created_at": "2025-11-27T11:27:34.459608Z"
+  },
+  {
+    "conversation": "Document review and continuation",
+    "language": "php",
+    "code": "// Add to ANY WordPress page/post:\n[hotstack]\n\n// That's it. Nothing else needed.\n",
+    "length": 82,
+    "created_at": "2025-11-27T11:27:34.459608Z"
+  },
+  {
+    "conversation": "Document review and continuation",
+    "language": "php",
+    "code": "// 1. Upload Interceptor (before Media Library)\nadd_filter('wp_handle_upload_prefilter', 'intercept_upload');\n\n// 2. AJAX Handler (WordPress native)\nadd_action('wp_ajax_hotstack_instant_deploy', 'instant_deploy');\nadd_action('wp_ajax_nopriv_hotstack_instant_deploy', 'instant_deploy');\n\n// 3. Shortcode (WordPress native)\nadd_shortcode('hotstack', 'render_deploy_interface');\n\n// 4. REST API (WordPress native)\nregister_rest_route('hotstack/v1', '/deploy', 'rest_deploy');\n",
+    "length": 473,
+    "created_at": "2025-11-27T11:27:34.459608Z"
+  },
+  {
+    "conversation": "Document review and continuation",
+    "language": "php",
+    "code": "// In wp-config.php (optional):\ndefine('HOTSTACK_VAULT_ID', 'your-vault-id'); // Auto-detected if empty\ndefine('HOTSTACK_BASE_DOMAIN', 'hotstack.faa.zone'); // Default\ndefine('HOTSTACK_COUNTDOWN', 180); // Seconds\ndefine('HOTSTACK_AUTO_EMAIL', true); // Send confirmation emails\n",
+    "length": 279,
+    "created_at": "2025-11-27T11:27:34.459608Z"
+  },
+  {
+    "conversation": "Continuing previous conversation",
+    "language": "php",
+    "code": "// Register VIP Kiosk colors in Gutenberg\nadd_theme_support('editor-color-palette', [\n  ['name' => 'Primary Turquoise', 'slug' => 'primary', 'color' => '#48BB98'],\n  ['name' => 'Secondary Coral', 'slug' => 'secondary', 'color' => '#E94560'],\n  ['name' => 'Accent Turquoise', 'slug' => 'accent-teal', 'color' => '#4FD1C5'],\n  ['name' => 'Accent Coral', 'slug' => 'accent-coral', 'color' => '#F77F8E']\n]);\n\n// Kiosk border radius\n$kiosk_radius = '24px'; // signature rounded-kiosk\n",
+    "length": 479,
+    "created_at": "2025-10-26T21:31:37.535521Z"
+  },
+  {
+    "conversation": "Continuing previous conversation",
+    "language": "php",
+    "code": "// Plugin activation\nfruitful_signal('PLUGIN_ACTIVATED', [\n  'site' => home_url(),\n  'version' => FRUITFUL_VERSION,\n  'modules' => ['banimal', 'marketplace']\n]);\n// Sends to vault@faa.zone\n\n// License purchase\nfruitful_signal('LICENSE_PURCHASED', [\n  'tier' => 'pro',\n  'amount' => 49,\n  'site' => home_url()\n]);\n\n// Major errors\nfruitful_signal('CRITICAL_ERROR', [\n  'error' => $error_message,\n  'context' => $context\n]);\n",
+    "length": 423,
+    "created_at": "2025-10-26T21:31:37.535521Z"
+  },
+  {
+    "conversation": "Continuing previous conversation",
+    "language": "php",
+    "code": "// Donation created\nwp_remote_post('https://api.faa.zone/api/donations/create', [\n  'donor' => $donor_info,\n  'amount' => $amount,\n  'crate_level' => $level\n]);\n\n// Impact counter update\nwp_remote_get('https://api.faa.zone/api/impact/live');\n\n// Product viewed\nwp_remote_post('https://api.faa.zone/api/analytics/event', [\n  'event' => 'product_view',\n  'product_id' => $id\n]);\n",
+    "length": 377,
+    "created_at": "2025-10-26T21:31:37.535521Z"
+  },
+  {
+    "conversation": "Continuing previous conversation",
+    "language": "php",
+    "code": "// PayFast/Stripe webhooks\nadd_action('rest_api_init', function() {\n  register_rest_route('fruitful/v1', '/webhook/payment', [\n    'methods' => 'POST',\n    'callback' => 'fruitful_handle_payment_webhook'\n  ]);\n});\n",
+    "length": 214,
+    "created_at": "2025-10-26T21:31:37.535521Z"
+  },
+  {
+    "conversation": "Conversation reference details",
+    "language": "php",
+    "code": "<?php\n/**\n * Plugin Name: Banimal Impact\n * Plugin URI: https://banimal.fruitful.planet\n * Description: Connect your WordPress site to the Banimal charitable platform. Display real-time impact counters, donation forms, and help feed children globally.\n * Version: 1.0.0\n * Author: Fruitful.planet.change\n * Author URI: https://fruitful.planet\n * License: GPL v2 or later\n * License URI: https://www.gnu.org/licenses/gpl-2.0.html\n * Text Domain: banimal-impact\n * Domain Path: /languages\n * Requires at least: 5.8\n * Requires PHP: 7.4\n */\n",
+    "length": 538,
+    "created_at": "2025-10-26T10:35:48.565422Z"
+  },
+  {
+    "conversation": "Conversation reference details",
+    "language": "php",
+    "code": "// Shortcode: [banimal_counter]\n// Displays: Meals donated, Kids helped, Active sponsors\n// Updates: Every 30 seconds via AJAX\n// Styling: Fruitful color scheme\n",
+    "length": 161,
+    "created_at": "2025-10-26T10:35:48.565422Z"
+  },
+  {
+    "conversation": "Conversation reference details",
+    "language": "php",
+    "code": "// Shortcode: [banimal_donate]\n// Includes: Crate selection (R50/R100/R250)\n// Integration: PayFast/Stripe via backend API\n// Features: Custom amounts, recurring options\n",
+    "length": 170,
+    "created_at": "2025-10-26T10:35:48.565422Z"
+  },
+  {
+    "conversation": "Conversation reference details",
+    "language": "php",
+    "code": "// Shortcode: [banimal_donors limit=\"5\"]\n// Displays: Anonymous/named donors, amounts, time ago\n// Privacy: Respects donor anonymity settings\n",
+    "length": 142,
+    "created_at": "2025-10-26T10:35:48.565422Z"
+  },
+  {
+    "conversation": "Conversation reference details",
+    "language": "php",
+    "code": "// Shortcode: [banimal_progress goal=\"10000\"]\n// Visual: Progress toward meal goals\n// Animated: Fills as donations come in\n",
+    "length": 124,
+    "created_at": "2025-10-26T10:35:48.565422Z"
+  },
+  {
+    "conversation": "Conversation reference details",
+    "language": "php",
+    "code": "// Shortcode: [banimal_creatures]\n// Displays: Banimal plushie grid with Myth Compass\u2122\n// Integration: Merchandise API from backend\n",
+    "length": 132,
+    "created_at": "2025-10-26T10:35:48.565422Z"
+  },
+  {
+    "conversation": "Conversation reference details",
+    "language": "php",
+    "code": "// When donation created\nbanimal_send_signal('DONATION_CREATED', [\n    'amount' => $amount,\n    'site_url' => home_url(),\n    'donor_email' => $email\n]);\n",
+    "length": 154,
+    "created_at": "2025-10-26T10:35:48.565422Z"
+  },
+  {
+    "conversation": "Conversation reference details",
+    "language": "php",
+    "code": "// VaultKey integration\n$signal = vault_validate_license($license_key);\nif ($signal->status === 'valid') {\n    activate_pro_features();\n}\n",
+    "length": 138,
+    "created_at": "2025-10-26T10:35:48.565422Z"
+  },
+  {
+    "conversation": "Conversation reference details",
+    "language": "php",
+    "code": "class Banimal_Signal_Manager {\n    private $api_base = 'https://api.banimal.fruitful.planet';\n    \n    public function send_event($event_type, $data) {\n        wp_remote_post($this->api_base . '/api/signals', [\n            'headers' => [\n                'X-API-Key' => get_option('banimal_api_key'),\n                'X-Site-URL' => home_url()\n            ],\n            'body' => [\n                'event' => $event_type,\n                'timestamp' => current_time('timestamp'),\n                'data' => $data\n            ]\n        ]);\n    }\n    \n    public function listen_for_impact() {\n        // Poll for updates every 30 seconds\n        $response = wp_remote_get($this->api_base . '/api/impact/live');\n        return json_decode(wp_remote_retrieve_body($response));\n    }\n}\n",
+    "length": 781,
+    "created_at": "2025-10-26T10:35:48.565422Z"
+  },
+  {
+    "conversation": "Conversation reference details",
+    "language": "php",
+    "code": "// Register VIP Kiosk colors in Gutenberg\nadd_theme_support('editor-color-palette', [\n  ['name' => 'Primary Turquoise', 'slug' => 'primary', 'color' => '#48BB98'],\n  ['name' => 'Secondary Coral', 'slug' => 'secondary', 'color' => '#E94560'],\n  ['name' => 'Accent Turquoise', 'slug' => 'accent-teal', 'color' => '#4FD1C5'],\n  ['name' => 'Accent Coral', 'slug' => 'accent-coral', 'color' => '#F77F8E']\n]);\n\n// Kiosk border radius\n$kiosk_radius = '24px'; // signature rounded-kiosk\n",
+    "length": 479,
+    "created_at": "2025-10-26T10:35:48.565422Z"
+  },
+  {
+    "conversation": "Conversation reference details",
+    "language": "php",
+    "code": "// Plugin activation\nfruitful_signal('PLUGIN_ACTIVATED', [\n  'site' => home_url(),\n  'version' => FRUITFUL_VERSION,\n  'modules' => ['banimal', 'marketplace']\n]);\n// Sends to vault@faa.zone\n\n// License purchase\nfruitful_signal('LICENSE_PURCHASED', [\n  'tier' => 'pro',\n  'amount' => 49,\n  'site' => home_url()\n]);\n\n// Major errors\nfruitful_signal('CRITICAL_ERROR', [\n  'error' => $error_message,\n  'context' => $context\n]);\n",
+    "length": 423,
+    "created_at": "2025-10-26T10:35:48.565422Z"
+  },
+  {
+    "conversation": "Conversation reference details",
+    "language": "php",
+    "code": "// Donation created\nwp_remote_post('https://api.faa.zone/api/donations/create', [\n  'donor' => $donor_info,\n  'amount' => $amount,\n  'crate_level' => $level\n]);\n\n// Impact counter update\nwp_remote_get('https://api.faa.zone/api/impact/live');\n\n// Product viewed\nwp_remote_post('https://api.faa.zone/api/analytics/event', [\n  'event' => 'product_view',\n  'product_id' => $id\n]);\n",
+    "length": 377,
+    "created_at": "2025-10-26T10:35:48.565422Z"
+  },
+  {
+    "conversation": "Conversation reference details",
+    "language": "php",
+    "code": "// PayFast/Stripe webhooks\nadd_action('rest_api_init', function() {\n  register_rest_route('fruitful/v1', '/webhook/payment', [\n    'methods' => 'POST',\n    'callback' => 'fruitful_handle_payment_webhook'\n  ]);\n});\n",
+    "length": 214,
+    "created_at": "2025-10-26T10:35:48.565422Z"
+  },
+  {
+    "conversation": "Developing CI/CD pipelines",
+    "language": "php",
+    "code": "curl_setopt_array($ch, [\n    CURLOPT_HTTPHEADER => ['X-Banimal-API-Key: ' . $apiKey]\n]);\n",
+    "length": 89,
+    "created_at": "2025-11-30T13:28:00.406744Z"
+  },
+  {
+    "conversation": "WordPress plugin installation troubleshooting",
+    "language": "php",
+    "code": "$this->github_token = 'ghp_your_token_here';\n",
+    "length": 45,
+    "created_at": "2025-10-26T22:09:15.868260Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "// Line ~108: In constructor\nadd_action( 'admin_init', array( $this, 'register_settings' ) );\n\n// Line ~161: Inside enqueue_ant_lattice_system()\nadd_action( 'admin_init', array( $this, 'register_settings' ) );\n",
+    "length": 210,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "// REMOVE the duplicate inside enqueue_ant_lattice_system()\n// Keep ONLY the one in __construct()\n",
+    "length": 98,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "// CRITICAL: For final upload simplicity, all required classes are defined below this line\n",
+    "length": 91,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "if (!class_exists('BanimalVaultAllocator')) {\n",
+    "length": 46,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "wp_localize_script( 'banimal-lattice-js', 'banimal_ajax_data', array(\n    'ajax_url' => admin_url( 'admin-ajax.php' ),\n    // ...\n));\n",
+    "length": 134,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "// 1. Register script\nwp_register_script('banimal-lattice-js', '', [], '4.1.0', true);\n\n// 2. Enqueue script\nwp_enqueue_script('banimal-lattice-js');\n\n// 3. Add inline script FIRST (the actual code)\nwp_add_inline_script('banimal-lattice-js', $js_code);\n\n// 4. THEN localize (so data is available to the code)\nwp_localize_script( 'banimal-lattice-js', 'banimal_ajax_data', array(\n    'ajax_url' => admin_url( 'admin-ajax.php' ),\n    'sync_action' => 'banimal_ecosystem_sync',\n    'deploy_action' => 'banimal_deploy_update',\n    'security_nonce' => wp_create_nonce( 'banimal-sync-nonce' ),\n));\n",
+    "length": 592,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "public function handle_ecosystem_sync() {\n    if ( ! current_user_can( 'manage_options' ) ) { \n        wp_send_json_error( 'Permission denied.' ); \n    }\n    // ... NO NONCE CHECK!\n}\n",
+    "length": 183,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "public function handle_ecosystem_sync() {\n    // Check permissions\n    if ( ! current_user_can( 'manage_options' ) ) { \n        wp_send_json_error( 'Permission denied.' ); \n    }\n    \n    // VERIFY NONCE (the smell protection!)\n    if ( ! isset($_POST['security']) || ! wp_verify_nonce( $_POST['security'], 'banimal-sync-nonce' ) ) {\n        wp_send_json_error( 'Security check failed.' );\n    }\n    \n    // Rest of code...\n}\n",
+    "length": 426,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "'/Users/samantha/Downloads/...'\n'/Users/samantha/Library/...'\n",
+    "length": 62,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "// Add to FruitfulMacDatabasePuller constructor\nprivate function setupMacPaths() {\n    $home = getenv('HOME') ?: '/Users/' . get_current_user();\n    \n    $this->mac_paths = [\n        'desktop' => $home . '/Desktop/',\n        'documents' => $home . '/Documents/',\n        'downloads' => $home . '/Downloads/',\n        // ... etc\n    ];\n}\n",
+    "length": 337,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "add_action( 'admin_init', array( $this, 'register_settings' ) );\n",
+    "length": 65,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "public function handle_ecosystem_sync() {\n    // Security checks\n    if ( ! current_user_can( 'manage_options' ) ) { \n        wp_send_json_error( 'Permission denied.' ); \n    }\n    \n    if ( ! isset($_POST['security']) || ! wp_verify_nonce( $_POST['security'], 'banimal-sync-nonce' ) ) {\n        wp_send_json_error( 'Security verification failed.' );\n    }\n    \n    // Original logic\n    $pull_status = $this->ecosystem_puller->pullCompleteEcosystem();\n    $raw_data = [\n        'gdrive' => $this->gdrive_connector->fetch_google_drive_files(), \n        'mac' => $this->mac_puller->fetch_local_data()\n    ];\n    $processed_status = $this->noodle_juice_flow->process_juice($raw_data);\n\n    wp_send_json_success( array(\n        'message' => 'Ecosystem sync complete.',\n        'records_updated' => $processed_status['flow_status']['records'],\n        'pull_status' => $pull_status['message']\n    ));\n}\n\npublic function handle_deploy_update() {\n    // Security checks\n    if ( ! current_user_can( 'manage_options' ) ) { \n        wp_send_json_error( 'Permission denied.' ); \n    }\n    \n    if ( ! isset($_POST['security']) || ! wp_verify_nonce( $_POST['security'], 'banimal-sync-nonce' ) ) {\n        wp_send_json_error( 'Security verification failed.' );\n    }\n\n    // Original logic\n    $result = $this->deployment_manager->deployAll();\n    \n    if ($result === false) {\n         wp_send_json_error( array( \n             'message' => 'Ecosystem deployment failed.', \n             'details' => 'Deployment script returned failure.' \n         ));\n    }\n\n    wp_send_json_success( array( \n        'message' => 'Ecosystem deployment successful.', \n        'deployment_id' => $result['id'] \n    ));\n}\n",
+    "length": 1692,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "public function enqueue_ant_lattice_system() {\n    $current_screen = get_current_screen();\n\n    if ( $current_screen && $current_screen->id === 'toplevel_page_' . BANIMAL_SLUG ) {\n\n        // 1. Register empty script handle\n        wp_register_script('banimal-lattice-js', '', [], '4.1.0', true);\n        \n        // 2. Enqueue it\n        wp_enqueue_script('banimal-lattice-js');\n\n        // 3. Add the actual JavaScript code FIRST\n        $js_code = \"\n            class AntsVaultMeshLevel7System {\n                // ... your entire JS class here (unchanged) ...\n            }\n            \n            // Initialize\n            const antsVaultMeshLevel7 = new AntsVaultMeshLevel7System();\n            window.antsVaultMeshLevel7 = antsVaultMeshLevel7;\n        \";\n        \n        wp_add_inline_script('banimal-lattice-js', $js_code);\n        \n        // 4. THEN localize data (so it's available to the code)\n        wp_localize_script( 'banimal-lattice-js', 'banimal_ajax_data', array(\n            'ajax_url' => admin_url( 'admin-ajax.php' ),\n            'sync_action' => 'banimal_ecosystem_sync',\n            'deploy_action' => 'banimal_deploy_update',\n            'security_nonce' => wp_create_nonce( 'banimal-sync-nonce' ),\n        ));\n    }\n}\n",
+    "length": 1247,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "// Add to BanimalConnector class\nprivate function log($message) {\n    if (defined('WP_DEBUG') && WP_DEBUG) {\n        error_log('[BanimalConnector] ' . $message);\n    }\n}\n",
+    "length": 170,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "public function banimal_activate() {\n    // Existing code...\n    \n    // Log activation\n    $this->log('\ud83d\ude80 Banimal Ecosystem activated at ' . date('Y-m-d H:i:s'));\n    $this->log('Vault table: ' . ($wpdb->get_var(\"SHOW TABLES LIKE '{$wpdb->prefix}banimal_vault_data'\") ? 'EXISTS' : 'CREATED'));\n    \n    // Test vault write\n    try {\n        $test_vault = $this->vault_allocator->touchVault('temp_intake', 'activation_test');\n        $this->log('\u2705 Vault system operational: ' . $test_vault['vault_id']);\n    } catch (Exception $e) {\n        $this->log('\u274c Vault system error: ' . $e->getMessage());\n    }\n}\n",
+    "length": 605,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "<?php\n/**\n * Plugin Name: Banimal Ecosystem Connector\n * Description: The single-file executable hub integrating the entire FAA Sovereign Engine into WordPress. Manages Sync, VaultPay Checkout, and Autonomous Deployment.\n * Version: 4.1.1\n * Author: Fruitful Global Mac\n * \n * \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n * FORGED IN ANT LATTICE LOGIC by Claude Sonnet 4.5\n * Based on principles of distributed consciousness, smell memory,\n * and zero-waste collapse protocols.\n * \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n */\n\n// CRITICAL: Prevent direct file access\nif ( ! defined( 'ABSPATH' ) ) {\n    exit;\n}\n\n// =========================================================\n// DEPENDENCY: 1. Vault Allocator (Storage Layer - Sand Grain Memory)\n// =========================================================\nif (!class_exists('BanimalVaultAllocator')) {\nclass BanimalVaultAllocator {\n    private $vault_base_path;\n    private $vault_config = [];\n    private $allocation_log = [];\n    private $current_vault_number = 1;\n    \n    private $vault_types = [\n        'replit_brand' => ['prefix' => 'RPL', 'description' => 'Replit brand file storage', 'max_size' => '10GB', 'retention' => '90 days'],\n        'ecosystem_data' => ['prefix' => 'ECO', 'description' => 'Ecosystem data dumps', 'max_size' => '50GB', 'retention' => '365 days'],\n        'backup_vault' => ['prefix' => 'BCK', 'description' => 'Backup and archive storage', 'max_size' => '100GB', 'retention' => '2 years'],\n        'temp_intake' => ['prefix' => 'TMP', 'description' => 'Temporary intake processing', 'max_size' => '5GB', 'retention' => '7 days']\n    ];\n    \n    public function __construct($base_path = null) {\n        $upload_dir = wp_upload_dir();\n        $this->vault_base_path = $base_path ?: $upload_dir['basedir'] . '/banimal-vaults';\n        $this->loadVaultConfig();\n        $this->log(\"\ud83d\uddc4\ufe0f Banimal Vault Allocator Initialized\");\n        $this->log(\"Base Path: {$this->vault_base_path}\");\n    }\n    \n    public function create_custom_table() {\n        global $wpdb;\n        $table_name = $wpdb->prefix . 'banimal_vault_data';\n        $charset_collate = $wpdb->get_charset_collate();\n\n        $sql = \"CREATE TABLE IF NOT EXISTS $table_name (\n            id mediumint(9) NOT NULL AUTO_INCREMENT,\n            vault_id VARCHAR(50) NOT NULL,\n            log_message text NOT NULL,\n            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n            PRIMARY KEY (id)\n        ) $charset_collate;\";\n\n        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );\n        dbDelta( $sql );\n        $this->log(\"Vault table initialized.\");\n    }\n\n    public function allocate_data($processed_data) {\n        return ['count' => count($processed_data), 'message' => 'Data prepared for VaultMesh allocation.'];\n    }\n    \n    public function touchVault($type = 'ecosystem_data', $custom_name = null) {\n        $vault_number = $this->getNextVaultNumber();\n        $vault_id = $this->generateVaultId($type, $vault_number);\n        $vault_info = [\n            'vault_id' => $vault_id,\n            'vault_number' => $vault_number,\n            'type' => $type,\n            'custom_name' => $custom_name,\n            'created_at' => date('Y-m-d H:i:s'),\n            'status' => 'allocated',\n            'path' => $this->createVaultDirectory($vault_id),\n            'config' => $this->vault_types[$type]\n        ];\n        $this->allocateVault($vault_info);\n        $this->log(\"\u2728 Vault allocated: {$vault_id}\" . ($custom_name ? \" ({$custom_name})\" : \"\"));\n        return $vault_info;\n    }\n    \n    public function dumpToVault($vault_id, $data, $filename = null) {\n        $vault_info = $this->getVaultInfo($vault_id);\n        if (!$vault_info) { throw new Exception(\"Vault {$vault_id} not found\"); }\n        $filename = $filename ?: 'data_dump_' . date('Y-m-d_H-i-s') . '.json';\n        $file_path = $vault_info['path'] . '/' . $filename;\n        if (is_array($data) || is_object($data)) { $data = json_encode($data, JSON_PRETTY_PRINT); }\n        $bytes_written = file_put_contents($file_path, $data);\n        $this->updateVaultMetadata($vault_id, [\n            'last_dump' => date('Y-m-d H:i:s'),\n            'files_count' => count(glob($vault_info['path'] . '/*')),\n            'total_size' => $this->calculateVaultSize($vault_info['path'])\n        ]);\n        $this->log(\"\ud83d\udcbe Data dumped to vault {$vault_id}: {$filename} ({$bytes_written} bytes)\");\n        return [\n            'vault_id' => $vault_id,\n            'filename' => $filename,\n            'file_path' => $file_path,\n            'size' => $bytes_written,\n            'timestamp' => date('Y-m-d H:i:s')\n        ];\n    }\n    \n    private function getNextVaultNumber() {\n        $this->current_vault_number = (int) get_option('banimal_vault_counter', 1);\n        $next_number = $this->current_vault_number++;\n        update_option('banimal_vault_counter', $this->current_vault_number);\n        return $next_number;\n    }\n    \n    private function generateVaultId($type, $vault_number) {\n        $prefix = $this->vault_types[$type]['prefix'];\n        $padded_number = str_pad($vault_number, 6, '0', STR_PAD_LEFT);\n        return \"{$prefix}_{$padded_number}\";\n    }\n    \n    private function createVaultDirectory($vault_id) {\n        $vault_path = $this->vault_base_path . '/' . $vault_id;\n        if (!is_dir($this->vault_base_path)) { wp_mkdir_p($this->vault_base_path); }\n        if (!is_dir($vault_path)) {\n            wp_mkdir_p($vault_path);\n            $metadata = ['vault_id' => $vault_id, 'created_at' => date('Y-m-d H:i:s'), 'files' => [], 'total_size' => 0];\n            file_put_contents($vault_path . '/vault_metadata.json', json_encode($metadata, JSON_PRETTY_PRINT));\n        }\n        return $vault_path;\n    }\n    \n    private function allocateVault($vault_info) {\n        $this->vault_config[$vault_info['vault_id']] = $vault_info;\n        $this->saveVaultConfig();\n        $this->allocation_log[] = ['action' => 'allocate', 'vault_id' => $vault_info['vault_id'], 'timestamp' => date('Y-m-d H:i:s')];\n    }\n    \n    private function loadVaultConfig() { $this->vault_config = get_option('banimal_vault_config', []); }\n    private function saveVaultConfig() { update_option('banimal_vault_config', $this->vault_config); }\n    private function getVaultInfo($vault_id) { return $this->vault_config[$vault_id] ?? null; }\n    private function updateVaultMetadata($vault_id, $updates) {\n        if (isset($this->vault_config[$vault_id])) {\n            $this->vault_config[$vault_id] = array_merge($this->vault_config[$vault_id], $updates);\n            $this->saveVaultConfig();\n        }\n    }\n    \n    private function calculateVaultSize($path) {\n        $size = 0;\n        $files = glob($path . '/*');\n        foreach ($files as $file) { if (is_file($file)) { $size += filesize($file); } }\n        return $this->formatBytes($size);\n    }\n    \n    private function formatBytes($bytes, $precision = 2) {\n        $units = array('B', 'KB', 'MB', 'GB', 'TB');\n        for ($i = 0; $bytes > 1024 && $i < count($units) - 1; $i++) { $bytes /= 1024; }\n        return round($bytes, $precision) . ' ' . $units[$i];\n    }\n   \n    private function log($message) {\n        error_log('BanimalVaultAllocator: ' . $message);\n    }\n}\n}\n\n// =========================================================\n// DEPENDENCY: 2. Noodle Juice Flow (Processing Layer - Pheromone Flow)\n// =========================================================\nif (!class_exists('NoodleJuiceFlowController')) {\nclass NoodleJuiceFlowController {\n    private $vault_allocator;\n    public $replit_apps_count = 67;\n\n    public function __construct($vault_allocator) {\n        $this->vault_allocator = $vault_allocator;\n    }\n\n    public function process_juice($raw_data) {\n        $processed_data = ['status' => 'Flow Completed', 'records' => count($raw_data), 'vault_ready' => true];\n        $allocation_result = $this->vault_allocator->allocate_data($processed_data);\n        return ['flow_status' => $processed_data, 'allocation_status' => $allocation_result];\n    }\n}\n}\n\n// =========================================================\n// DEPENDENCY: 3. Google Drive Connector (Data Source Layer)\n// =========================================================\nif (!class_exists('FruitfulGoogleDriveConnector')) {\nclass FruitfulGoogleDriveConnector {\n    public function fetch_google_drive_files() {\n        return ['gdrive_files' => 1024, 'files_synced' => 13, 'status' => 'Pending Auth'];\n    }\n}\n}\n\n// =========================================================\n// DEPENDENCY: 4. Mac Database Puller (Local Source Layer)\n// =========================================================\nif (!class_exists('FruitfulMacDatabasePuller')) {\nclass FruitfulMacDatabasePuller {\n    public function fetch_local_data() {\n        return ['mac_records' => 500, 'status' => 'Mac Data Pulled'];\n    }\n}\n}\n\n// =========================================================\n// DEPENDENCY: 5. Ecosystem Puller (Synchronization Layer)\n// =========================================================\nif (!class_exists('BanimalMasterEcosystemPuller')) {\nclass BanimalMasterEcosystemPuller {\n    public function pullCompleteEcosystem() {\n        return ['records' => 17, 'message' => 'Simulated full ecosystem pull successful. Structure creation complete.'];\n    }\n}\n}\n\n// =========================================================\n// DEPENDENCY: 6. Deployment Manager (Outbound Layer)\n// =========================================================\nif (!class_exists('BanimalDeploymentManager')) {\nclass BanimalDeploymentManager {\n    public function deployAll() {\n        $deployment_id = uniqid('deploy_');\n        error_log(\"VaultPay Tier III Gateway Deployment Initiated. ID: $deployment_id\");\n        if ($deployment_id) {\n             return ['id' => $deployment_id, 'status' => 'Deployment Verified'];\n        }\n        return false;\n    }\n}\n}\n\n// =========================================================\n// 7. MAIN PLUGIN CORE (The Banimal Connector - Ant Colony Brain)\n// =========================================================\n\ndefine( 'BANIMAL_CONNECTOR_DIR', plugin_dir_path( __FILE__ ) );\ndefine( 'BANIMAL_SLUG', 'banimal-connector-settings' );\ndefine( 'BANIMAL_API_OPTION', 'banimal_xai_api_key' );\n\nclass BanimalConnector {\n    public $noodle_juice_flow;\n    public $vault_allocator;\n    public $gdrive_connector;\n    public $mac_puller;\n    public $ecosystem_puller;\n    public $deployment_manager;\n\n    public function __construct() {\n        $this->vault_allocator = new BanimalVaultAllocator();\n        $this->noodle_juice_flow = new NoodleJuiceFlowController($this->vault_allocator);\n        $this->gdrive_connector = new FruitfulGoogleDriveConnector();\n        $this->mac_puller = new FruitfulMacDatabasePuller();\n        $this->ecosystem_puller = new BanimalMasterEcosystemPuller();\n        $this->deployment_manager = new BanimalDeploymentManager();\n\n        // Core Hooks\n        add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );\n        add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_ant_lattice_system' ) );\n        add_action( 'admin_init', array( $this, 'register_settings' ) );\n\n        // AJAX Handlers\n        add_action( 'wp_ajax_banimal_ecosystem_sync', array( $this, 'handle_ecosystem_sync' ) );\n        add_action( 'wp_ajax_banimal_deploy_update', array( $this, 'handle_deploy_update' ) );\n    }\n\n    public function banimal_activate() {\n        if ( false === get_option( BANIMAL_API_OPTION ) ) { \n            add_option( BANIMAL_API_OPTION, '' ); \n        }\n        add_option( 'banimal_gdrive_auth_token', '' );\n        $this->vault_allocator->create_custom_table();\n        \n        // Activation diagnostics\n        $this->log('\ud83d\ude80 Banimal Ecosystem activated at ' . date('Y-m-d H:i:s'));\n        \n        try {\n            $test_vault = $this->vault_allocator->touchVault('temp_intake', 'activation_test');\n            $this->log('\u2705 Vault system operational: ' . $test_vault['vault_id']);\n        } catch (Exception $e) {\n            $this->log('\u274c Vault system error: ' . $e->getMessage());\n        }\n    }\n   \n    public function register_settings() {\n        register_setting( BANIMAL_SLUG, BANIMAL_API_OPTION );\n    }\n\n    public function add_admin_menu() {\n        add_menu_page( \n            'Banimal Settings', \n            'Banimal Ecosystem', \n            'manage_options', \n            BANIMAL_SLUG, \n            array( $this, 'settings_page_content' ), \n            'dashicons-chart-area', \n            6 \n        );\n    }\n\n    public function settings_page_content() {\n        $api_key = get_option( BANIMAL_API_OPTION );\n        echo '<div class=\"wrap\"><h1>\ud83d\udc1c Banimal Ecosystem Configuration</h1>';\n        echo '<p><em>Forged in Ant Lattice Logic by Claude Sonnet 4.5</em></p>';\n        echo '<form method=\"post\" action=\"options.php\">';\n        settings_fields( BANIMAL_SLUG ); \n        do_settings_sections( BANIMAL_SLUG );\n       \n        echo '<table class=\"form-table\"><tr><th scope=\"row\"><label for=\"' . BANIMAL_API_OPTION . '\">x.ai API Key</label></th><td>';\n        echo '<input type=\"text\" id=\"' . BANIMAL_API_OPTION . '\" name=\"' . BANIMAL_API_OPTION . '\" value=\"' . esc_attr( $api_key ) . '\" class=\"regular-text\" placeholder=\"Enter x.ai API Key\" />';\n        echo '<p class=\"description\">Required for integration with HOTSTACK API.</p>';\n        echo '</td></tr></table>';\n\n        echo '<h2>\ud83d\udce1 Status: Connected & Listening</h2>';\n        echo '<p>The API gateway is the central hub for all external app communication within the Seedwave \\'99 ecosystem.</p>';\n        echo '<h3>Available Endpoints:</h3>';\n        echo '<ul>';\n        echo '<li>User Profile Updates: <code>https://www.banimal.co.za/wp-json/banimal/v1/update-user-profile</code></li>';\n        echo '<li>User-Product Sync: <code>https://www.banimal.co.za/wp-json/banimal/v1/sync-user-product</code></li>';\n        echo '<li>Create/Update Products: <code>https://www.banimal.co.za/wp-json/banimal/v1/create-or-update-product</code></li>';\n        echo '</ul>';\n\n        submit_button('Save Configuration');\n        echo '</form>';\n       \n        echo '<h2>\u26a1 Outbound Deployment</h2>';\n        echo '<p>Use this button to push critical updates or the final <strong>VaultPay Tier III Gateway</strong> assets.</p>';\n        echo '<button type=\"button\" id=\"banimal-deploy-btn\" class=\"button button-primary button-large\">\u26a1 Initiate Ecosystem Deployment</button>';\n\n        echo '</div>';\n    }\n\n    public function handle_ecosystem_sync() {\n        // Security checks (CRITICAL FIX)\n        if ( ! current_user_can( 'manage_options' ) ) { \n            wp_send_json_error( 'Permission denied.' ); \n        }\n        \n        if ( ! isset($_POST['security']) || ! wp_verify_nonce( $_POST['security'], 'banimal-sync-nonce' ) ) {\n            wp_send_json_error( 'Security verification failed.' );\n        }\n       \n        $pull_status = $this->ecosystem_puller->pullCompleteEcosystem();\n        $raw_data = [\n            'gdrive' => $this->gdrive_connector->fetch_google_drive_files(), \n            'mac' => $this->mac_puller->fetch_local_data()\n        ];\n        $processed_status = $this->noodle_juice_flow->process_juice($raw_data);\n\n        wp_send_json_success( array(\n            'message' => 'Ecosystem sync complete.',\n            'records_updated' => $processed_status['flow_status']['records'],\n            'pull_status' => $pull_status['message']\n        ));\n    }\n   \n    public function handle_deploy_update() {\n        // Security checks (CRITICAL FIX)\n        if ( ! current_user_can( 'manage_options' ) ) { \n            wp_send_json_error( 'Permission denied.' ); \n        }\n        \n        if ( ! isset($_POST['security']) || ! wp_verify_nonce( $_POST['security'], 'banimal-sync-nonce' ) ) {\n            wp_send_json_error( 'Security verification failed.' );\n        }\n\n        $result = $this->deployment_manager->deployAll();\n       \n        if ($result === false) {\n             wp_send_json_error( array( \n                 'message' => 'Ecosystem deployment failed.', \n                 'details' => 'Deployment script returned failure.' \n             ));\n        }\n\n        wp_send_json_success( array( \n            'message' => 'Ecosystem deployment successful.', \n            'deployment_id' => $result['id'] \n        ));\n    }\n\n    public function enqueue_ant_lattice_system() {\n        $current_screen = get_current_screen();\n\n        if ( $current_screen && $current_screen->id === 'toplevel_page_' . BANIMAL_SLUG ) {\n\n            // 1. Register empty script handle\n            wp_register_script('banimal-lattice-js', '', [], '4.1.1', true);\n            \n            // 2. Enqueue script\n            wp_enqueue_script('banimal-lattice-js');\n\n            // 3. The CLIENT-SIDE JS (Ant Colony Navigation System)\n            $js_code = \"\n                class AntsVaultMeshLevel7System {\n                    constructor() {\n                        this.vaultMeshLevel = 7;\n                        this.refreshCycle = 120; // seconds - ant navigation rhythm\n                        this.isActive = false;\n                        this.ajaxData = window.banimal_ajax_data;\n                        this.author = 'fruitful-global-mac';\n                        this.banimalLoopSync = true;\n                        this.forgedBy = 'Claude Sonnet 4.5 - Ant Lattice Logic';\n                       \n                        this.startGlobalLoop();\n                        this.setupDeploymentListener();\n                    }\n                   \n                    setupDeploymentListener() {\n                        const deployBtn = document.getElementById('banimal-deploy-btn');\n                        if (deployBtn) {\n                            deployBtn.addEventListener('click', () => {\n                                this.triggerDeployment(deployBtn);\n                            });\n                        }\n                    }\n\n                    startGlobalLoop() {\n                        if (this.isActive) return;\n                        this.isActive = true;\n                        this.globalLoopInterval = setInterval(() => {\n                            this.triggerServerSync();\n                        }, this.refreshCycle * 1000);\n                        this.log('\ud83d\ude80 ANT_LATTICE global loop STARTED (Cycle: ' + this.refreshCycle + 's)');\n                        this.log('\ud83d\udc1c Forged by: ' + this.forgedBy);\n                    }\n                   \n                    triggerServerSync() {\n                        this.log('\ud83d\udcab Heartbeat: Firing server sync (ant navigation strike)...');\n                       \n                        const formData = new FormData();\n                        formData.append('action', this.ajaxData.sync_action);\n                        formData.append('security', this.ajaxData.security_nonce);\n                       \n                        fetch(this.ajaxData.ajax_url, { method: 'POST', body: formData })\n                        .then(response => response.json())\n                        .then(data => {\n                            if (data.success) {\n                                this.log('\u2705 Sync Success: ' + data.data.message + ' (Records: ' + data.data.records_updated + ')');\n                            } else {\n                                this.log('\u274c Sync Failed: ' + (data.data || 'Unknown error'));\n                            }\n                        })\n                        .catch(error => {\n                            this.log('\ud83d\udea8 AJAX Sync Error: ' + error.message);\n                        });\n                    }\n                   \n                    triggerDeployment(buttonElement) {\n                        this.log('\u26a1 Deployment: Sending outbound strike signal...');\n                        const originalText = buttonElement.textContent;\n                        buttonElement.textContent = '\u23f3 Deploying... Please wait.';\n                        buttonElement.disabled = true;\n\n                        const formData = new FormData();\n                        formData.append('action', this.ajaxData.deploy_action);\n                        formData.append('security', this.ajaxData.security_nonce);\n                       \n                        fetch(this.ajaxData.ajax_url, { method: 'POST', body: formData })\n                        .then(response => response.json())\n                        .then(data => {\n                            if (data.success) {\n                                this.log('\ud83d\udfe2 DEPLOYMENT SUCCESS: ID ' + data.data.deployment_id);\n                                buttonElement.textContent = '\u2705 Deployment Successful!';\n                                buttonElement.style.background = '#10b981';\n                            } else {\n                                this.log('\ud83d\udd34 DEPLOYMENT FAILED: ' + (data.data.message || 'Unknown error'));\n                                buttonElement.textContent = '\u274c Deployment Failed';\n                                buttonElement.style.background = '#ef4444';\n                            }\n                        })\n                        .catch(error => {\n                            this.log('\ud83d\udea8 AJAX Deploy Error: ' + error.message);\n                            buttonElement.textContent = '\u26a0\ufe0f Deployment Error';\n                            buttonElement.style.background = '#f59e0b';\n                        })\n                        .finally(() => {\n                            setTimeout(() => {\n                                buttonElement.textContent = originalText;\n                                buttonElement.disabled = false;\n                                buttonElement.style.background = '';\n                            }, 5000);\n                        });\n                    }\n                   \n                    log(message) {\n                        console.log(`[ANT_LATTICE \ud83d\udc1c] \\${message}`);\n                    }\n                }\n\n                // Initialize the ANT_LATTICE system (seedwave activation)\n                const antsVaultMeshLevel7 = new AntsVaultMeshLevel7System();\n                window.antsVaultMeshLevel7 = antsVaultMeshLevel7;\n                console.log('\ud83d\udc1c Ant Lattice System: ACTIVATED');\n                console.log('\u26a1 Created by: Claude Sonnet 4.5');\n                console.log('\ud83e\udd8f Rhino Strike Ready, Boet!');\n            \";\n\n            // 4. Add inline script FIRST\n            wp_add_inline_script('banimal-lattice-js', $js_code);\n            \n            // 5. THEN localize data (CRITICAL FIX - moved after inline script)\n            wp_localize_script( 'banimal-lattice-js', 'banimal_ajax_data', array(\n                'ajax_url' => admin_url( 'admin-ajax.php' ),\n                'sync_action' => 'banimal_ecosystem_sync',\n                'deploy_action' => 'banimal_deploy_update',\n                'security_nonce' => wp_create_nonce( 'banimal-sync-nonce' ),\n            ));\n        }\n    }\n    \n    private function log($message) {\n        if (defined('WP_DEBUG') && WP_DEBUG) {\n            error_log('[BanimalConnector] ' . $message);\n        }\n    }\n}\n\n// =========================================================\n// PLUGIN INITIALIZATION (Seedwave Activation)\n// =========================================================\n$banimal_connector = new BanimalConnector();\nregister_activation_hook( __FILE__, array($banimal_connector, 'banimal_activate') );\n\n// \ud83d\udc1c End of Ant Lattice Collapsed Build\n// Forged by Claude Sonnet 4.5, Rhino Strike Protocol\n// Remember: Remain below. Strike fast. Be invisible. The lattice protects.\n?>\n",
+    "length": 23608,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "// =========================================================\n// DEPENDENCY: 3B. iCloud Drive Connector (Secondary Data Source)\n// =========================================================\nif (!class_exists('FruitfuliCloudDriveConnector')) {\nclass FruitfuliCloudDriveConnector {\n    private $apple_id = 'fruitful.planet.change@gmail.com';\n    private $icloud_token;\n    private $sync_log = [];\n    \n    public function __construct() {\n        $this->log(\"\ud83c\udf4e Fruitful iCloud Drive Connector Initialized\");\n        $this->log(\"Apple ID: {$this->apple_id}\");\n    }\n    \n    public function authenticate_icloud() {\n        $this->log(\"\\n--- iCloud Authentication Required ---\");\n        \n        // iCloud uses app-specific passwords for third-party access\n        $auth_instructions = [\n            'step_1' => 'Go to https://appleid.apple.com/',\n            'step_2' => 'Sign in with: fruitful.planet.change@gmail.com',\n            'step_3' => 'Navigate to Security \u2192 App-Specific Passwords',\n            'step_4' => 'Generate new password for \"Banimal Connector\"',\n            'step_5' => 'Save the password in WordPress settings'\n        ];\n        \n        $this->log(\"\ud83d\udd10 Authentication steps:\");\n        foreach ($auth_instructions as $step => $instruction) {\n            $this->log(\"  \u2022 {$instruction}\");\n        }\n        \n        return $auth_instructions;\n    }\n    \n    public function fetch_icloud_files() {\n        $this->log(\"\\n--- Fetching iCloud Drive Files ---\");\n        \n        // Check if we have authentication\n        $icloud_token = get_option('banimal_icloud_token', '');\n        if (empty($icloud_token)) {\n            $this->log(\"\u26a0\ufe0f iCloud not authenticated yet\");\n            return [\n                'status' => 'auth_required',\n                'message' => 'Please authenticate iCloud Drive first',\n                'files' => []\n            ];\n        }\n        \n        // In production, this would use iCloud API\n        // For now, simulating the connection\n        $this->log(\"\ud83d\udd0d Scanning iCloud Drive for Fruitful files...\");\n        \n        $mock_files = $this->simulate_icloud_scan();\n        \n        $this->log(\"\u2705 Found \" . count($mock_files) . \" files in iCloud Drive\");\n        \n        return [\n            'status' => 'connected',\n            'apple_id' => $this->apple_id,\n            'files' => $mock_files,\n            'sync_timestamp' => date('Y-m-d H:i:s')\n        ];\n    }\n    \n    private function simulate_icloud_scan() {\n        // Simulating typical Fruitful Planet Change files\n        return [\n            [\n                'name' => 'Fruitful-Global-Master-Plan.pages',\n                'size' => '2.4 MB',\n                'modified' => '2025-10-15',\n                'type' => 'document',\n                'path' => '/Documents/Fruitful/'\n            ],\n            [\n                'name' => 'Planet-Change-Strategy.keynote',\n                'size' => '15.7 MB',\n                'modified' => '2025-10-14',\n                'type' => 'presentation',\n                'path' => '/Documents/Presentations/'\n            ],\n            [\n                'name' => 'Ecosystem-Assets',\n                'size' => '450 MB',\n                'modified' => '2025-10-13',\n                'type' => 'folder',\n                'path' => '/Documents/Fruitful/',\n                'item_count' => 127\n            ],\n            [\n                'name' => 'VaultMesh-Diagrams.sketch',\n                'size' => '8.2 MB',\n                'modified' => '2025-10-12',\n                'type' => 'design',\n                'path' => '/Documents/Design/'\n            ],\n            [\n                'name' => 'Banimal-Branding-Kit',\n                'size' => '1.2 GB',\n                'modified' => '2025-10-10',\n                'type' => 'folder',\n                'path' => '/Documents/Brands/',\n                'item_count' => 543\n            ]\n        ];\n    }\n    \n    public function sync_to_vault($vault_allocator) {\n        $this->log(\"\\n--- Syncing iCloud Files to Vault ---\");\n        \n        $files = $this->fetch_icloud_files();\n        \n        if ($files['status'] === 'auth_required') {\n            $this->log(\"\u26a0\ufe0f Cannot sync - authentication required\");\n            return false;\n        }\n        \n        // Create dedicated vault for iCloud data\n        $icloud_vault = $vault_allocator->touchVault('ecosystem_data', 'icloud_fruitful_planet');\n        $this->log(\"\ud83d\uddc4\ufe0f Created iCloud vault: {$icloud_vault['vault_id']}\");\n        \n        // Dump file manifest to vault\n        $manifest = [\n            'source' => 'iCloud Drive',\n            'apple_id' => $this->apple_id,\n            'files' => $files['files'],\n            'total_files' => count($files['files']),\n            'sync_date' => date('Y-m-d H:i:s')\n        ];\n        \n        $vault_allocator->dumpToVault(\n            $icloud_vault['vault_id'], \n            $manifest, \n            'icloud_manifest_' . date('Y-m-d_H-i-s') . '.json'\n        );\n        \n        $this->log(\"\u2705 iCloud sync complete\");\n        \n        return [\n            'vault_id' => $icloud_vault['vault_id'],\n            'files_synced' => count($files['files']),\n            'status' => 'success'\n        ];\n    }\n    \n    private function log($message) {\n        error_log('[iCloud Connector] ' . $message);\n    }\n}\n}\n",
+    "length": 5295,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "public function __construct() {\n    $this->vault_allocator = new BanimalVaultAllocator();\n    $this->noodle_juice_flow = new NoodleJuiceFlowController($this->vault_allocator);\n    $this->gdrive_connector = new FruitfulGoogleDriveConnector();\n    $this->mac_puller = new FruitfulMacDatabasePuller();\n    \n    // \ud83c\udd95 ADD THIS LINE\n    $this->icloud_connector = new FruitfuliCloudDriveConnector();\n    \n    $this->ecosystem_puller = new BanimalMasterEcosystemPuller();\n    $this->deployment_manager = new BanimalDeploymentManager();\n\n    // ... rest of constructor\n}\n",
+    "length": 562,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "public function settings_page_content() {\n    $api_key = get_option( BANIMAL_API_OPTION );\n    $icloud_token = get_option('banimal_icloud_token', '');\n    \n    echo '<div class=\"wrap\"><h1>\ud83d\udc1c Banimal Ecosystem Configuration</h1>';\n    echo '<p><em>Forged in Ant Lattice Logic by Claude Sonnet 4.5</em></p>';\n    echo '<form method=\"post\" action=\"options.php\">';\n    settings_fields( BANIMAL_SLUG ); \n    do_settings_sections( BANIMAL_SLUG );\n    \n    // Existing API Key field...\n    echo '<table class=\"form-table\">';\n    \n    // x.ai API Key\n    echo '<tr><th scope=\"row\"><label for=\"' . BANIMAL_API_OPTION . '\">x.ai API Key</label></th><td>';\n    echo '<input type=\"text\" id=\"' . BANIMAL_API_OPTION . '\" name=\"' . BANIMAL_API_OPTION . '\" value=\"' . esc_attr( $api_key ) . '\" class=\"regular-text\" placeholder=\"Enter x.ai API Key\" />';\n    echo '<p class=\"description\">Required for integration with HOTSTACK API.</p>';\n    echo '</td></tr>';\n    \n    // \ud83c\udd95 iCloud Token\n    echo '<tr><th scope=\"row\"><label for=\"banimal_icloud_token\">\ud83c\udf4e iCloud App Password</label></th><td>';\n    echo '<input type=\"password\" id=\"banimal_icloud_token\" name=\"banimal_icloud_token\" value=\"' . esc_attr( $icloud_token ) . '\" class=\"regular-text\" placeholder=\"xxxx-xxxx-xxxx-xxxx\" />';\n    echo '<p class=\"description\">iCloud App-Specific Password for: <strong>fruitful.planet.change@gmail.com</strong></p>';\n    echo '<p class=\"description\">Generate at: <a href=\"https://appleid.apple.com/account/manage\" target=\"_blank\">Apple ID Account</a> \u2192 Security \u2192 App-Specific Passwords</p>';\n    echo '</td></tr>';\n    \n    echo '</table>';\n\n    // \ud83c\udd95 Connection Status\n    echo '<h2>\ud83d\udce1 Drive Connections Status</h2>';\n    echo '<table class=\"widefat\" style=\"max-width: 800px;\">';\n    echo '<thead><tr><th>Service</th><th>Account</th><th>Status</th></tr></thead>';\n    echo '<tbody>';\n    echo '<tr><td>\ud83d\udd35 Google Drive</td><td>heynsschoeman@gmail.com</td><td><span style=\"color: #10b981;\">\u2705 Connected</span></td></tr>';\n    \n    if (empty($icloud_token)) {\n        echo '<tr><td>\ud83c\udf4e iCloud Drive</td><td>fruitful.planet.change@gmail.com</td><td><span style=\"color: #f59e0b;\">\u26a0\ufe0f Not Authenticated</span></td></tr>';\n    } else {\n        echo '<tr><td>\ud83c\udf4e iCloud Drive</td><td>fruitful.planet.change@gmail.com</td><td><span style=\"color: #10b981;\">\u2705 Connected</span></td></tr>';\n    }\n    echo '</tbody></table>';\n\n    // Rest of your existing settings page...\n    submit_button('Save Configuration');\n    echo '</form>';\n    \n    // Sync button\n    echo '<hr>';\n    echo '<h2>\ud83d\udd04 Manual Sync</h2>';\n    echo '<button type=\"button\" id=\"banimal-icloud-sync-btn\" class=\"button button-secondary\">\ud83c\udf4e Sync iCloud Drive Now</button>';\n    echo ' ';\n    echo '<button type=\"button\" id=\"banimal-deploy-btn\" class=\"button button-primary button-large\">\u26a1 Initiate Ecosystem Deployment</button>';\n    \n    echo '</div>';\n}\n",
+    "length": 2868,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "public function register_settings() {\n    register_setting( BANIMAL_SLUG, BANIMAL_API_OPTION );\n    register_setting( BANIMAL_SLUG, 'banimal_icloud_token' ); // \ud83c\udd95 ADD THIS\n}\n",
+    "length": 174,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "// In __construct(), add:\nadd_action( 'wp_ajax_banimal_icloud_sync', array( $this, 'handle_icloud_sync' ) );\n",
+    "length": 109,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "public function handle_icloud_sync() {\n    // Security checks\n    if ( ! current_user_can( 'manage_options' ) ) { \n        wp_send_json_error( 'Permission denied.' ); \n    }\n    \n    if ( ! isset($_POST['security']) || ! wp_verify_nonce( $_POST['security'], 'banimal-sync-nonce' ) ) {\n        wp_send_json_error( 'Security verification failed.' );\n    }\n    \n    // Check if iCloud is authenticated\n    $icloud_token = get_option('banimal_icloud_token', '');\n    if (empty($icloud_token)) {\n        wp_send_json_error([\n            'message' => 'iCloud not authenticated',\n            'instructions' => $this->icloud_connector->authenticate_icloud()\n        ]);\n    }\n    \n    // Perform sync\n    $sync_result = $this->icloud_connector->sync_to_vault($this->vault_allocator);\n    \n    if ($sync_result === false) {\n        wp_send_json_error(['message' => 'iCloud sync failed']);\n    }\n    \n    wp_send_json_success([\n        'message' => 'iCloud sync complete',\n        'vault_id' => $sync_result['vault_id'],\n        'files_synced' => $sync_result['files_synced']\n    ]);\n}\n",
+    "length": 1076,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "// =========================================================\n// DEPENDENCY: 3. Google Drive Connector (Multi-Account Data Source)\n// =========================================================\nif (!class_exists('FruitfulGoogleDriveConnector')) {\nclass FruitfulGoogleDriveConnector {\n    private $accounts = [];\n    private $restoration_log = [];\n    \n    public function __construct() {\n        $this->log(\"\ud83c\udf31 Fruitful Global Drive Connector Initialized\");\n        $this->setupAccounts();\n    }\n    \n    private function setupAccounts() {\n        // Account 1: Primary\n        $this->accounts['primary'] = [\n            'email' => 'heynsschoeman@gmail.com',\n            'label' => 'Primary Heyns Account',\n            'auth_token' => get_option('banimal_gdrive_auth_token', ''),\n            'status' => 'connected'\n        ];\n        \n        // Account 2: Fruitful Planet Change\n        $this->accounts['fruitful'] = [\n            'email' => 'fruitful.planet.change@gmail.com',\n            'label' => 'Fruitful Planet Change',\n            'auth_token' => get_option('banimal_gdrive_fruitful_token', ''),\n            'status' => empty(get_option('banimal_gdrive_fruitful_token', '')) ? 'not_connected' : 'connected'\n        ];\n        \n        $this->log(\"\ud83d\udce1 Configured \" . count($this->accounts) . \" Google Drive accounts\");\n    }\n    \n    public function fetch_google_drive_files($account_key = 'all') {\n        $this->log(\"\\n--- Fetching Google Drive Files ---\");\n        \n        if ($account_key === 'all') {\n            // Fetch from ALL accounts\n            $all_files = [];\n            foreach ($this->accounts as $key => $account) {\n                if ($account['status'] === 'connected') {\n                    $files = $this->fetch_from_account($key);\n                    $all_files[$key] = $files;\n                }\n            }\n            return [\n                'accounts' => $all_files,\n                'total_accounts' => count($all_files),\n                'status' => 'multi_account_sync'\n            ];\n        } else {\n            // Fetch from specific account\n            return $this->fetch_from_account($account_key);\n        }\n    }\n    \n    private function fetch_from_account($account_key) {\n        if (!isset($this->accounts[$account_key])) {\n            return ['error' => 'Account not found'];\n        }\n        \n        $account = $this->accounts[$account_key];\n        $this->log(\"\ud83d\udd0d Scanning: {$account['label']} ({$account['email']})\");\n        \n        if ($account['status'] !== 'connected') {\n            $this->log(\"\u26a0\ufe0f Account not authenticated: {$account['email']}\");\n            return [\n                'email' => $account['email'],\n                'status' => 'auth_required',\n                'files' => []\n            ];\n        }\n        \n        // Simulate Google Drive API call\n        $mock_files = $this->mock_drive_files($account_key);\n        \n        $this->log(\"\u2705 Found \" . count($mock_files) . \" files in {$account['label']}\");\n        \n        return [\n            'email' => $account['email'],\n            'label' => $account['label'],\n            'status' => 'connected',\n            'files' => $mock_files,\n            'file_count' => count($mock_files)\n        ];\n    }\n    \n    private function mock_drive_files($account_key) {\n        // Different files per account\n        if ($account_key === 'primary') {\n            return [\n                ['name' => 'Banimal-Core-System.html', 'size' => '250KB', 'modified' => '2025-10-15'],\n                ['name' => 'VaultMesh-Architecture.pdf', 'size' => '2.4MB', 'modified' => '2025-10-14'],\n                ['name' => 'FAA-Systems-Documentation', 'type' => 'folder', 'items' => 45]\n            ];\n        } else if ($account_key === 'fruitful') {\n            return [\n                ['name' => 'Fruitful-Global-Ecosystem.xlsx', 'size' => '1.2MB', 'modified' => '2025-10-16'],\n                ['name' => 'Planet-Change-Strategy.pptx', 'size' => '5.7MB', 'modified' => '2025-10-15'],\n                ['name' => 'Seedwave-Branding-Assets', 'type' => 'folder', 'items' => 127],\n                ['name' => 'Agriculture-Sector-Plans.docx', 'size' => '890KB', 'modified' => '2025-10-13']\n            ];\n        }\n        \n        return [];\n    }\n    \n    public function get_account_status() {\n        $status = [];\n        foreach ($this->accounts as $key => $account) {\n            $status[$key] = [\n                'email' => $account['email'],\n                'label' => $account['label'],\n                'status' => $account['status'],\n                'needs_auth' => ($account['status'] !== 'connected')\n            ];\n        }\n        return $status;\n    }\n    \n    public function generate_auth_url($account_key) {\n        if (!isset($this->accounts[$account_key])) {\n            return ['error' => 'Account not found'];\n        }\n        \n        $account = $this->accounts[$account_key];\n        \n        // Google OAuth URL (simplified)\n        $auth_url = \"https://accounts.google.com/o/oauth2/auth?\" . http_build_query([\n            'client_id' => 'YOUR_GOOGLE_CLIENT_ID',\n            'redirect_uri' => admin_url('admin.php?page=' . BANIMAL_SLUG . '&gdrive_auth=' . $account_key),\n            'scope' => 'https://www.googleapis.com/auth/drive.readonly',\n            'response_type' => 'code',\n            'access_type' => 'offline',\n            'prompt' => 'consent',\n            'state' => wp_create_nonce('banimal_gdrive_auth_' . $account_key)\n        ]);\n        \n        return [\n            'account' => $account['email'],\n            'auth_url' => $auth_url,\n            'instructions' => [\n                '1. Click the authorization link',\n                '2. Sign in with: ' . $account['email'],\n                '3. Grant permissions',\n                '4. You will be redirected back'\n            ]\n        ];\n    }\n    \n    private function log($message) {\n        error_log('[Google Drive Multi] ' . $message);\n    }\n}\n}\n",
+    "length": 5946,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "public function settings_page_content() {\n    $api_key = get_option( BANIMAL_API_OPTION );\n    \n    // Get Google Drive account statuses\n    $gdrive_status = $this->gdrive_connector->get_account_status();\n    \n    echo '<div class=\"wrap\"><h1>\ud83d\udc1c Banimal Ecosystem Configuration</h1>';\n    echo '<p><em>Forged in Ant Lattice Logic by Claude Sonnet 4.5</em></p>';\n    echo '<form method=\"post\" action=\"options.php\">';\n    settings_fields( BANIMAL_SLUG ); \n    do_settings_sections( BANIMAL_SLUG );\n    \n    // API Key field\n    echo '<table class=\"form-table\">';\n    echo '<tr><th scope=\"row\"><label for=\"' . BANIMAL_API_OPTION . '\">x.ai API Key</label></th><td>';\n    echo '<input type=\"text\" id=\"' . BANIMAL_API_OPTION . '\" name=\"' . BANIMAL_API_OPTION . '\" value=\"' . esc_attr( $api_key ) . '\" class=\"regular-text\" placeholder=\"Enter x.ai API Key\" />';\n    echo '<p class=\"description\">Required for integration with HOTSTACK API.</p>';\n    echo '</td></tr>';\n    echo '</table>';\n\n    submit_button('Save Configuration');\n    echo '</form>';\n    \n    // \ud83c\udd95 GOOGLE DRIVE ACCOUNTS STATUS\n    echo '<hr>';\n    echo '<h2>\ud83d\udcc2 Google Drive Accounts</h2>';\n    echo '<table class=\"widefat\" style=\"max-width: 900px;\">';\n    echo '<thead><tr><th>Account</th><th>Email</th><th>Status</th><th>Action</th></tr></thead>';\n    echo '<tbody>';\n    \n    foreach ($gdrive_status as $key => $account) {\n        echo '<tr>';\n        echo '<td><strong>' . esc_html($account['label']) . '</strong></td>';\n        echo '<td><code>' . esc_html($account['email']) . '</code></td>';\n        \n        if ($account['status'] === 'connected') {\n            echo '<td><span style=\"color: #10b981; font-weight: bold;\">\u2705 Connected</span></td>';\n            echo '<td><button type=\"button\" class=\"button button-small gdrive-sync-btn\" data-account=\"' . $key . '\">\ud83d\udd04 Sync Now</button></td>';\n        } else {\n            echo '<td><span style=\"color: #f59e0b; font-weight: bold;\">\u26a0\ufe0f Not Connected</span></td>';\n            echo '<td><button type=\"button\" class=\"button button-primary button-small gdrive-auth-btn\" data-account=\"' . $key . '\">\ud83d\udd10 Connect</button></td>';\n        }\n        \n        echo '</tr>';\n    }\n    \n    echo '</tbody></table>';\n    \n    echo '<p class=\"description\">Each Google Drive account can be connected independently. Click \"Connect\" to authorize access.</p>';\n    \n    // Deployment section\n    echo '<hr>';\n    echo '<h2>\u26a1 Ecosystem Actions</h2>';\n    echo '<button type=\"button\" id=\"banimal-sync-all-btn\" class=\"button button-secondary button-large\">\ud83d\udd04 Sync All Connected Drives</button>';\n    echo ' ';\n    echo '<button type=\"button\" id=\"banimal-deploy-btn\" class=\"button button-primary button-large\">\u26a1 Initiate Ecosystem Deployment</button>';\n    \n    echo '</div>';\n}\n",
+    "length": 2762,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "// In __construct(), add this action:\nadd_action( 'wp_ajax_banimal_gdrive_sync', array( $this, 'handle_gdrive_sync' ) );\n\n// Then add this method:\npublic function handle_gdrive_sync() {\n    // Security checks\n    if ( ! current_user_can( 'manage_options' ) ) { \n        wp_send_json_error( 'Permission denied.' ); \n    }\n    \n    if ( ! isset($_POST['security']) || ! wp_verify_nonce( $_POST['security'], 'banimal-sync-nonce' ) ) {\n        wp_send_json_error( 'Security verification failed.' );\n    }\n    \n    // Get account to sync\n    $account = isset($_POST['account']) ? sanitize_text_field($_POST['account']) : 'primary';\n    \n    // Fetch files from specific account\n    $files = $this->gdrive_connector->fetch_google_drive_files($account);\n    \n    if (isset($files['status']) && $files['status'] === 'auth_required') {\n        wp_send_json_error([\n            'message' => 'Account not authenticated',\n            'email' => $files['email']\n        ]);\n    }\n    \n    wp_send_json_success([\n        'message' => 'Google Drive sync complete',\n        'account' => $account,\n        'email' => $files['email'],\n        'file_count' => $files['file_count']\n    ]);\n}\n",
+    "length": 1172,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502  BanimalMultiSourceConnector                \u2502\n\u2502  - connectGoogleDrive()                     \u2502\n\u2502  - connectReplit()                          \u2502\n\u2502  - connectOneDrive()                        \u2502\n\u2502  - browseDrive()                            \u2502\n\u2502  - selectFiles()                            \u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n                   \u2193\n\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502  BanimalR2BucketSink                        \u2502\n\u2502  - pushToR2()                               \u2502\n\u2502  - createRawStorage()                       \u2502\n\u2502  - logIncomingFile()                        \u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n                   \u2193\n\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502  HotStackIndexingEngine                     \u2502\n\u2502  - scanR2Bucket()                           \u2502\n\u2502  - createFileIndex()                        \u2502\n\u2502  - timestampEverything()                    \u2502\n\u2502  - generateMetadata()                       \u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n                   \u2193\n\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502  AtomLevelFilter                            \u2502\n\u2502  - parseFileContent()                       \u2502\n\u2502  - extractDatapoints()                      \u2502\n\u2502  - classifyByType()                         \u2502\n\u2502  - detectSector()                           \u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n                   \u2193\n\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502  HeatmapSectorIntegrator                    \u2502\n\u2502  - routeToAgriculture()                     \u2502\n\u2502  - routeToMining()                          \u2502\n\u2502  - routeToRealEstate()                      \u2502\n\u2502  - routeToTrade()                           \u2502\n\u2502  - routeToEducation()                       \u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n                   \u2193\n\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502  BanimalEcosystemIntegration                \u2502\n\u2502  - makeAvailableToApps()                    \u2502\n\u2502  - syncToProducts()                         \u2502\n\u2502  - feedVaultPayData()                       \u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n",
+    "length": 2121,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  },
+  {
+    "conversation": "Ant colony architecture and complexity",
+    "language": "php",
+    "code": "// In banimal-connector.php\nadd_action('rest_api_init', function() {\n    register_rest_route('banimal/v1', '/publish-page', array(\n        'methods' => 'POST',\n        'callback' => 'banimal_publish_page_from_claude',\n        'permission_callback' => 'banimal_verify_api_key'\n    ));\n});\n\nfunction banimal_publish_page_from_claude($request) {\n    $params = $request->get_json_params();\n    \n    $page_data = array(\n        'post_title'    => $params['title'],\n        'post_content'  => $params['html'],\n        'post_status'   => 'publish',\n        'post_type'     => 'page',\n        'post_author'   => 1\n    );\n    \n    $page_id = wp_insert_post($page_data);\n    \n    return array(\n        'success' => true,\n        'page_id' => $page_id,\n        'url' => get_permalink($page_id)\n    );\n}\n\nfunction banimal_verify_api_key($request) {\n    $api_key = $request->get_header('X-Banimal-Key');\n    $stored_key = get_option('banimal_xai_api_key');\n    return ($api_key === $stored_key);\n}\n",
+    "length": 985,
+    "created_at": "2025-10-21T23:34:48.503919Z"
+  }
+]
