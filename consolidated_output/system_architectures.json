@@ -1,0 +1,129 @@
+{
+  "HotStack": {
+    "description": "Rapid deployment platform (180-second deployment)",
+    "technologies": [
+      "cloudflare",
+      "workers",
+      "r2",
+      "dns"
+    ],
+    "repos": [
+      "heyns1000/hotstack"
+    ],
+    "brands": [
+      "HotStack",
+      "BuildNest",
+      "DeployNest"
+    ]
+  },
+  "VaultMesh": {
+    "description": "Payment and checkout system",
+    "technologies": [
+      "paypal",
+      "payfast",
+      "stripe",
+      "api"
+    ],
+    "repos": [
+      "heyns1000/vaultmesh"
+    ],
+    "brands": [
+      "VaultMesh",
+      "VaultPay",
+      "VaultKey",
+      "VaultDNA"
+    ]
+  },
+  "Seedwave": {
+    "description": "Multi-brand licensing and management",
+    "technologies": [
+      "postgresql",
+      "node.js",
+      "react"
+    ],
+    "repos": [
+      "heyns1000/seedwave"
+    ],
+    "brands": [
+      "Seedwave",
+      "FAA"
+    ]
+  },
+  "Banimal": {
+    "description": "E-commerce and charitable platform",
+    "technologies": [
+      "wordpress",
+      "woocommerce",
+      "php"
+    ],
+    "repos": [
+      "heyns1000/banimal"
+    ],
+    "brands": [
+      "Banimal",
+      "BareCart"
+    ]
+  },
+  "OmniGrid": {
+    "description": "CI/CD and ecosystem orchestration",
+    "technologies": [
+      "python",
+      "docker",
+      "git"
+    ],
+    "repos": [
+      "heyns1000/omnigrid"
+    ],
+    "brands": [
+      "OmniGrid",
+      "OmniSignal",
+      "PulseGrid"
+    ]
+  },
+  "CodeNest": {
+    "description": "Repository orchestration and metadata",
+    "technologies": [
+      "git",
+      "github",
+      "node.js"
+    ],
+    "repos": [
+      "heyns1000/codenest"
+    ],
+    "brands": [
+      "CodeNest",
+      "BuildNest"
+    ]
+  },
+  "ToyNest": {
+    "description": "Three-Cube Lattice Banking System - FCU transaction processing",
+    "technologies": [
+      "node.js",
+      "express",
+      "postgresql",
+      "websocket",
+      "html",
+      "css"
+    ],
+    "repos": [
+      "heyns1000/omnigrid"
+    ],
+    "brands": [
+      "ToyNest",
+      "Seedwave",
+      "FAA"
+    ],
+    "deployment_url": "https://toynest.seedwave.faa.zone",
+    "features": [
+      "15,000+ TPS transaction processing",
+      "1.2M+ active FCU accounts",
+      "Three-cube architecture (DC Infra, Banking Core, Bank DC)",
+      "Real-time WebSocket synchronization",
+      "Infrastructure charging (80,700 FCU/month)",
+      "50+ distributed subnodes",
+      "3D visualization dashboard"
+    ],
+    "api_endpoints": 20,
+    "database_tables": 10
+  }
+}
