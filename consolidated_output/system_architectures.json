@@ -94,5 +94,36 @@
       "CodeNest",
       "BuildNest"
     ]
+  },
+  "ToyNest": {
+    "description": "Three-Cube Lattice Banking System - FCU transaction processing",
+    "technologies": [
+      "node.js",
+      "express",
+      "postgresql",
+      "websocket",
+      "html",
+      "css"
+    ],
+    "repos": [
+      "heyns1000/omnigrid"
+    ],
+    "brands": [
+      "ToyNest",
+      "Seedwave",
+      "FAA"
+    ],
+    "deployment_url": "https://toynest.seedwave.faa.zone",
+    "features": [
+      "15,000+ TPS transaction processing",
+      "1.2M+ active FCU accounts",
+      "Three-cube architecture (DC Infra, Banking Core, Bank DC)",
+      "Real-time WebSocket synchronization",
+      "Infrastructure charging (80,700 FCU/month)",
+      "50+ distributed subnodes",
+      "3D visualization dashboard"
+    ],
+    "api_endpoints": 20,
+    "database_tables": 10
   }
 }

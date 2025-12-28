@@ -26,6 +26,13 @@ cd rebuilt_systems/omnigrid
 python3 orchestrator.py
 cd ../..
 
+# Deploy ToyNest
+echo "🚀 Deploying ToyNest..."
+cd rebuilt_systems/toynest
+npm install
+npm run dev &
+cd ../..
+
 echo ""
 echo "✨ All systems deployed!"
 echo ""
@@ -33,4 +40,5 @@ echo "Access points:"
 echo "  - HotStack:   https://hotstack.faa.zone"
 echo "  - VaultMesh:  https://vaultmesh.faa.zone"
 echo "  - OmniGrid:   https://omnigrid.faa.zone"
+echo "  - ToyNest:    https://toynest.seedwave.faa.zone"
 echo ""
