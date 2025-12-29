@@ -1,0 +1,7 @@
+{
+  "buildCommand": "pnpm --filter @bushportal/signup-frontend build",
+  "outputDirectory": "apps/bushportal-signup/frontend/dist",
+  "framework": "vite",
+  "installCommand": "pnpm install",
+  "nodeVersion": "20.x"
+}
