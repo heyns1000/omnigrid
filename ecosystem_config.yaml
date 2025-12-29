@@ -1,0 +1,207 @@
+# HotStack Ecosystem Configuration
+# Central configuration for all ecosystem repositories
+
+ecosystem:
+  name: "HotStack"
+  version: "1.0.0"
+  hub: "omnigrid"
+  owner: "heyns1000"
+  organization: "Fruitful Holdings (Pty) Ltd"
+
+repositories:
+  - name: omnigrid
+    role: hub
+    priority: 1
+    type: fullstack
+    tech_stack:
+      - react
+      - typescript
+      - node.js
+      - postgresql
+    automation:
+      - sync
+      - deploy
+      - monitor
+    health_check: "http://localhost:3000/health"
+
+  - name: hotstack
+    role: platform
+    priority: 2
+    type: fullstack
+    automation:
+      - deploy
+      - build
+    health_check: "http://localhost:8080/status"
+
+  - name: nexus-nair
+    role: ai
+    priority: 3
+    type: python
+    tech_stack:
+      - python
+      - fastapi
+      - ai/ml
+    automation:
+      - deploy
+      - monitor
+    health_check: "http://localhost:5000/api/health"
+
+  - name: vaultmesh
+    role: security
+    priority: 4
+    type: fullstack
+    tech_stack:
+      - encryption
+      - data-mesh
+      - security
+    automation:
+      - deploy
+      - audit
+      - monitor
+    health_check: "http://localhost:4000/health"
+
+  - name: buildnest
+    role: build
+    priority: 5
+    type: automation
+    tech_stack:
+      - bash
+      - ci/cd
+    automation:
+      - build
+      - deploy
+
+  - name: codenest
+    role: code
+    priority: 6
+    type: automation
+    tech_stack:
+      - code-management
+      - git
+    automation:
+      - sync
+      - analyze
+
+  - name: seedwave
+    role: data
+    priority: 7
+    type: automation
+    tech_stack:
+      - python
+      - data-seeding
+    automation:
+      - seed
+      - deploy
+
+  - name: banimal
+    role: brand
+    priority: 8
+    type: fullstack
+    tech_stack:
+      - brand-management
+      - javascript
+    automation:
+      - deploy
+
+  - name: faa.zone
+    role: faa
+    priority: 9
+    type: fullstack
+    tech_stack:
+      - zone-management
+      - javascript
+    automation:
+      - deploy
+
+# Automation rules
+automation:
+  sync:
+    enabled: true
+    interval: "daily"
+    patterns:
+      - "*.sh"
+      - "*.py"
+      - "*deploy*"
+      - "*build*"
+      - "*.yaml"
+      - "*.yml"
+
+  deploy:
+    order: priority
+    parallel: false
+    health_check_timeout: 30
+    retry_count: 3
+
+  monitor:
+    enabled: true
+    interval: "hourly"
+    metrics:
+      - commit_count
+      - branch_count
+      - last_update
+      - working_tree_status
+
+# Brand ecosystem
+brands:
+  total: 162
+  primary:
+    - Fruitful
+    - HotStack
+    - OmniGrid
+    - Nexus
+    - VaultMesh
+    - BuildNest
+    - CodeNest
+    - Seedwave
+    - Banimal
+    - FAA
+
+# Technology stack
+tech_stack:
+  languages:
+    - javascript
+    - typescript
+    - python
+    - go
+    - rust
+    - bash
+    - php
+  frameworks:
+    - react
+    - next.js
+    - express
+    - fastapi
+    - vite
+  databases:
+    - postgresql
+    - mongodb
+    - sqlite
+  cloud:
+    - cloudflare
+    - aws
+    - vercel
+  tools:
+    - git
+    - docker
+    - npm
+    - pip
+
+# Data statistics
+statistics:
+  total_repos: 12
+  total_brands: 162
+  code_snippets: 24852
+  tech_entries: 3380
+
+# Paths
+paths:
+  sync_root: "/tmp/ecosystem-sync"
+  logs: "$HOME/ecosystem-logs"
+  backups: "$HOME/ecosystem-backups"
+
+# GitHub settings
+github:
+  user: "heyns1000"
+  default_branch: "main"
+  pr_template: true
+  issue_tracking: true
