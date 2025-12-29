@@ -32,6 +32,9 @@ class PulseRepoMerger:
             "SeedwaveConnect"
         ]
 
+        self.repo_index = 0  # Track rotation
+        self.repos_per_pulse = 3  # Process 3 repos per 9s cycle
+
         self.stats = {
             "total_pulses": 0,
             "repos_merged": 0,
@@ -189,8 +192,18 @@ class PulseRepoMerger:
         print(f"║  PULSE #{self.stats['total_pulses']:04d} - {datetime.now().strftime('%H:%M:%S')}                                         ║")
         print(f"╚════════════════════════════════════════════════════════════════╝")
 
-        # Process all repos in parallel (but limited concurrency)
-        tasks = [self.process_repo(repo) for repo in self.repos[:5]]  # 5 at a time
+        # Get next batch of repos to process (rotating)
+        start_idx = self.repo_index
+        end_idx = min(start_idx + self.repos_per_pulse, len(self.repos))
+        current_batch = self.repos[start_idx:end_idx]
+
+        # Rotate index for next pulse
+        self.repo_index = (self.repo_index + self.repos_per_pulse) % len(self.repos)
+
+        print(f"🔄 Processing repos {start_idx + 1}-{end_idx} of {len(self.repos)}")
+
+        # Process current batch
+        tasks = [self.process_repo(repo) for repo in current_batch]
         await asyncio.gather(*tasks, return_exceptions=True)
 
         # Wait remaining time to complete 9s cycle
