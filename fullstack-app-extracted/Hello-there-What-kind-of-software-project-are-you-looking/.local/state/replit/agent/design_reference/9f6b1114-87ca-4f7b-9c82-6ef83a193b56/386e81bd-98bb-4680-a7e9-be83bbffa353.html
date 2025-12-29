@@ -1,0 +1,1328 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 VaultMesh™ Global Deployment Center | Multi-Brand Orchestration Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'vault-blue': '#0071e3',
+                        'fcu-green': '#4CAF50',
+                        'mindlift-purple': '#7B68EE',
+                        'seedwave-glow': '#00e393',
+                        'accent-red': '#ff4d4d',
+                        'warning-orange': '#ffa500',
+                        'dark-bg': '#1a1a1c',
+                        'dark-card': '#2a2a2e',
+                        'dark-border': '#3a3a3e',
+                        'hyper-bg': '#000033',
+                        'hyper-text': '#FFCCFF',
+                        'hyper-primary': '#FF00FF',
+                    }
+                }
+            }
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --sidebar-width: 280px;
+            --header-height: 70px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f7;
+            margin: 0;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode {
+            background-color: var(--dark-bg);
+            color: #f5f5f7;
+        }
+
+        .hyper-mode {
+            background-color: var(--hyper-bg);
+            color: var(--hyper-text);
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: linear-gradient(180deg, #2a2a2e 0%, #1a1a1c 100%);
+            border-right: 1px solid var(--dark-border);
+            z-index: 1000;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        .deployment-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            border: 1px solid #e2e8f0;
+        }
+
+        .deployment-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .deployment-card {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+        }
+
+        .hyper-mode .deployment-card {
+            background: #110044;
+            border-color: #330066;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.2);
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .status-active { background-color: #22c55e; }
+        .status-deploying { background-color: #f59e0b; animation: pulse 2s infinite; }
+        .status-error { background-color: #ef4444; }
+        .status-inactive { background-color: #6b7280; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .brand-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background-color: #e5e7eb;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0071e3, #7B68EE);
+            transition: width 0.5s ease;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .dark-mode .metric-card {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+        }
+
+        .hyper-mode .metric-card {
+            background: #110044;
+            border-color: #330066;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #9ca3af;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-radius: 8px;
+            margin: 4px 12px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .nav-item i {
+            width: 20px;
+            margin-right: 12px;
+        }
+
+        .deployment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .deployment-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .deploy-button {
+            background: linear-gradient(135deg, #0071e3, #7B68EE);
+            transition: all 0.3s ease;
+        }
+
+        .deploy-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 25px rgba(0, 113, 227, 0.4);
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <!-- @COMPONENT: Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="p-6 border-b border-gray-600">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-gradient-to-r from-vault-blue to-mindlift-purple rounded-lg flex items-center justify-center">
+                    <i class="fas fa-rocket text-white text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-white font-bold text-lg">VaultMesh™</h1>
+                    <p class="text-gray-400 text-sm">Deployment Center</p>
+                </div>
+            </div>
+        </div>
+
+        <nav class="py-4">
+            <a href="#overview" class="nav-item active" onclick="showTab('overview', this)">
+                <i class="fas fa-tachometer-alt"></i>
+                Overview
+            </a>
+            <a href="#brands" class="nav-item" onclick="showTab('brands', this)">
+                <i class="fas fa-building"></i>
+                Brand Management
+            </a>
+            <a href="#deployments" class="nav-item" onclick="showTab('deployments', this)">
+                <i class="fas fa-cloud-upload-alt"></i>
+                Deployments
+            </a>
+            <a href="#payments" class="nav-item" onclick="showTab('payments', this)">
+                <i class="fas fa-credit-card"></i>
+                Payment Systems
+            </a>
+            <a href="#themes" class="nav-item" onclick="showTab('themes', this)">
+                <i class="fas fa-palette"></i>
+                Theme Distribution
+            </a>
+            <a href="#analytics" class="nav-item" onclick="showTab('analytics', this)">
+                <i class="fas fa-chart-line"></i>
+                Analytics Hub
+            </a>
+            <a href="#components" class="nav-item" onclick="showTab('components', this)">
+                <i class="fas fa-cubes"></i>
+                Component Library
+            </a>
+            <a href="#settings" class="nav-item" onclick="showTab('settings', this)">
+                <i class="fas fa-cog"></i>
+                Settings
+            </a>
+        </nav>
+
+        <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-600">
+            <div class="flex items-center justify-between">
+                <span class="text-gray-400 text-sm">29 Active Brands</span>
+                <div class="flex space-x-2">
+                    <button onclick="toggleTheme('light')" class="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center hover:bg-gray-500 transition">
+                        <i class="fas fa-sun text-yellow-400 text-sm"></i>
+                    </button>
+                    <button onclick="toggleTheme('dark')" class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-500 transition">
+                        <i class="fas fa-moon text-white text-sm"></i>
+                    </button>
+                    <button onclick="toggleTheme('hyper')" class="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center hover:bg-purple-500 transition">
+                        <i class="fas fa-bolt text-white text-sm"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: Sidebar -->
+
+    <!-- @COMPONENT: MainContent -->
+    <div class="main-content" id="mainContent">
+        <!-- Header -->
+        <header class="bg-white dark:bg-dark-card border-b border-gray-200 dark:border-dark-border px-6 py-4 sticky top-0 z-50">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleSidebar()" class="lg:hidden p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                        <i class="fas fa-bars text-gray-600 dark:text-gray-300"></i>
+                    </button>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Global Deployment Center</h2>
+                    <span class="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-sm font-medium">
+                        Live Production
+                    </span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="deploy-button text-white px-6 py-2 rounded-lg font-semibold flex items-center space-x-2" onclick="showDeployModal()">
+                        <i class="fas fa-rocket"></i>
+                        <span>Deploy All</span>
+                    </button>
+                    <div class="w-10 h-10 bg-gradient-to-r from-vault-blue to-mindlift-purple rounded-full flex items-center justify-center">
+                        <span class="text-white font-semibold">AD</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Overview Tab -->
+        <div id="overview" class="tab-content active">
+            <div class="p-6">
+                <!-- Metrics Dashboard -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="metric-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600 dark:text-gray-400 text-sm">Active Deployments</p>
+                                <p class="text-3xl font-bold text-gray-900 dark:text-white">29</p>
+                            </div>
+                            <div class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-check-circle text-green-600 dark:text-green-400 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex items-center">
+                            <span class="text-green-600 dark:text-green-400 text-sm font-medium">+12%</span>
+                            <span class="text-gray-500 text-sm ml-2">vs last month</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600 dark:text-gray-400 text-sm">Total Revenue</p>
+                                <p class="text-3xl font-bold text-gray-900 dark:text-white">$2.4M</p>
+                            </div>
+                            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-dollar-sign text-blue-600 dark:text-blue-400 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex items-center">
+                            <span class="text-green-600 dark:text-green-400 text-sm font-medium">+8.2%</span>
+                            <span class="text-gray-500 text-sm ml-2">vs last month</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600 dark:text-gray-400 text-sm">Build Success Rate</p>
+                                <p class="text-3xl font-bold text-gray-900 dark:text-white">98.7%</p>
+                            </div>
+                            <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-code-branch text-purple-600 dark:text-purple-400 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex items-center">
+                            <span class="text-green-600 dark:text-green-400 text-sm font-medium">+0.3%</span>
+                            <span class="text-gray-500 text-sm ml-2">vs last month</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600 dark:text-gray-400 text-sm">Avg Deploy Time</p>
+                                <p class="text-3xl font-bold text-gray-900 dark:text-white">2.3s</p>
+                            </div>
+                            <div class="w-12 h-12 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-clock text-orange-600 dark:text-orange-400 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex items-center">
+                            <span class="text-green-600 dark:text-green-400 text-sm font-medium">-15%</span>
+                            <span class="text-gray-500 text-sm ml-2">vs last month</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="deployment-card p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Deployments</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <div class="brand-logo bg-green-500">🌱</div>
+                                    <div>
+                                        <p class="font-medium text-gray-900 dark:text-white">Agriculture & Biotech</p>
+                                        <p class="text-sm text-gray-500">Deployed 2 minutes ago</p>
+                                    </div>
+                                </div>
+                                <span class="status-indicator status-active"></span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <div class="brand-logo bg-purple-500">🎮</div>
+                                    <div>
+                                        <p class="font-medium text-gray-900 dark:text-white">Gaming & Simulation</p>
+                                        <p class="text-sm text-gray-500">Deployed 5 minutes ago</p>
+                                    </div>
+                                </div>
+                                <span class="status-indicator status-active"></span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <div class="brand-logo bg-blue-500">🏦</div>
+                                    <div>
+                                        <p class="font-medium text-gray-900 dark:text-white">Banking & Finance</p>
+                                        <p class="text-sm text-gray-500">Currently deploying...</p>
+                                    </div>
+                                </div>
+                                <span class="status-indicator status-deploying"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="deployment-card p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Performance Monitor</h3>
+                        <div class="space-y-4">
+                            <!-- Chart placeholder -->
+                            <div class="h-48 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+                                <canvas id="performanceChart" class="w-full h-full"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Brand Management Tab -->
+        <div id="brands" class="tab-content">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Brand Portfolio Management</h3>
+                    <button class="bg-vault-blue text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-600 transition">
+                        <i class="fas fa-plus mr-2"></i>Add New Brand
+                    </button>
+                </div>
+
+                <div class="deployment-grid">
+                    <!-- Agriculture & Biotech Brand -->
+                    <div class="deployment-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="brand-logo bg-green-500">🌱</div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900 dark:text-white">Agriculture & Biotech</h4>
+                                    <p class="text-sm text-gray-500">12 active products</p>
+                                </div>
+                            </div>
+                            <span class="status-indicator status-active"></span>
+                        </div>
+                        <div class="progress-bar mb-3">
+                            <div class="progress-fill" style="width: 95%"></div>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600 dark:text-gray-400">Deployment Health: 95%</span>
+                            <button class="text-vault-blue hover:text-blue-600 font-medium">Configure</button>
+                        </div>
+                        <div class="mt-4 grid grid-cols-2 gap-4 text-sm">
+                            <div class="text-center p-2 bg-gray-50 dark:bg-gray-700 rounded">
+                                <div class="font-semibold text-gray-900 dark:text-white">$145K</div>
+                                <div class="text-gray-500">Monthly Revenue</div>
+                            </div>
+                            <div class="text-center p-2 bg-gray-50 dark:bg-gray-700 rounded">
+                                <div class="font-semibold text-gray-900 dark:text-white">2.3K</div>
+                                <div class="text-gray-500">Active Users</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gaming & Simulation Brand -->
+                    <div class="deployment-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="brand-logo bg-purple-500">🎮</div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900 dark:text-white">Gaming & Simulation</h4>
+                                    <p class="text-sm text-gray-500">8 active products</p>
+                                </div>
+                            </div>
+                            <span class="status-indicator status-active"></span>
+                        </div>
+                        <div class="progress-bar mb-3">
+                            <div class="progress-fill" style="width: 89%"></div>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600 dark:text-gray-400">Deployment Health: 89%</span>
+                            <button class="text-vault-blue hover:text-blue-600 font-medium">Configure</button>
+                        </div>
+                        <div class="mt-4 grid grid-cols-2 gap-4 text-sm">
+                            <div class="text-center p-2 bg-gray-50 dark:bg-gray-700 rounded">
+                                <div class="font-semibold text-gray-900 dark:text-white">$298K</div>
+                                <div class="text-gray-500">Monthly Revenue</div>
+                            </div>
+                            <div class="text-center p-2 bg-gray-50 dark:bg-gray-700 rounded">
+                                <div class="font-semibold text-gray-900 dark:text-white">5.7K</div>
+                                <div class="text-gray-500">Active Users</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Banking & Finance Brand -->
+                    <div class="deployment-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="brand-logo bg-blue-500">🏦</div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900 dark:text-white">Banking & Finance</h4>
+                                    <p class="text-sm text-gray-500">15 active products</p>
+                                </div>
+                            </div>
+                            <span class="status-indicator status-deploying"></span>
+                        </div>
+                        <div class="progress-bar mb-3">
+                            <div class="progress-fill" style="width: 73%"></div>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600 dark:text-gray-400">Currently Deploying: 73%</span>
+                            <button class="text-warning-orange hover:text-orange-600 font-medium">Monitor</button>
+                        </div>
+                        <div class="mt-4 grid grid-cols-2 gap-4 text-sm">
+                            <div class="text-center p-2 bg-gray-50 dark:bg-gray-700 rounded">
+                                <div class="font-semibold text-gray-900 dark:text-white">$523K</div>
+                                <div class="text-gray-500">Monthly Revenue</div>
+                            </div>
+                            <div class="text-center p-2 bg-gray-50 dark:bg-gray-700 rounded">
+                                <div class="font-semibold text-gray-900 dark:text-white">8.2K</div>
+                                <div class="text-gray-500">Active Users</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Health & Hygiene Brand -->
+                    <div class="deployment-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="brand-logo bg-pink-500">🧠</div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900 dark:text-white">Health & Hygiene</h4>
+                                    <p class="text-sm text-gray-500">9 active products</p>
+                                </div>
+                            </div>
+                            <span class="status-indicator status-active"></span>
+                        </div>
+                        <div class="progress-bar mb-3">
+                            <div class="progress-fill" style="width: 92%"></div>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600 dark:text-gray-400">Deployment Health: 92%</span>
+                            <button class="text-vault-blue hover:text-blue-600 font-medium">Configure</button>
+                        </div>
+                        <div class="mt-4 grid grid-cols-2 gap-4 text-sm">
+                            <div class="text-center p-2 bg-gray-50 dark:bg-gray-700 rounded">
+                                <div class="font-semibold text-gray-900 dark:text-white">$187K</div>
+                                <div class="text-gray-500">Monthly Revenue</div>
+                            </div>
+                            <div class="text-center p-2 bg-gray-50 dark:bg-gray-700 rounded">
+                                <div class="font-semibold text-gray-900 dark:text-white">3.4K</div>
+                                <div class="text-gray-500">Active Users</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Creative Tech Brand -->
+                    <div class="deployment-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="brand-logo bg-indigo-500">🖋️</div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900 dark:text-white">Creative Tech</h4>
+                                    <p class="text-sm text-gray-500">6 active products</p>
+                                </div>
+                            </div>
+                            <span class="status-indicator status-active"></span>
+                        </div>
+                        <div class="progress-bar mb-3">
+                            <div class="progress-fill" style="width: 87%"></div>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600 dark:text-gray-400">Deployment Health: 87%</span>
+                            <button class="text-vault-blue hover:text-blue-600 font-medium">Configure</button>
+                        </div>
+                        <div class="mt-4 grid grid-cols-2 gap-4 text-sm">
+                            <div class="text-center p-2 bg-gray-50 dark:bg-gray-700 rounded">
+                                <div class="font-semibold text-gray-900 dark:text-white">$76K</div>
+                                <div class="text-gray-500">Monthly Revenue</div>
+                            </div>
+                            <div class="text-center p-2 bg-gray-50 dark:bg-gray-700 rounded">
+                                <div class="font-semibold text-gray-900 dark:text-white">1.9K</div>
+                                <div class="text-gray-500">Active Users</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fashion & Identity Brand -->
+                    <div class="deployment-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="brand-logo bg-rose-500">✂</div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900 dark:text-white">Fashion & Identity</h4>
+                                    <p class="text-sm text-gray-500">11 active products</p>
+                                </div>
+                            </div>
+                            <span class="status-indicator status-active"></span>
+                        </div>
+                        <div class="progress-bar mb-3">
+                            <div class="progress-fill" style="width: 94%"></div>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600 dark:text-gray-400">Deployment Health: 94%</span>
+                            <button class="text-vault-blue hover:text-blue-600 font-medium">Configure</button>
+                        </div>
+                        <div class="mt-4 grid grid-cols-2 gap-4 text-sm">
+                            <div class="text-center p-2 bg-gray-50 dark:bg-gray-700 rounded">
+                                <div class="font-semibold text-gray-900 dark:text-white">$234K</div>
+                                <div class="text-gray-500">Monthly Revenue</div>
+                            </div>
+                            <div class="text-center p-2 bg-gray-50 dark:bg-gray-700 rounded">
+                                <div class="font-semibold text-gray-900 dark:text-white">4.1K</div>
+                                <div class="text-gray-500">Active Users</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Systems Tab -->
+        <div id="payments" class="tab-content">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Payment System Distribution</h3>
+                    <button class="bg-fcu-green text-white px-4 py-2 rounded-lg font-medium hover:bg-green-600 transition">
+                        <i class="fas fa-sync mr-2"></i>Sync PayPal Config
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                    <div class="deployment-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="font-semibold text-gray-900 dark:text-white">PayPal Integration</h4>
+                            <span class="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-xs">Active</span>
+                        </div>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600 dark:text-gray-400">Client ID:</span>
+                                <span class="font-mono text-gray-900 dark:text-white">BAAGdPecRsf6...</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600 dark:text-gray-400">Webhook Status:</span>
+                                <span class="text-green-600 dark:text-green-400">✓ Connected</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600 dark:text-gray-400">Last Sync:</span>
+                                <span class="text-gray-900 dark:text-white">2 mins ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="deployment-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="font-semibold text-gray-900 dark:text-white">FCU Currency System</h4>
+                            <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs">Deployed</span>
+                        </div>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600 dark:text-gray-400">Exchange Rate:</span>
+                                <span class="font-mono text-gray-900 dark:text-white">1 FCU = $0.85</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600 dark:text-gray-400">Total Circulation:</span>
+                                <span class="text-gray-900 dark:text-white">2.8M FCU</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600 dark:text-gray-400">Active Wallets:</span>
+                                <span class="text-gray-900 dark:text-white">14,593</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="deployment-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="font-semibold text-gray-900 dark:text-white">Checkout System</h4>
+                            <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full text-xs">v2.1.4</span>
+                        </div>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600 dark:text-gray-400">Success Rate:</span>
+                                <span class="text-green-600 dark:text-green-400">98.7%</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600 dark:text-gray-400">Avg Completion:</span>
+                                <span class="text-gray-900 dark:text-white">47 seconds</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600 dark:text-gray-400">Daily Volume:</span>
+                                <span class="text-gray-900 dark:text-white">$47,293</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Routing Configuration -->
+                <div class="deployment-card p-6">
+                    <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Brand Payment Routing</h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="border-b border-gray-200 dark:border-gray-700">
+                                    <th class="text-left py-3 px-4 font-medium text-gray-900 dark:text-white">Brand</th>
+                                    <th class="text-left py-3 px-4 font-medium text-gray-900 dark:text-white">Payment Methods</th>
+                                    <th class="text-left py-3 px-4 font-medium text-gray-900 dark:text-white">Currency</th>
+                                    <th class="text-left py-3 px-4 font-medium text-gray-900 dark:text-white">Status</th>
+                                    <th class="text-left py-3 px-4 font-medium text-gray-900 dark:text-white">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="space-y-2">
+                                <tr class="border-b border-gray-100 dark:border-gray-800">
+                                    <td class="py-3 px-4">
+                                        <div class="flex items-center space-x-2">
+                                            <div class="brand-logo bg-green-500 w-6 h-6 text-xs">🌱</div>
+                                            <span class="text-gray-900 dark:text-white">Agriculture & Biotech</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4 text-gray-600 dark:text-gray-400">PayPal, FCU, Credit Card</td>
+                                    <td class="py-3 px-4 text-gray-600 dark:text-gray-400">USD, FCU</td>
+                                    <td class="py-3 px-4">
+                                        <span class="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-xs">Live</span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <button class="text-vault-blue hover:text-blue-600 font-medium">Configure</button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-gray-100 dark:border-gray-800">
+                                    <td class="py-3 px-4">
+                                        <div class="flex items-center space-x-2">
+                                            <div class="brand-logo bg-blue-500 w-6 h-6 text-xs">🏦</div>
+                                            <span class="text-gray-900 dark:text-white">Banking & Finance</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4 text-gray-600 dark:text-gray-400">PayPal, Wire Transfer, ACH</td>
+                                    <td class="py-3 px-4 text-gray-600 dark:text-gray-400">USD, EUR, FCU</td>
+                                    <td class="py-3 px-4">
+                                        <span class="px-2 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 rounded-full text-xs">Updating</span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <button class="text-warning-orange hover:text-orange-600 font-medium">Monitor</button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-gray-100 dark:border-gray-800">
+                                    <td class="py-3 px-4">
+                                        <div class="flex items-center space-x-2">
+                                            <div class="brand-logo bg-purple-500 w-6 h-6 text-xs">🎮</div>
+                                            <span class="text-gray-900 dark:text-white">Gaming & Simulation</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4 text-gray-600 dark:text-gray-400">PayPal, Apple Pay, Google Pay</td>
+                                    <td class="py-3 px-4 text-gray-600 dark:text-gray-400">USD, FCU</td>
+                                    <td class="py-3 px-4">
+                                        <span class="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-xs">Live</span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <button class="text-vault-blue hover:text-blue-600 font-medium">Configure</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Component Library Tab -->
+        <div id="components" class="tab-content">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Component Library Management</h3>
+                    <button class="bg-mindlift-purple text-white px-4 py-2 rounded-lg font-medium hover:bg-purple-600 transition">
+                        <i class="fas fa-code mr-2"></i>Version Control
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Core Components -->
+                    <div class="deployment-card p-6">
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Core Components</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-layer-group text-vault-blue"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-900 dark:text-white">Header Component</p>
+                                        <p class="text-sm text-gray-500">v2.3.1 • Used in 29 brands</p>
+                                    </div>
+                                </div>
+                                <button class="text-vault-blue hover:text-blue-600 text-sm font-medium">Update</button>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-shopping-cart text-fcu-green"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-900 dark:text-white">Checkout Flow</p>
+                                        <p class="text-sm text-gray-500">v2.1.4 • Used in 29 brands</p>
+                                    </div>
+                                </div>
+                                <button class="text-vault-blue hover:text-blue-600 text-sm font-medium">Update</button>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-palette text-mindlift-purple"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-900 dark:text-white">Theme System</p>
+                                        <p class="text-sm text-gray-500">v3.0.2 • Used in 29 brands</p>
+                                    </div>
+                                </div>
+                                <button class="text-vault-blue hover:text-blue-600 text-sm font-medium">Update</button>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-chart-bar text-warning-orange"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-900 dark:text-white">Analytics Dashboard</p>
+                                        <p class="text-sm text-gray-500">v1.8.9 • Used in 23 brands</p>
+                                    </div>
+                                </div>
+                                <button class="text-vault-blue hover:text-blue-600 text-sm font-medium">Update</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Specialized Components -->
+                    <div class="deployment-card p-6">
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Specialized Components</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-music text-green-500"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-900 dark:text-white">Spotify Integration</p>
+                                        <p class="text-sm text-gray-500">v1.2.0 • Used in 8 brands</p>
+                                    </div>
+                                </div>
+                                <button class="text-vault-blue hover:text-blue-600 text-sm font-medium">Deploy</button>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-coins text-yellow-500"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-900 dark:text-white">Currency Converter</p>
+                                        <p class="text-sm text-gray-500">v2.0.3 • Used in 12 brands</p>
+                                    </div>
+                                </div>
+                                <button class="text-vault-blue hover:text-blue-600 text-sm font-medium">Deploy</button>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-map text-blue-500"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-900 dark:text-white">Google Maps SDK</p>
+                                        <p class="text-sm text-gray-500">v1.5.2 • Used in 6 brands</p>
+                                    </div>
+                                </div>
+                                <button class="text-vault-blue hover:text-blue-600 text-sm font-medium">Deploy</button>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-video text-red-500"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-900 dark:text-white">Video Player</p>
+                                        <p class="text-sm text-gray-500">v1.1.4 • Used in 15 brands</p>
+                                    </div>
+                                </div>
+                                <button class="text-vault-blue hover:text-blue-600 text-sm font-medium">Deploy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Deployment History -->
+                <div class="deployment-card p-6 mt-6">
+                    <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Component Updates</h4>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 border-l-4 border-green-500 bg-green-50 dark:bg-green-900/20">
+                            <div>
+                                <p class="font-medium text-gray-900 dark:text-white">Header Component v2.3.1 deployed to all brands</p>
+                                <p class="text-sm text-gray-500">5 minutes ago • Auto-deployment successful</p>
+                            </div>
+                            <i class="fas fa-check-circle text-green-500"></i>
+                        </div>
+                        <div class="flex items-center justify-between p-3 border-l-4 border-blue-500 bg-blue-50 dark:bg-blue-900/20">
+                            <div>
+                                <p class="font-medium text-gray-900 dark:text-white">Theme System v3.0.2 rolled out to 15 brands</p>
+                                <p class="text-sm text-gray-500">2 hours ago • Manual deployment in progress</p>
+                            </div>
+                            <i class="fas fa-sync fa-spin text-blue-500"></i>
+                        </div>
+                        <div class="flex items-center justify-between p-3 border-l-4 border-purple-500 bg-purple-50 dark:bg-purple-900/20">
+                            <div>
+                                <p class="font-medium text-gray-900 dark:text-white">Analytics Dashboard v1.8.9 updated</p>
+                                <p class="text-sm text-gray-500">1 day ago • Successfully deployed to 23 brands</p>
+                            </div>
+                            <i class="fas fa-history text-purple-500"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Theme Distribution Tab -->
+        <div id="themes" class="tab-content">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Theme System Distribution</h3>
+                    <div class="flex space-x-2">
+                        <button class="bg-yellow-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-yellow-600 transition">
+                            <i class="fas fa-sun mr-2"></i>Deploy Light
+                        </button>
+                        <button class="bg-gray-800 text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-700 transition">
+                            <i class="fas fa-moon mr-2"></i>Deploy Dark
+                        </button>
+                        <button class="bg-hyper-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-purple-600 transition">
+                            <i class="fas fa-bolt mr-2"></i>Deploy Hyper
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Theme Distribution Status -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                    <div class="deployment-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="font-semibold text-gray-900 dark:text-white flex items-center">
+                                <i class="fas fa-sun text-yellow-500 mr-2"></i>Light Mode
+                            </h4>
+                            <span class="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-xs">29/29 Deployed</span>
+                        </div>
+                        <div class="progress-bar mb-3">
+                            <div class="progress-fill bg-yellow-500" style="width: 100%"></div>
+                        </div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">Last updated: 2 hours ago</div>
+                    </div>
+
+                    <div class="deployment-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="font-semibold text-gray-900 dark:text-white flex items-center">
+                                <i class="fas fa-moon text-blue-500 mr-2"></i>Dark Mode
+                            </h4>
+                            <span class="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-xs">29/29 Deployed</span>
+                        </div>
+                        <div class="progress-bar mb-3">
+                            <div class="progress-fill bg-blue-500" style="width: 100%"></div>
+                        </div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">Last updated: 2 hours ago</div>
+                    </div>
+
+                    <div class="deployment-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="font-semibold text-gray-900 dark:text-white flex items-center">
+                                <i class="fas fa-bolt text-purple-500 mr-2"></i>Hyper Mode
+                            </h4>
+                            <span class="px-2 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 rounded-full text-xs">24/29 Deployed</span>
+                        </div>
+                        <div class="progress-bar mb-3">
+                            <div class="progress-fill bg-purple-500" style="width: 83%"></div>
+                        </div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">Last updated: 1 day ago</div>
+                    </div>
+                </div>
+
+                <!-- Brand Theme Customization -->
+                <div class="deployment-card p-6">
+                    <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Brand-Specific Theme Customizations</h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="border-b border-gray-200 dark:border-gray-700">
+                                    <th class="text-left py-3 px-4 font-medium text-gray-900 dark:text-white">Brand</th>
+                                    <th class="text-left py-3 px-4 font-medium text-gray-900 dark:text-white">Primary Color</th>
+                                    <th class="text-left py-3 px-4 font-medium text-gray-900 dark:text-white">Active Themes</th>
+                                    <th class="text-left py-3 px-4 font-medium text-gray-900 dark:text-white">Custom CSS</th>
+                                    <th class="text-left py-3 px-4 font-medium text-gray-900 dark:text-white">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="space-y-2">
+                                <tr class="border-b border-gray-100 dark:border-gray-800">
+                                    <td class="py-3 px-4">
+                                        <div class="flex items-center space-x-2">
+                                            <div class="brand-logo bg-green-500 w-6 h-6 text-xs">🌱</div>
+                                            <span class="text-gray-900 dark:text-white">Agriculture & Biotech</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <div class="flex items-center space-x-2">
+                                            <div class="w-4 h-4 bg-green-500 rounded"></div>
+                                            <span class="font-mono text-gray-600 dark:text-gray-400">#4CAF50</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4 text-gray-600 dark:text-gray-400">Light, Dark, Hyper</td>
+                                    <td class="py-3 px-4">
+                                        <span class="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-xs">2.3KB</span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <button class="text-vault-blue hover:text-blue-600 font-medium">Edit</button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-gray-100 dark:border-gray-800">
+                                    <td class="py-3 px-4">
+                                        <div class="flex items-center space-x-2">
+                                            <div class="brand-logo bg-purple-500 w-6 h-6 text-xs">🎮</div>
+                                            <span class="text-gray-900 dark:text-white">Gaming & Simulation</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <div class="flex items-center space-x-2">
+                                            <div class="w-4 h-4 bg-purple-500 rounded"></div>
+                                            <span class="font-mono text-gray-600 dark:text-gray-400">#7B68EE</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4 text-gray-600 dark:text-gray-400">Light, Dark, Hyper</td>
+                                    <td class="py-3 px-4">
+                                        <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs">4.1KB</span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <button class="text-vault-blue hover:text-blue-600 font-medium">Edit</button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-gray-100 dark:border-gray-800">
+                                    <td class="py-3 px-4">
+                                        <div class="flex items-center space-x-2">
+                                            <div class="brand-logo bg-blue-500 w-6 h-6 text-xs">🏦</div>
+                                            <span class="text-gray-900 dark:text-white">Banking & Finance</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <div class="flex items-center space-x-2">
+                                            <div class="w-4 h-4 bg-blue-500 rounded"></div>
+                                            <span class="font-mono text-gray-600 dark:text-gray-400">#0071E3</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4 text-gray-600 dark:text-gray-400">Light, Dark</td>
+                                    <td class="py-3 px-4">
+                                        <span class="px-2 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 rounded-full text-xs">1.8KB</span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <button class="text-vault-blue hover:text-blue-600 font-medium">Edit</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settings" class="tab-content">
+            <div class="p-6">
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Global Configuration Settings</h3>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Deployment Settings -->
+                    <div class="deployment-card p-6">
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Deployment Configuration</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Auto-deployment</label>
+                                <div class="flex items-center space-x-3">
+                                    <input type="checkbox" id="autoDeployment" class="h-4 w-4 text-vault-blue" checked>
+                                    <label for="autoDeployment" class="text-sm text-gray-600 dark:text-gray-400">Enable automatic deployment for core components</label>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Deployment Interval</label>
+                                <select class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                                    <option>Every 5 minutes</option>
+                                    <option>Every 15 minutes</option>
+                                    <option>Every hour</option>
+                                    <option>Daily</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Rollback Strategy</label>
+                                <select class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                                    <option>Automatic rollback on failure</option>
+                                    <option>Manual rollback only</option>
+                                    <option>Keep failed deployments</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- API Configuration -->
+                    <div class="deployment-card p-6">
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">API Configuration</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">PayPal Client ID</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white" value="BAAGdPecRsf6dw_nIrWqUen0GdW0UsBZapp1Gn62xkPdD-Vqc-4lqWAidKK8LOObXux8pHJGjXknZoar6Q" data-mock="true">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Google Maps API Key</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white" value="AIzaSyBPG8dG29cl0TvYRGyLozejGed5Wj5Ab80" data-mock="true">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Webhook Endpoint</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white" value="https://api.vaultmesh.com/webhooks" data-mock="true">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Settings -->
+                    <div class="deployment-card p-6">
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Security & Access Control</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Two-Factor Authentication</label>
+                                <div class="flex items-center space-x-3">
+                                    <input type="checkbox" id="twoFactor" class="h-4 w-4 text-vault-blue" checked>
+                                    <label for="twoFactor" class="text-sm text-gray-600 dark:text-gray-400">Require 2FA for admin access</label>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Session Timeout</label>
+                                <select class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                                    <option>30 minutes</option>
+                                    <option>1 hour</option>
+                                    <option>4 hours</option>
+                                    <option>24 hours</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">IP Whitelist</label>
+                                <textarea class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white" rows="3" placeholder="Enter IP addresses (one per line)" data-mock="true">192.168.1.100
+10.0.0.50
+203.45.67.89</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notification Settings -->
+                    <div class="deployment-card p-6">
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Notification Preferences</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email Notifications</label>
+                                <div class="space-y-2">
+                                    <div class="flex items-center space-x-3">
+                                        <input type="checkbox" id="deploySuccess" class="h-4 w-4 text-vault-blue" checked>
+                                        <label for="deploySuccess" class="text-sm text-gray-600 dark:text-gray-400">Deployment success</label>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <input type="checkbox" id="deployFailure" class="h-4 w-4 text-vault-blue" checked>
+                                        <label for="deployFailure" class="text-sm text-gray-600 dark:text-gray-400">Deployment failures</label>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <input type="checkbox" id="systemAlerts" class="h-4 w-4 text-vault-blue">
+                                        <label for="systemAlerts" class="text-sm text-gray-600 dark:text-gray-400">System alerts</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Slack Integration</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="Slack webhook URL" data-mock="true">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Save Settings -->
+                <div class="flex justify-end mt-8 space-x-4">
+                    <button class="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                        Reset to Defaults
+                    </button>
+                    <button class="px-6 py-2 bg-vault-blue text-white rounded-lg hover:bg-blue-600 transition">
+                        Save Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- @FUNCTIONALITY: This could continue with the other tabs like deployments, analytics, etc. -->
+    </div>
+    <!-- @END_COMPONENT: MainContent -->
+
+    <!-- Deploy Modal -->
+    <div id="deployModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white dark:bg-dark-card rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Deploy to All Brands</h3>
+            <p class="text-gray-600 dark:text-gray-400 mb-6">This will deploy the latest version of all components to all 29 active brands. This action cannot be undone.</p>
+            <div class="flex justify-end space-x-4">
+                <button onclick="hideDeployModal()" class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                    Cancel
+                </button>
+                <button onclick="startGlobalDeployment()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                    Deploy All
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // TODO: Implement full JavaScript functionality for deployment management
+
+        // Tab Management
+        function showTab(tabName, element) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(tab => tab.classList.remove('active'));
+            
+            // Remove active class from all nav items
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            element.classList.add('active');
+        }
+
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+        }
+
+        // Theme Management
+        function toggleTheme(theme) {
+            const body = document.body;
+            body.className = '';
+            
+            if (theme === 'light') {
+                body.classList.add('light-mode');
+            } else if (theme === 'dark') {
+                body.classList.add('dark-mode');
+            } else if (theme === 'hyper') {
+                body.classList.add('hyper-mode');
+            }
+        }
+
+        // Deploy Modal
+        function showDeployModal() {
+            document.getElementById('deployModal').classList.remove('hidden');
+        }
+
+        function hideDeployModal() {
+            document.getElementById('deployModal').classList.add('hidden');
+        }
+
+        function startGlobalDeployment() {
+            // TODO: Implement actual deployment logic
+            alert('Global deployment initiated! Check the deployment status in the Overview tab.');
+            hideDeployModal();
+        }
+
+        // Performance Chart
+        function initPerformanceChart() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'],
+                    datasets: [{
+                        label: 'Deploy Success Rate',
+                        data: [98.2, 97.8, 99.1, 98.7, 97.9, 98.4, 98.7],
+                        borderColor: '#0071e3',
+                        backgroundColor: 'rgba(0, 113, 227, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: 'System Load',
+                        data: [45, 52, 48, 61, 58, 49, 53],
+                        borderColor: '#7B68EE',
+                        backgroundColor: 'rgba(123, 104, 238, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initPerformanceChart();
+            
+            // Set default theme to dark mode
+            toggleTheme('dark');
+        });
+
+        // Responsive sidebar handling
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 1024) {
+                document.getElementById('sidebar').classList.remove('collapsed');
+                document.getElementById('mainContent').classList.remove('expanded');
+            }
+        });
+    </script>
+</body>
+</html>
