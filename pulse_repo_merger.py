@@ -29,7 +29,7 @@ class PulseRepoMerger:
             "omnigrid", "hotstack", "nexus-nair", "vaultmesh",
             "buildnest", "codenest", "seedwave", "banimal", "faa.zone",
             "Fruitful-global-deployment", "FruitfulAssist", "LicenseVault",
-            "SeedwaveConnect"
+            "SeedwaveConnect", "baobab-bush-portal"
         ]
 
         self.repo_index = 0  # Track rotation
