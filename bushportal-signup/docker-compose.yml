@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  bushportal-backend:
+    build:
+      context: .
+      target: backend
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      CLIENT_URL: http://localhost:5173
+      JWT_SECRET: dev-secret-key
+    volumes:
+      - ./backend/src:/app/apps/bushportal-signup/backend/src
+    command: pnpm --filter @bushportal/signup-backend dev
+
+  bushportal-frontend:
+    build:
+      context: .
+      target: frontend
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:3000
+    volumes:
+      - ./frontend/src:/app/apps/bushportal-signup/frontend/src
+      - ./frontend/index.html:/app/apps/bushportal-signup/frontend/index.html
+    command: pnpm --filter @bushportal/signup-frontend dev --host 0.0.0.0
+    depends_on:
+      - bushportal-backend
