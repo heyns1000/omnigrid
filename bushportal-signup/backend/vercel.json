@@ -1,0 +1,11 @@
+{
+  "buildCommand": "pnpm --filter @bushportal/signup-backend build",
+  "outputDirectory": "apps/bushportal-signup/backend/dist",
+  "framework": "express",
+  "installCommand": "pnpm install",
+  "nodeVersion": "20.x",
+  "env": {
+    "NODE_ENV": "production",
+    "JWT_SECRET": "@bushportal_signup_jwt_secret"
+  }
+}
