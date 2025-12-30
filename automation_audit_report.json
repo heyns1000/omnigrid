@@ -1,0 +1,976 @@
+{
+  "timestamp": "2025-12-29T03:30:33.767035",
+  "repositories_audited": [
+    {
+      "name": "omnigrid",
+      "path": ".",
+      "status": "audited",
+      "automation_count": 41,
+      "scripts": [
+        {
+          "path": "continuous_pulse_updater.py",
+          "name": "continuous_pulse_updater.py",
+          "type": ".py",
+          "size": 10383,
+          "executable": true,
+          "issues": [],
+          "line_count": 315
+        },
+        {
+          "path": "test_simunye.py",
+          "name": "test_simunye.py",
+          "type": ".py",
+          "size": 4892,
+          "executable": false,
+          "issues": [
+            "\u2139\ufe0f Not executable"
+          ],
+          "line_count": 138
+        },
+        {
+          "path": "conversation_analyzer.py",
+          "name": "conversation_analyzer.py",
+          "type": ".py",
+          "size": 11490,
+          "executable": false,
+          "issues": [
+            "\u2139\ufe0f Not executable"
+          ],
+          "line_count": 283
+        },
+        {
+          "path": "test_ip_sweep.py",
+          "name": "test_ip_sweep.py",
+          "type": ".py",
+          "size": 4301,
+          "executable": false,
+          "issues": [
+            "\u2139\ufe0f Not executable"
+          ],
+          "line_count": 130
+        },
+        {
+          "path": "fullstack-app-extracted/Hello-there-What-kind-of-software-project-are-you-looking/backup/client/src/pages/deployment-control.tsx",
+          "name": "deployment-control.tsx",
+          "type": ".tsx",
+          "size": 14736,
+          "executable": false,
+          "issues": [],
+          "line_count": 376
+        },
+        {
+          "path": "elder_wisdom.py",
+          "name": "elder_wisdom.py",
+          "type": ".py",
+          "size": 8197,
+          "executable": false,
+          "issues": [
+            "\u2139\ufe0f Not executable"
+          ],
+          "line_count": 234
+        },
+        {
+          "path": "banimal_connector.py",
+          "name": "banimal_connector.py",
+          "type": ".py",
+          "size": 7916,
+          "executable": false,
+          "issues": [
+            "\u2139\ufe0f Not executable"
+          ],
+          "line_count": 224
+        },
+        {
+          "path": "ip_sentinel.py",
+          "name": "ip_sentinel.py",
+          "type": ".py",
+          "size": 6354,
+          "executable": false,
+          "issues": [
+            "\u2139\ufe0f Not executable"
+          ],
+          "line_count": 176
+        },
+        {
+          "path": "fullstack-app-extracted/Hello-there-What-kind-of-software-project-are-you-looking/client/src/pages/automation.tsx",
+          "name": "automation.tsx",
+          "type": ".tsx",
+          "size": 13894,
+          "executable": false,
+          "issues": [],
+          "line_count": 312
+        },
+        {
+          "path": "rebuilt_systems/fruitful-global/client/src/pages/automation.tsx",
+          "name": "automation.tsx",
+          "type": ".tsx",
+          "size": 13894,
+          "executable": false,
+          "issues": [],
+          "line_count": 312
+        },
+        {
+          "path": "simunye_lattice.py",
+          "name": "simunye_lattice.py",
+          "type": ".py",
+          "size": 7096,
+          "executable": false,
+          "issues": [
+            "\u2139\ufe0f Not executable"
+          ],
+          "line_count": 193
+        },
+        {
+          "path": "activate_fruitful_global.sh",
+          "name": "activate_fruitful_global.sh",
+          "type": ".sh",
+          "size": 2142,
+          "executable": true,
+          "issues": [],
+          "line_count": 59
+        },
+        {
+          "path": "test_audit_loop.py",
+          "name": "test_audit_loop.py",
+          "type": ".py",
+          "size": 3252,
+          "executable": false,
+          "issues": [
+            "\u2139\ufe0f Not executable"
+          ],
+          "line_count": 101
+        },
+        {
+          "path": "ecosystem_status.py",
+          "name": "ecosystem_status.py",
+          "type": ".py",
+          "size": 6299,
+          "executable": true,
+          "issues": [],
+          "line_count": 185
+        },
+        {
+          "path": "setup_github_profile.sh",
+          "name": "setup_github_profile.sh",
+          "type": ".sh",
+          "size": 7487,
+          "executable": true,
+          "issues": [
+            "\u26a0\ufe0f Contains potential hardcoded credentials"
+          ],
+          "line_count": 239
+        },
+        {
+          "path": "test_pulse_cycle.py",
+          "name": "test_pulse_cycle.py",
+          "type": ".py",
+          "size": 2672,
+          "executable": false,
+          "issues": [
+            "\u2139\ufe0f Not executable"
+          ],
+          "line_count": 85
+        },
+        {
+          "path": "pulse_engine.py",
+          "name": "pulse_engine.py",
+          "type": ".py",
+          "size": 5934,
+          "executable": false,
+          "issues": [
+            "\u2139\ufe0f Not executable"
+          ],
+          "line_count": 166
+        },
+        {
+          "path": "ecosystem_sync.sh",
+          "name": "ecosystem_sync.sh",
+          "type": ".sh",
+          "size": 8101,
+          "executable": true,
+          "issues": [
+            "\u26a0\ufe0f Contains dangerous rm -rf command"
+          ],
+          "line_count": 300
+        },
+        {
+          "path": "system_rebuilder.py",
+          "name": "system_rebuilder.py",
+          "type": ".py",
+          "size": 15374,
+          "executable": false,
+          "issues": [
+            "\u26a0\ufe0f Contains potential hardcoded credentials",
+            "\u2139\ufe0f Not executable"
+          ],
+          "line_count": 523
+        },
+        {
+          "path": "rebuilt_systems/fruitful-global/python_scripts/deployment_generator.py",
+          "name": "deployment_generator.py",
+          "type": ".py",
+          "size": 85135,
+          "executable": false,
+          "issues": [
+            "\u26a0\ufe0f Contains potential hardcoded credentials",
+            "\u26a0\ufe0f Missing shebang",
+            "\u2139\ufe0f Not executable"
+          ],
+          "line_count": 1526
+        },
+        {
+          "path": "buildnest_engine.sh",
+          "name": "buildnest_engine.sh",
+          "type": ".sh",
+          "size": 3941,
+          "executable": true,
+          "issues": [],
+          "line_count": 152
+        },
+        {
+          "path": "hotstack_deploy_all.py",
+          "name": "hotstack_deploy_all.py",
+          "type": ".py",
+          "size": 10234,
+          "executable": true,
+          "issues": [],
+          "line_count": 297
+        },
+        {
+          "path": "rebuilt_systems/omnigrid/orchestrator.py",
+          "name": "orchestrator.py",
+          "type": ".py",
+          "size": 1902,
+          "executable": false,
+          "issues": [
+            "\u2139\ufe0f Not executable"
+          ],
+          "line_count": 69
+        },
+        {
+          "path": "claude_data_consolidator.py",
+          "name": "claude_data_consolidator.py",
+          "type": ".py",
+          "size": 24311,
+          "executable": false,
+          "issues": [
+            "\u2139\ufe0f Not executable"
+          ],
+          "line_count": 589
+        },
+        {
+          "path": "rebuilt_systems/vaultmesh/payment_gateway.py",
+          "name": "payment_gateway.py",
+          "type": ".py",
+          "size": 2240,
+          "executable": false,
+          "issues": [
+            "\u26a0\ufe0f Contains potential hardcoded credentials",
+            "\u2139\ufe0f Not executable"
+          ],
+          "line_count": 73
+        },
+        {
+          "path": "rebuilt_systems/toynest/deploy-toynest.sh",
+          "name": "deploy-toynest.sh",
+          "type": ".sh",
+          "size": 5032,
+          "executable": true,
+          "issues": [],
+          "line_count": 172
+        },
+        {
+          "path": "claude_profile_importer.py",
+          "name": "claude_profile_importer.py",
+          "type": ".py",
+          "size": 10207,
+          "executable": false,
+          "issues": [
+            "\u2139\ufe0f Not executable"
+          ],
+          "line_count": 239
+        },
+        {
+          "path": "fullstack-app-extracted/Hello-there-What-kind-of-software-project-are-you-looking/client/src/pages/deployment-control.tsx",
+          "name": "deployment-control.tsx",
+          "type": ".tsx",
+          "size": 14736,
+          "executable": false,
+          "issues": [],
+          "line_count": 376
+        },
+        {
+          "path": "fullstack-app-extracted/Hello-there-What-kind-of-software-project-are-you-looking/python_scripts/deployment_generator.py",
+          "name": "deployment_generator.py",
+          "type": ".py",
+          "size": 85135,
+          "executable": false,
+          "issues": [
+            "\u26a0\ufe0f Contains potential hardcoded credentials",
+            "\u26a0\ufe0f Missing shebang",
+            "\u2139\ufe0f Not executable"
+          ],
+          "line_count": 1526
+        },
+        {
+          "path": "rebuilt_systems/fruitful-global/client/src/pages/deployment-control.tsx",
+          "name": "deployment-control.tsx",
+          "type": ".tsx",
+          "size": 14736,
+          "executable": false,
+          "issues": [],
+          "line_count": 376
+        },
+        {
+          "path": "consolidation_merge.sh",
+          "name": "consolidation_merge.sh",
+          "type": ".sh",
+          "size": 3083,
+          "executable": true,
+          "issues": [],
+          "line_count": 91
+        },
+        {
+          "path": "metaflow_cleaner.py",
+          "name": "metaflow_cleaner.py",
+          "type": ".py",
+          "size": 8197,
+          "executable": false,
+          "issues": [
+            "\u2139\ufe0f Not executable"
+          ],
+          "line_count": 250
+        },
+        {
+          "path": "rebuilt_systems/deploy_all.sh",
+          "name": "deploy_all.sh",
+          "type": ".sh",
+          "size": 1324,
+          "executable": true,
+          "issues": [],
+          "line_count": 44
+        },
+        {
+          "path": "rebuilt_systems/hotstack/deployment_engine.py",
+          "name": "deployment_engine.py",
+          "type": ".py",
+          "size": 1911,
+          "executable": false,
+          "issues": [
+            "\u2139\ufe0f Not executable"
+          ],
+          "line_count": 71
+        },
+        {
+          "path": "automation_audit.py",
+          "name": "automation_audit.py",
+          "type": ".py",
+          "size": 13116,
+          "executable": true,
+          "issues": [
+            "\u26a0\ufe0f Contains potential hardcoded credentials"
+          ],
+          "line_count": 380
+        },
+        {
+          "path": "rebuilt_systems/fruitful-global/backup/client/src/pages/deployment-control.tsx",
+          "name": "deployment-control.tsx",
+          "type": ".tsx",
+          "size": 14736,
+          "executable": false,
+          "issues": [],
+          "line_count": 376
+        },
+        {
+          "path": "rebuilt_systems/toynest/deployment_generator.py",
+          "name": "deployment_generator.py",
+          "type": ".py",
+          "size": 85135,
+          "executable": false,
+          "issues": [
+            "\u26a0\ufe0f Contains potential hardcoded credentials",
+            "\u26a0\ufe0f Missing shebang",
+            "\u2139\ufe0f Not executable"
+          ],
+          "line_count": 1526
+        },
+        {
+          "path": ".github/workflows/pulse_update.yml",
+          "name": "pulse_update.yml",
+          "type": ".yml",
+          "size": 7351,
+          "executable": false,
+          "issues": [
+            "\u26a0\ufe0f Contains potential hardcoded credentials"
+          ],
+          "line_count": 210
+        },
+        {
+          "path": "sponsor_gratitude.py",
+          "name": "sponsor_gratitude.py",
+          "type": ".py",
+          "size": 6813,
+          "executable": false,
+          "issues": [
+            "\u2139\ufe0f Not executable"
+          ],
+          "line_count": 215
+        },
+        {
+          "path": "rebuilt_systems/toynest/three-cube-sync-service.js",
+          "name": "three-cube-sync-service.js",
+          "type": ".js",
+          "size": 13482,
+          "executable": false,
+          "issues": [
+            "\u26a0\ufe0f Contains potential hardcoded credentials"
+          ],
+          "line_count": 381
+        },
+        {
+          "path": "rebuilt_systems/toynest/html-page-generator.py",
+          "name": "html-page-generator.py",
+          "type": ".py",
+          "size": 127715,
+          "executable": false,
+          "issues": [
+            "\u26a0\ufe0f Contains potential hardcoded credentials",
+            "\u26a0\ufe0f Missing shebang",
+            "\u2139\ufe0f Large file (>100KB)",
+            "\u2139\ufe0f Not executable"
+          ],
+          "line_count": 2044
+        }
+      ]
+    }
+  ],
+  "automation_scripts": [
+    {
+      "repository": "omnigrid",
+      "path": "continuous_pulse_updater.py",
+      "name": "continuous_pulse_updater.py",
+      "type": ".py",
+      "size": 10383,
+      "executable": true,
+      "issues": [],
+      "line_count": 315
+    },
+    {
+      "repository": "omnigrid",
+      "path": "test_simunye.py",
+      "name": "test_simunye.py",
+      "type": ".py",
+      "size": 4892,
+      "executable": false,
+      "issues": [
+        "\u2139\ufe0f Not executable"
+      ],
+      "line_count": 138
+    },
+    {
+      "repository": "omnigrid",
+      "path": "conversation_analyzer.py",
+      "name": "conversation_analyzer.py",
+      "type": ".py",
+      "size": 11490,
+      "executable": false,
+      "issues": [
+        "\u2139\ufe0f Not executable"
+      ],
+      "line_count": 283
+    },
+    {
+      "repository": "omnigrid",
+      "path": "test_ip_sweep.py",
+      "name": "test_ip_sweep.py",
+      "type": ".py",
+      "size": 4301,
+      "executable": false,
+      "issues": [
+        "\u2139\ufe0f Not executable"
+      ],
+      "line_count": 130
+    },
+    {
+      "repository": "omnigrid",
+      "path": "fullstack-app-extracted/Hello-there-What-kind-of-software-project-are-you-looking/backup/client/src/pages/deployment-control.tsx",
+      "name": "deployment-control.tsx",
+      "type": ".tsx",
+      "size": 14736,
+      "executable": false,
+      "issues": [],
+      "line_count": 376
+    },
+    {
+      "repository": "omnigrid",
+      "path": "elder_wisdom.py",
+      "name": "elder_wisdom.py",
+      "type": ".py",
+      "size": 8197,
+      "executable": false,
+      "issues": [
+        "\u2139\ufe0f Not executable"
+      ],
+      "line_count": 234
+    },
+    {
+      "repository": "omnigrid",
+      "path": "banimal_connector.py",
+      "name": "banimal_connector.py",
+      "type": ".py",
+      "size": 7916,
+      "executable": false,
+      "issues": [
+        "\u2139\ufe0f Not executable"
+      ],
+      "line_count": 224
+    },
+    {
+      "repository": "omnigrid",
+      "path": "ip_sentinel.py",
+      "name": "ip_sentinel.py",
+      "type": ".py",
+      "size": 6354,
+      "executable": false,
+      "issues": [
+        "\u2139\ufe0f Not executable"
+      ],
+      "line_count": 176
+    },
+    {
+      "repository": "omnigrid",
+      "path": "fullstack-app-extracted/Hello-there-What-kind-of-software-project-are-you-looking/client/src/pages/automation.tsx",
+      "name": "automation.tsx",
+      "type": ".tsx",
+      "size": 13894,
+      "executable": false,
+      "issues": [],
+      "line_count": 312
+    },
+    {
+      "repository": "omnigrid",
+      "path": "rebuilt_systems/fruitful-global/client/src/pages/automation.tsx",
+      "name": "automation.tsx",
+      "type": ".tsx",
+      "size": 13894,
+      "executable": false,
+      "issues": [],
+      "line_count": 312
+    },
+    {
+      "repository": "omnigrid",
+      "path": "simunye_lattice.py",
+      "name": "simunye_lattice.py",
+      "type": ".py",
+      "size": 7096,
+      "executable": false,
+      "issues": [
+        "\u2139\ufe0f Not executable"
+      ],
+      "line_count": 193
+    },
+    {
+      "repository": "omnigrid",
+      "path": "activate_fruitful_global.sh",
+      "name": "activate_fruitful_global.sh",
+      "type": ".sh",
+      "size": 2142,
+      "executable": true,
+      "issues": [],
+      "line_count": 59
+    },
+    {
+      "repository": "omnigrid",
+      "path": "test_audit_loop.py",
+      "name": "test_audit_loop.py",
+      "type": ".py",
+      "size": 3252,
+      "executable": false,
+      "issues": [
+        "\u2139\ufe0f Not executable"
+      ],
+      "line_count": 101
+    },
+    {
+      "repository": "omnigrid",
+      "path": "ecosystem_status.py",
+      "name": "ecosystem_status.py",
+      "type": ".py",
+      "size": 6299,
+      "executable": true,
+      "issues": [],
+      "line_count": 185
+    },
+    {
+      "repository": "omnigrid",
+      "path": "setup_github_profile.sh",
+      "name": "setup_github_profile.sh",
+      "type": ".sh",
+      "size": 7487,
+      "executable": true,
+      "issues": [
+        "\u26a0\ufe0f Contains potential hardcoded credentials"
+      ],
+      "line_count": 239
+    },
+    {
+      "repository": "omnigrid",
+      "path": "test_pulse_cycle.py",
+      "name": "test_pulse_cycle.py",
+      "type": ".py",
+      "size": 2672,
+      "executable": false,
+      "issues": [
+        "\u2139\ufe0f Not executable"
+      ],
+      "line_count": 85
+    },
+    {
+      "repository": "omnigrid",
+      "path": "pulse_engine.py",
+      "name": "pulse_engine.py",
+      "type": ".py",
+      "size": 5934,
+      "executable": false,
+      "issues": [
+        "\u2139\ufe0f Not executable"
+      ],
+      "line_count": 166
+    },
+    {
+      "repository": "omnigrid",
+      "path": "ecosystem_sync.sh",
+      "name": "ecosystem_sync.sh",
+      "type": ".sh",
+      "size": 8101,
+      "executable": true,
+      "issues": [
+        "\u26a0\ufe0f Contains dangerous rm -rf command"
+      ],
+      "line_count": 300
+    },
+    {
+      "repository": "omnigrid",
+      "path": "system_rebuilder.py",
+      "name": "system_rebuilder.py",
+      "type": ".py",
+      "size": 15374,
+      "executable": false,
+      "issues": [
+        "\u26a0\ufe0f Contains potential hardcoded credentials",
+        "\u2139\ufe0f Not executable"
+      ],
+      "line_count": 523
+    },
+    {
+      "repository": "omnigrid",
+      "path": "rebuilt_systems/fruitful-global/python_scripts/deployment_generator.py",
+      "name": "deployment_generator.py",
+      "type": ".py",
+      "size": 85135,
+      "executable": false,
+      "issues": [
+        "\u26a0\ufe0f Contains potential hardcoded credentials",
+        "\u26a0\ufe0f Missing shebang",
+        "\u2139\ufe0f Not executable"
+      ],
+      "line_count": 1526
+    },
+    {
+      "repository": "omnigrid",
+      "path": "buildnest_engine.sh",
+      "name": "buildnest_engine.sh",
+      "type": ".sh",
+      "size": 3941,
+      "executable": true,
+      "issues": [],
+      "line_count": 152
+    },
+    {
+      "repository": "omnigrid",
+      "path": "hotstack_deploy_all.py",
+      "name": "hotstack_deploy_all.py",
+      "type": ".py",
+      "size": 10234,
+      "executable": true,
+      "issues": [],
+      "line_count": 297
+    },
+    {
+      "repository": "omnigrid",
+      "path": "rebuilt_systems/omnigrid/orchestrator.py",
+      "name": "orchestrator.py",
+      "type": ".py",
+      "size": 1902,
+      "executable": false,
+      "issues": [
+        "\u2139\ufe0f Not executable"
+      ],
+      "line_count": 69
+    },
+    {
+      "repository": "omnigrid",
+      "path": "claude_data_consolidator.py",
+      "name": "claude_data_consolidator.py",
+      "type": ".py",
+      "size": 24311,
+      "executable": false,
+      "issues": [
+        "\u2139\ufe0f Not executable"
+      ],
+      "line_count": 589
+    },
+    {
+      "repository": "omnigrid",
+      "path": "rebuilt_systems/vaultmesh/payment_gateway.py",
+      "name": "payment_gateway.py",
+      "type": ".py",
+      "size": 2240,
+      "executable": false,
+      "issues": [
+        "\u26a0\ufe0f Contains potential hardcoded credentials",
+        "\u2139\ufe0f Not executable"
+      ],
+      "line_count": 73
+    },
+    {
+      "repository": "omnigrid",
+      "path": "rebuilt_systems/toynest/deploy-toynest.sh",
+      "name": "deploy-toynest.sh",
+      "type": ".sh",
+      "size": 5032,
+      "executable": true,
+      "issues": [],
+      "line_count": 172
+    },
+    {
+      "repository": "omnigrid",
+      "path": "claude_profile_importer.py",
+      "name": "claude_profile_importer.py",
+      "type": ".py",
+      "size": 10207,
+      "executable": false,
+      "issues": [
+        "\u2139\ufe0f Not executable"
+      ],
+      "line_count": 239
+    },
+    {
+      "repository": "omnigrid",
+      "path": "fullstack-app-extracted/Hello-there-What-kind-of-software-project-are-you-looking/client/src/pages/deployment-control.tsx",
+      "name": "deployment-control.tsx",
+      "type": ".tsx",
+      "size": 14736,
+      "executable": false,
+      "issues": [],
+      "line_count": 376
+    },
+    {
+      "repository": "omnigrid",
+      "path": "fullstack-app-extracted/Hello-there-What-kind-of-software-project-are-you-looking/python_scripts/deployment_generator.py",
+      "name": "deployment_generator.py",
+      "type": ".py",
+      "size": 85135,
+      "executable": false,
+      "issues": [
+        "\u26a0\ufe0f Contains potential hardcoded credentials",
+        "\u26a0\ufe0f Missing shebang",
+        "\u2139\ufe0f Not executable"
+      ],
+      "line_count": 1526
+    },
+    {
+      "repository": "omnigrid",
+      "path": "rebuilt_systems/fruitful-global/client/src/pages/deployment-control.tsx",
+      "name": "deployment-control.tsx",
+      "type": ".tsx",
+      "size": 14736,
+      "executable": false,
+      "issues": [],
+      "line_count": 376
+    },
+    {
+      "repository": "omnigrid",
+      "path": "consolidation_merge.sh",
+      "name": "consolidation_merge.sh",
+      "type": ".sh",
+      "size": 3083,
+      "executable": true,
+      "issues": [],
+      "line_count": 91
+    },
+    {
+      "repository": "omnigrid",
+      "path": "metaflow_cleaner.py",
+      "name": "metaflow_cleaner.py",
+      "type": ".py",
+      "size": 8197,
+      "executable": false,
+      "issues": [
+        "\u2139\ufe0f Not executable"
+      ],
+      "line_count": 250
+    },
+    {
+      "repository": "omnigrid",
+      "path": "rebuilt_systems/deploy_all.sh",
+      "name": "deploy_all.sh",
+      "type": ".sh",
+      "size": 1324,
+      "executable": true,
+      "issues": [],
+      "line_count": 44
+    },
+    {
+      "repository": "omnigrid",
+      "path": "rebuilt_systems/hotstack/deployment_engine.py",
+      "name": "deployment_engine.py",
+      "type": ".py",
+      "size": 1911,
+      "executable": false,
+      "issues": [
+        "\u2139\ufe0f Not executable"
+      ],
+      "line_count": 71
+    },
+    {
+      "repository": "omnigrid",
+      "path": "automation_audit.py",
+      "name": "automation_audit.py",
+      "type": ".py",
+      "size": 13116,
+      "executable": true,
+      "issues": [
+        "\u26a0\ufe0f Contains potential hardcoded credentials"
+      ],
+      "line_count": 380
+    },
+    {
+      "repository": "omnigrid",
+      "path": "rebuilt_systems/fruitful-global/backup/client/src/pages/deployment-control.tsx",
+      "name": "deployment-control.tsx",
+      "type": ".tsx",
+      "size": 14736,
+      "executable": false,
+      "issues": [],
+      "line_count": 376
+    },
+    {
+      "repository": "omnigrid",
+      "path": "rebuilt_systems/toynest/deployment_generator.py",
+      "name": "deployment_generator.py",
+      "type": ".py",
+      "size": 85135,
+      "executable": false,
+      "issues": [
+        "\u26a0\ufe0f Contains potential hardcoded credentials",
+        "\u26a0\ufe0f Missing shebang",
+        "\u2139\ufe0f Not executable"
+      ],
+      "line_count": 1526
+    },
+    {
+      "repository": "omnigrid",
+      "path": ".github/workflows/pulse_update.yml",
+      "name": "pulse_update.yml",
+      "type": ".yml",
+      "size": 7351,
+      "executable": false,
+      "issues": [
+        "\u26a0\ufe0f Contains potential hardcoded credentials"
+      ],
+      "line_count": 210
+    },
+    {
+      "repository": "omnigrid",
+      "path": "sponsor_gratitude.py",
+      "name": "sponsor_gratitude.py",
+      "type": ".py",
+      "size": 6813,
+      "executable": false,
+      "issues": [
+        "\u2139\ufe0f Not executable"
+      ],
+      "line_count": 215
+    },
+    {
+      "repository": "omnigrid",
+      "path": "rebuilt_systems/toynest/three-cube-sync-service.js",
+      "name": "three-cube-sync-service.js",
+      "type": ".js",
+      "size": 13482,
+      "executable": false,
+      "issues": [
+        "\u26a0\ufe0f Contains potential hardcoded credentials"
+      ],
+      "line_count": 381
+    },
+    {
+      "repository": "omnigrid",
+      "path": "rebuilt_systems/toynest/html-page-generator.py",
+      "name": "html-page-generator.py",
+      "type": ".py",
+      "size": 127715,
+      "executable": false,
+      "issues": [
+        "\u26a0\ufe0f Contains potential hardcoded credentials",
+        "\u26a0\ufe0f Missing shebang",
+        "\u2139\ufe0f Large file (>100KB)",
+        "\u2139\ufe0f Not executable"
+      ],
+      "line_count": 2044
+    }
+  ],
+  "github_actions": [
+    {
+      "name": "pulse_update.yml",
+      "path": ".github/workflows/pulse_update.yml",
+      "size": 7351,
+      "issues": [],
+      "uses_secrets": true,
+      "has_schedule": true,
+      "manual_trigger": true,
+      "line_count": 210
+    }
+  ],
+  "security_issues": [],
+  "recommendations": [
+    {
+      "priority": "medium",
+      "category": "permissions",
+      "issue": "30 scripts are not executable",
+      "recommendation": "Run: chmod +x <script_name> for executable scripts",
+      "impact": "Scripts may fail to run directly"
+    },
+    {
+      "priority": "high",
+      "category": "code_quality",
+      "issue": "38 issues found across automation scripts",
+      "recommendation": "Review and fix flagged issues",
+      "impact": "Potential security or reliability problems"
+    },
+    {
+      "priority": "info",
+      "category": "ecosystem",
+      "issue": "Pulse engine detected",
+      "recommendation": "Ensure pulse_update.yml workflow is enabled",
+      "impact": "Live GitHub profile updates"
+    }
+  ],
+  "statistics": {
+    "total_repositories": 9,
+    "repositories_audited": 1,
+    "total_automation_scripts": 41,
+    "total_github_actions": 1,
+    "script_types": {
+      ".py": 26,
+      ".tsx": 6,
+      ".sh": 7,
+      ".yml": 1,
+      ".js": 1
+    },
+    "total_issues": 38,
+    "executable_scripts": 11,
+    "non_executable_scripts": 30
+  }
+}
