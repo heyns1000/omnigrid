@@ -185,24 +185,24 @@ class MrActuaryGPR:
             "performance": {
                 "r_squared": round(r_squared, 6),
                 "r_squared_target": 0.999,
-                "r_squared_passed": r_squared > 0.999,
+                "r_squared_passed": bool(r_squared > 0.999),
                 "inference_time_ms": round(inference_time_ms, 2),
                 "inference_target_ms": self.inference_target_ms,
-                "inference_passed": inference_time_ms < 500,
+                "inference_passed": bool(inference_time_ms < 500),
             },
             "predictions": {
                 "care_achievement_percent": round(care_achievement, 2),
                 "care_target_percent": self.care_loop_target,
-                "care_passed": care_achievement > 300,
+                "care_passed": bool(care_achievement > 300),
                 "projected_daily_revenue": round(projected_revenue, 2),
                 "revenue_target": self.target_revenue,
-                "revenue_passed": projected_revenue > self.target_revenue * 0.8,
+                "revenue_passed": bool(projected_revenue > self.target_revenue * 0.8),
             },
             "status": "OPERATIONAL"
         }
         
         # Overall validation
-        report["validation_passed"] = (
+        report["validation_passed"] = bool(
             report["performance"]["r_squared_passed"] and
             report["performance"]["inference_passed"]
         )
