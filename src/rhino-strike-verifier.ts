@@ -24,9 +24,10 @@ export class RhinoStrikeVerifier {
   private maxRetries: number;
   private collapseTime: number = 80; // 0.08s in milliseconds
 
-  constructor(knowledgeSync: any, maxRetries: number = 10) {
+  constructor(knowledgeSync: any, maxRetries: number = 10, collapseTimeMs: number = 80) {
     this.knowledgeSync = knowledgeSync;
     this.maxRetries = maxRetries;
+    this.collapseTime = collapseTimeMs;
   }
 
   /**

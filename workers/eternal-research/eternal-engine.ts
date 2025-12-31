@@ -228,15 +228,23 @@ export class EternalResearchEngine implements DurableObject {
    * Upload data to fulfill request
    */
   private async handleUploadData(request: Request, headers: Record<string, string>): Promise<Response> {
-    // Handle file upload (simplified for now)
+    // Handle file upload (placeholder implementation)
     const contentType = request.headers.get('content-type');
     
     if (contentType?.includes('multipart/form-data')) {
-      // In real implementation, parse multipart data
+      // NOTE: This is a placeholder. In production, you would:
+      // 1. Parse multipart/form-data
+      // 2. Extract file content
+      // 3. Process based on file type (ZIP/JSON)
+      // 4. Update engine state with new data
+      // 5. Fulfill active data request
+      
       return new Response(JSON.stringify({ 
-        success: true,
-        message: 'Data upload received (simplified implementation)'
+        success: false,
+        message: 'File upload parsing not yet implemented. Use /api/fulfill-request with JSON data instead.',
+        placeholder: true
       }), {
+        status: 501,
         headers: { ...headers, 'Content-Type': 'application/json' }
       });
     }
@@ -262,14 +270,25 @@ export class EternalResearchEngine implements DurableObject {
    */
   private async startPulseLoop(): Promise<void> {
     while (!this.currentState.isDone) {
+      const pulseStartTime = Date.now();
+      
       try {
         await this.executePulseCycle();
-        await this.sleep(this.pulseInterval);
       } catch (error) {
         console.error('Pulse cycle error:', error);
         this.addEvolution('phase_change', `Error in pulse: ${error}`);
         // Don't stop on error - eternal engine continues
-        await this.sleep(this.pulseInterval);
+      }
+      
+      // Calculate sleep time to maintain exact 9-second intervals
+      const pulseExecutionTime = Date.now() - pulseStartTime;
+      const sleepTime = Math.max(0, this.pulseInterval - pulseExecutionTime);
+      
+      if (sleepTime > 0) {
+        await this.sleep(sleepTime);
+      } else {
+        // Pulse took longer than interval - log warning
+        console.warn(`Pulse exceeded ${this.pulseInterval}ms by ${-sleepTime}ms`);
       }
     }
   }
