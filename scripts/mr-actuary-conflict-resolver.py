@@ -56,7 +56,7 @@ def resolve_conflicts_ai(pr_number: int, auto_resolve: bool = False, push: bool 
             else:
                 # Code files: prefer incoming (Copilot) changes
                 resolved = re.sub(
-                    r'<<<<<<< HEAD.*?=======\n(.*?)\n>>>>>>> .*',
+                    r'<<<<<<< HEAD.*?=======\n(.*?)>>>>>>> .*',
                     r'\1',
                     content,
                     flags=re.DOTALL
@@ -81,15 +81,18 @@ def auto_resolve_config(content: str) -> str:
     lines = content.split('\n')
     resolved = []
     in_conflict = False
+    in_theirs = False
     ours = []
     theirs = []
     
     for line in lines:
         if line.startswith('<<<<<<< HEAD'):
             in_conflict = True
+            in_theirs = False
             ours = []
-        elif line.startswith('======='):
             theirs = []
+        elif line.startswith('======='):
+            in_theirs = True
         elif line.startswith('>>>>>>>'):
             # Merge both sides (deduplicate)
             resolved.extend(ours)
@@ -97,11 +100,12 @@ def auto_resolve_config(content: str) -> str:
                 if t not in ours:
                     resolved.append(t)
             in_conflict = False
+            in_theirs = False
         elif in_conflict:
-            if not theirs:
-                ours.append(line)
-            else:
+            if in_theirs:
                 theirs.append(line)
+            else:
+                ours.append(line)
         else:
             resolved.append(line)
     

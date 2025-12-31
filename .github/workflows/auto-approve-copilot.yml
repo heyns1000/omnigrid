@@ -6,7 +6,7 @@ on:
 jobs:
   auto-approve:
     if: |
-      github.event.pull_request.user.login == 'Copilot' ||
+      contains(fromJSON('["copilot", "github-actions[bot]", "dependabot[bot]"]'), github.event.pull_request.user.login) ||
       github.event.pull_request.user.type == 'Bot'
     runs-on: ubuntu-latest
     permissions:

@@ -1,4 +1,4 @@
-name: Ecosystem Sync Monitor (94 Repos)
+name: Ecosystem Sync Monitor
 on:
   schedule:
     - cron: '*/15 * * * *'  # Every 15 minutes
@@ -22,7 +22,7 @@ jobs:
         run: |
           pip install requests pygithub
           
-      - name: Sync 94 Repositories
+      - name: Sync Ecosystem Repositories
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

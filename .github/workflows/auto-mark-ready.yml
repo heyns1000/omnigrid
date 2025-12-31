@@ -24,13 +24,21 @@ jobs:
             });
             
             for (const pr of prs.filter(p => p.draft)) {
-              // Mark ready after 60 seconds
-              await github.rest.pulls.update({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                pull_number: pr.number,
-                draft: false
-              });
+              // Check PR age - only mark ready after 60 seconds
+              const createdAt = new Date(pr.created_at);
+              const now = new Date();
+              const ageInSeconds = (now - createdAt) / 1000;
               
-              console.log(`✅ PR #${pr.number} marked ready for review`);
+              if (ageInSeconds >= 60) {
+                await github.rest.pulls.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pr.number,
+                  draft: false
+                });
+                
+                console.log(`✅ PR #${pr.number} marked ready for review (age: ${Math.floor(ageInSeconds)}s)`);
+              } else {
+                console.log(`⏳ PR #${pr.number} too young (${Math.floor(ageInSeconds)}s < 60s)`);
+              }
             }

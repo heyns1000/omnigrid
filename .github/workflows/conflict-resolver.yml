@@ -26,7 +26,7 @@ jobs:
           
       - name: Install Dependencies
         run: |
-          pip install gitpython scikit-learn numpy pandas
+          pip install gitpython
           
       - name: Run AI Conflict Resolver
         run: |

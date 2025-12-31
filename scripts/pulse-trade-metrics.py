@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-PulseTrade Metrics - 94 Repository Sync Monitor
+PulseTrade Metrics - Ecosystem Repository Sync Monitor
 """
 
 import json
@@ -10,7 +10,7 @@ from pathlib import Path
 
 def scan_ecosystem(config_path: str, auto_sync: bool = False, create_prs: bool = False):
     """
-    Scan all 94 repositories for branch divergence
+    Scan all ecosystem repositories for branch divergence
     """
     token = os.environ.get("GITHUB_TOKEN")
     g = Github(token)
@@ -47,15 +47,18 @@ def scan_ecosystem(config_path: str, auto_sync: bool = False, create_prs: bool =
                     print(f"  ⚠️ {repo_name}:{branch.name} is {comparison.behind_by} commits behind")
                     
                     if create_prs and comparison.behind_by > 10:
-                        # Create sync PR
-                        pr = repo.create_pull(
-                            title=f"🔄 Auto-sync: {branch.name} with {default_branch}",
-                            body="FAA Actuary Mastery™ automated synchronization",
-                            head=branch.name,
-                            base=default_branch
-                        )
-                        pr.add_to_labels("automerge", "ecosystem-sync")
-                        print(f"    ✅ Created sync PR #{pr.number}")
+                        # Create sync PR to update the branch from default
+                        try:
+                            pr = repo.create_pull(
+                                title=f"🔄 Auto-sync: Update {branch.name} from {default_branch}",
+                                body="FAA Actuary Mastery™ automated synchronization - merging latest changes from default branch",
+                                head=default_branch,
+                                base=branch.name
+                            )
+                            pr.add_to_labels("automerge", "ecosystem-sync")
+                            print(f"    ✅ Created sync PR #{pr.number}")
+                        except Exception as pr_error:
+                            print(f"    ⚠️ Could not create PR: {pr_error}")
         
         except Exception as e:
             print(f"  ❌ Error scanning {repo_name}: {e}")
