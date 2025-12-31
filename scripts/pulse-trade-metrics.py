@@ -28,9 +28,7 @@ def scan_ecosystem(config_path: str, auto_sync: bool = False, create_prs: bool =
             default_branch = repo.default_branch
             
             # Get all branches
-            branches = list(repo.get_branches())
-            
-            for branch in branches:
+            for branch in repo.get_branches():
                 if branch.name == default_branch:
                     continue
                 

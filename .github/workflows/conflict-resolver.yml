@@ -26,7 +26,7 @@ jobs:
           
       - name: Install Dependencies
         run: |
-          pip install gitpython
+          # No Python dependencies needed - using git directly
           
       - name: Run AI Conflict Resolver
         run: |
