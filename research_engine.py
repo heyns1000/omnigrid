@@ -16,6 +16,14 @@ from typing import Dict, List, Any
 class ResearchEngine:
     """Main research orchestration engine"""
     
+    # Phase 1 simulation constants - used for generating realistic test data
+    # These values create varied patterns across pulses for dashboard testing
+    SIMULATION_FOOTER_RANGE = (5, 10)      # Min 5, varies up to 10 additional
+    SIMULATION_HEADER_RANGE = (3, 8)       # Min 3, varies up to 8 additional
+    SIMULATION_NAV_RANGE = (2, 6)          # Min 2, varies up to 6 additional
+    SIMULATION_HREF_RANGE = (100, 50)      # Base 100, varies up to 50 additional
+    SIMULATION_TEXT_RANGE = (500, 200)     # Base 500, varies up to 200 additional
+    
     def __init__(self, config_path: str = "research-config.json"):
         self.config_path = Path(config_path)
         self.config = self.load_config()
@@ -204,12 +212,13 @@ class ResearchEngine:
         
         # PHASE 1 SIMULATION: Generate test data for dashboard testing
         # In Phase 2, this will call: PatternExtractor.extractPatterns()
+        # Using defined constants for simulation ranges
         patterns = {
-            "footers": self.pulse_count % 10 + 5,
-            "headers": self.pulse_count % 8 + 3,
-            "navigations": self.pulse_count % 6 + 2,
-            "hrefs": self.pulse_count % 50 + 100,
-            "hardcodedStrings": self.pulse_count % 200 + 500
+            "footers": self.pulse_count % self.SIMULATION_FOOTER_RANGE[1] + self.SIMULATION_FOOTER_RANGE[0],
+            "headers": self.pulse_count % self.SIMULATION_HEADER_RANGE[1] + self.SIMULATION_HEADER_RANGE[0],
+            "navigations": self.pulse_count % self.SIMULATION_NAV_RANGE[1] + self.SIMULATION_NAV_RANGE[0],
+            "hrefs": self.pulse_count % self.SIMULATION_HREF_RANGE[1] + self.SIMULATION_HREF_RANGE[0],
+            "hardcodedStrings": self.pulse_count % self.SIMULATION_TEXT_RANGE[1] + self.SIMULATION_TEXT_RANGE[0]
         }
         
         self.dashboard_data["patterns"].update(patterns)

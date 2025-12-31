@@ -64,6 +64,19 @@ export class HrefVerifier {
       }
     }
 
+    // Validate URL before making request
+    try {
+      new URL(href.href); // Will throw if invalid
+    } catch (urlError) {
+      href.isValid = false;
+      href.error = 'Malformed URL';
+      this.verifiedCache.set(href.href, {
+        isValid: false,
+        timestamp: new Date(),
+      });
+      return href;
+    }
+
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
