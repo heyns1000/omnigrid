@@ -17,6 +17,7 @@ import json
 from datetime import datetime, timezone
 from typing import Dict, List, Tuple, Optional
 import sys
+import time
 
 try:
     from sklearn.gaussian_process import GaussianProcessRegressor
@@ -96,7 +97,6 @@ class MrActuaryGPR:
         """Train the GPR model"""
         print("\n🎓 Training Mr. Actuary™ GPR model...")
         
-        import time
         start_time = time.time()
         
         if SKLEARN_AVAILABLE and self.model is not None:
@@ -124,7 +124,6 @@ class MrActuaryGPR:
         if not self.is_trained:
             raise RuntimeError("Model must be trained before prediction")
         
-        import time
         start_time = time.time()
         
         if SKLEARN_AVAILABLE and self.model is not None:

@@ -295,7 +295,10 @@ def main():
     
     propagator = EcosystemPropagator(dry_run=dry_run)
     
-    workflow_path = Path("/home/runner/work/omnigrid/omnigrid/.github/workflows/auto-merge.yml")
+    # Use relative path for portability
+    script_dir = Path(__file__).resolve().parent
+    repo_root = script_dir.parent
+    workflow_path = repo_root / ".github" / "workflows" / "auto-merge.yml"
     
     if not workflow_path.exists():
         print(f"❌ Workflow file not found: {workflow_path}")

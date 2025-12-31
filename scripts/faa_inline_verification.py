@@ -238,7 +238,10 @@ def main():
     """Main verification execution"""
     verifier = FAAInlineVerification()
     
-    workflows_dir = Path("/home/runner/work/omnigrid/omnigrid/.github/workflows")
+    # Use relative path for portability
+    script_dir = Path(__file__).resolve().parent
+    repo_root = script_dir.parent
+    workflows_dir = repo_root / ".github" / "workflows"
     
     if not workflows_dir.exists():
         print(f"❌ Workflows directory not found: {workflows_dir}")
