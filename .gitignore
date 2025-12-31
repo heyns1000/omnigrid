@@ -38,3 +38,9 @@ scroll_sealed_temp/
 # OS
 .DS_Store
 Thumbs.db
+
+# Research System
+.research-cache/
+research-dashboard.json
+lib/standards/*.json
+components/global/generated-*
