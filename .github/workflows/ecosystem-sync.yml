@@ -120,6 +120,8 @@ jobs:
   validate-synchronization:
     needs: sync-workflows
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout omnigrid

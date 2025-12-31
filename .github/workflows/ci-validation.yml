@@ -10,6 +10,8 @@ on:
 jobs:
   validation:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     strategy:
       matrix:
@@ -45,6 +47,8 @@ jobs:
 
   performance-validation:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout
@@ -92,6 +96,8 @@ jobs:
 
   security-validation:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout
@@ -128,6 +134,8 @@ jobs:
   comprehensive-validation:
     needs: [validation, performance-validation, security-validation]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Final Validation Summary
