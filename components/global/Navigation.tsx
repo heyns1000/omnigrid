@@ -103,7 +103,7 @@ export const Navigation: React.FC<NavigationProps> = ({
               <span className="dropdown-arrow">{isOpen ? '▲' : '▼'}</span>
             </button>
             
-            {isOpen && (
+            {isOpen && item.children && (
               <ul 
                 id={dropdownId}
                 className="nav-dropdown"
