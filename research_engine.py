@@ -132,7 +132,14 @@ class ResearchEngine:
             self.dashboard_data["repositories"]["errors"] += 1
     
     def scan_repositories(self) -> Dict[str, Any]:
-        """Scan all repositories using TypeScript scanner"""
+        """
+        Scan all repositories using TypeScript scanner
+        
+        NOTE: Phase 1 simulates repository scanning for safe testing without
+        making actual GitHub API calls. Phase 2 will integrate the RepoScanner
+        TypeScript module to perform real GitHub API calls with proper
+        authentication and rate limiting.
+        """
         try:
             # Check if Node.js/TypeScript runtime is available
             result = subprocess.run(
@@ -145,7 +152,8 @@ class ResearchEngine:
                 print("⚠️  Node.js not available, using simplified Python scanner")
                 return self.python_fallback_scan()
             
-            # Use TypeScript scanner (would need to be compiled/run via tsx)
+            # PHASE 1 SIMULATION: Marks all repos as scanned without API calls
+            # In Phase 2, this will compile and run: RepoScanner.scanAllRepos()
             print("   Using TypeScript scanner...")
             
             total_repos = (
@@ -185,10 +193,17 @@ class ResearchEngine:
         }
     
     def extract_patterns(self, scan_results: Dict[str, Any]) -> Dict[str, Any]:
-        """Extract patterns from scan results"""
+        """
+        Extract patterns from scan results
+        
+        NOTE: Phase 1 uses simulated pattern data for safe testing.
+        Phase 2 will integrate the TypeScript PatternExtractor module
+        to perform actual pattern extraction from repository files.
+        """
         print("   Extracting footers, headers, navs, hrefs...")
         
-        # Simulate pattern extraction
+        # PHASE 1 SIMULATION: Generate test data for dashboard testing
+        # In Phase 2, this will call: PatternExtractor.extractPatterns()
         patterns = {
             "footers": self.pulse_count % 10 + 5,
             "headers": self.pulse_count % 8 + 3,

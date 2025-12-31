@@ -226,6 +226,8 @@ export class PatternExtractor {
 
   /**
    * Extract hardcoded text for i18n
+   * NOTE: Phase 1 uses basic pattern matching. Phase 2 will implement AST-based
+   * analysis for more accurate detection of translatable strings.
    */
   private extractHardcodedText(
     scanResult: ScanResult,
@@ -234,19 +236,27 @@ export class PatternExtractor {
     const textStrings: TextString[] = [];
     const content = change.content;
 
-    // Match text in JSX/HTML tags (simple approach)
+    // Match text in JSX/HTML tags (Phase 1 basic approach)
     const textPattern = />([^<>{}\n]{3,})</g;
     
     let match;
     while ((match = textPattern.exec(content)) !== null) {
       const text = match[1].trim();
       
-      // Skip if it looks like code or contains special characters
+      // Enhanced filtering to reduce false positives
       if (
         text.includes('=') ||
         text.includes(';') ||
         text.includes('()') ||
+        text.includes('className') ||
+        text.includes('style=') ||
         /^\d+$/.test(text) ||
+        /^[A-Z_]+$/.test(text) || // All caps constants
+        /^\$\{/.test(text) || // Template literals
+        text.startsWith('import ') ||
+        text.startsWith('const ') ||
+        text.startsWith('let ') ||
+        text.startsWith('var ') ||
         text.length < 3
       ) {
         continue;
