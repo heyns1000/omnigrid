@@ -1,0 +1,49 @@
+{
+  "timestamp": "2026-01-01T07:30:00Z",
+  "top_12_priority": [
+    "heyns1000/omnigrid",
+    "heyns1000/codenest",
+    "heyns1000/hotstack",
+    "heyns1000/buildnest",
+    "Fruitful-Global-Planet/FruitfulPlanetChange",
+    "heyns1000/payment-gateway-hub",
+    "heyns1000/banimal",
+    "heyns1000/vaultmesh",
+    "heyns1000/pulse-engine",
+    "heyns1000/zoho",
+    "heyns1000/toynest",
+    "heyns1000/data-warehouse"
+  ],
+  "urgency_rankings": [
+    {
+      "repo": "heyns1000/celestial-payroll",
+      "urgency_score": 250,
+      "metadata": {
+        "commits_behind": 20,
+        "days_since_last_sync": 10,
+        "open_prs": 2,
+        "security_alerts": 0
+      }
+    },
+    {
+      "repo": "heyns1000/healthgrid",
+      "urgency_score": 180,
+      "metadata": {
+        "commits_behind": 15,
+        "days_since_last_sync": 5,
+        "open_prs": 1,
+        "security_alerts": 0
+      }
+    },
+    {
+      "repo": "heyns1000/actuary-vault",
+      "urgency_score": 165,
+      "metadata": {
+        "commits_behind": 12,
+        "days_since_last_sync": 8,
+        "open_prs": 1,
+        "security_alerts": 0
+      }
+    }
+  ]
+}
