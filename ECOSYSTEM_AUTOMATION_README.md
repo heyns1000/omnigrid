@@ -202,7 +202,7 @@ hotstack-ecosystem/
 ├── banimal/               # Brand system
 ├── faa.zone/              # FAA management
 ├── FruitfulPlanetChange/  # Fruitful Global Planet integration
-└── ... (93 more repositories)
+└── ... (92 more repositories)
 ```
 
 ---
