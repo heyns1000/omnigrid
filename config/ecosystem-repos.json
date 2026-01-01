@@ -100,7 +100,9 @@
     "heyns1000/buildnest",
     "heyns1000/seedwave",
     "heyns1000/banimal",
-    "heyns1000/faa.zone"
+    "heyns1000/faa.zone",
+    "heyns1000/zoho",
+    "heyns1000/baobab-bush-portal"
   ],
   "sync_interval_minutes": 15,
   "auto_merge_threshold_commits": 10,
