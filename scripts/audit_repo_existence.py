@@ -38,7 +38,7 @@ class RepositoryAuditor:
             "repos_not_found": [],
             "repos_private_no_access": [],
             "existing_repos": [],
-            "offline_mode": not self.token
+            "offline_mode": self.github is None
         }
     
     def check_repository(self, repo_name: str) -> Dict:
@@ -59,6 +59,8 @@ class RepositoryAuditor:
         # If no GitHub client (offline mode), mark as exists with placeholder
         if not self.github:
             result["exists"] = True
+            result["default_branch"] = "main"
+            result["branches"] = 1
             result["error"] = "Offline mode - unable to verify"
             print(f"   ⚠️  Offline mode")
             return result
@@ -151,7 +153,8 @@ class RepositoryAuditor:
         print("📊 AUDIT SUMMARY")
         print("=" * 70)
         if self.audit_results.get("offline_mode"):
-            print("⚠️  OFFLINE MODE - Results are placeholders only")
+            print("⚠️  OFFLINE MODE - All repos marked as existing (placeholder data)")
+            print("ℹ️  Run with valid GITHUB_TOKEN for actual verification")
         print(f"Total listed in config:  {self.audit_results['repos_listed_in_config']}")
         print(f"Verified exist:          {self.audit_results['repos_verified_exist']}")
         print(f"Not found (404):         {len(self.audit_results['repos_not_found'])}")
