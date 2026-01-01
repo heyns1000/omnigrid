@@ -1,3 +1,13 @@
+# Auto Approve Copilot PRs
+#
+# This workflow automatically approves pull requests created by bot accounts
+# (copilot, github-actions, dependabot, etc.)
+#
+# IMPORTANT: Requires PAT_TOKEN secret to be configured
+# - GitHub's default GITHUB_TOKEN cannot approve PRs (bot restriction)
+# - A Personal Access Token (PAT) from a real user is required
+# - Setup instructions: docs/AUTO-APPROVE-PAT-SETUP.md
+#
 name: Auto Approve Copilot PRs
 on:
   pull_request_target:
@@ -13,17 +23,41 @@ jobs:
       pull-requests: write
       contents: read
     steps:
+      - name: Check PAT Token
+        id: check-token
+        run: |
+          if [ -z "${{ secrets.PAT_TOKEN }}" ]; then
+            echo "has_token=false" >> $GITHUB_OUTPUT
+            echo "::warning::PAT_TOKEN secret is not set. Please configure it to enable auto-approval."
+            echo "::warning::See docs/AUTO-APPROVE-PAT-SETUP.md for setup instructions."
+          else
+            echo "has_token=true" >> $GITHUB_OUTPUT
+          fi
+      
       - name: Auto Approve
+        if: steps.check-token.outputs.has_token == 'true'
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.PAT_TOKEN }}
           script: |
-            await github.rest.pulls.createReview({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.payload.pull_request.number,
-              event: 'APPROVE',
-              body: '✅ FAA Actuary Mastery™ AUTO-APPROVAL - Copilot PR validated'
-            });
-            
-            console.log(`✅ PR #${context.payload.pull_request.number} auto-approved`);
+            try {
+              await github.rest.pulls.createReview({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.payload.pull_request.number,
+                event: 'APPROVE',
+                body: '✅ FAA Actuary Mastery™ AUTO-APPROVAL - Copilot PR validated'
+              });
+              
+              console.log(`✅ PR #${context.payload.pull_request.number} auto-approved`);
+            } catch (error) {
+              core.setFailed(`Failed to approve PR: ${error.message}`);
+              console.error('Error details:', error);
+            }
+      
+      - name: PAT Not Configured
+        if: steps.check-token.outputs.has_token == 'false'
+        run: |
+          echo "⚠️  Auto-approval skipped: PAT_TOKEN not configured"
+          echo "📚 Setup guide: docs/AUTO-APPROVE-PAT-SETUP.md"
+          echo "🔗 Token setup: https://github.com/settings/tokens?type=beta"
