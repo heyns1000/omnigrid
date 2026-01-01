@@ -100,7 +100,8 @@
     "heyns1000/buildnest",
     "heyns1000/seedwave",
     "heyns1000/banimal",
-    "heyns1000/faa.zone"
+    "heyns1000/faa.zone",
+    "Fruitful-Global-Planet/FruitfulPlanetChange"
   ],
   "sync_interval_minutes": 15,
   "auto_merge_threshold_commits": 10,
