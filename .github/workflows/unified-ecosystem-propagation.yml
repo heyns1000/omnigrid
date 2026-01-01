@@ -1,0 +1,260 @@
+name: Unified Ecosystem Propagation
+on:
+  workflow_dispatch:
+    inputs:
+      target_repos:
+        description: 'Comma-separated list of repos (leave empty for all)'
+        required: false
+        default: ''
+      sync_mode:
+        description: 'Sync mode: top12, urgent, all'
+        required: false
+        default: 'top12'
+        type: choice
+        options:
+          - top12
+          - urgent
+          - all
+      force_repos:
+        description: 'Force sync specific repos (comma-separated)'
+        required: false
+        default: ''
+  schedule:
+    - cron: '0 */2 * * *'   # Every 2 hours: Top 12 sync
+    - cron: '0 */6 * * *'   # Every 6 hours: Top 12 + urgent repos
+    - cron: '0 2 * * 0'     # Weekly Sunday 2 AM: Full ecosystem sync
+
+jobs:
+  audit-and-propagate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    steps:
+      - name: Checkout omnigrid
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install Dependencies
+        run: |
+          pip install PyGithub
+      
+      - name: Audit Repository Existence
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "🔍 Auditing repository existence..."
+          python3 scripts/audit_repo_existence.py \
+            --config config/ecosystem-repos.json \
+            --output audit/repo-existence-check.json
+      
+      - name: Check CodeNest Connection Status
+        run: |
+          echo "🔗 Checking CodeNest connections..."
+          python3 scripts/check_codenest_connection.py \
+            --config config/ecosystem-repos.json \
+            --audit-file audit/repo-existence-check.json \
+            --output audit/codenest-connection-status.json
+      
+      - name: Determine Sync Mode
+        id: sync_mode
+        run: |
+          # Determine sync mode based on trigger
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            MODE="${{ github.event.inputs.sync_mode || 'top12' }}"
+          elif [ "${{ github.event.schedule }}" = "0 */2 * * *" ]; then
+            MODE="top12"
+          elif [ "${{ github.event.schedule }}" = "0 */6 * * *" ]; then
+            MODE="urgent"
+          else
+            MODE="all"
+          fi
+          echo "mode=$MODE" >> $GITHUB_OUTPUT
+          echo "🎯 Sync mode: $MODE"
+      
+      - name: Run Priority Sync Engine
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "🚀 Running priority sync engine..."
+          
+          MODE="${{ steps.sync_mode.outputs.mode }}"
+          FORCE_REPOS="${{ github.event.inputs.force_repos }}"
+          
+          # Build command
+          CMD="python3 scripts/priority_sync_engine.py --mode $MODE"
+          
+          if [ -n "$FORCE_REPOS" ]; then
+            CMD="$CMD --force $FORCE_REPOS"
+          fi
+          
+          # Run in production mode if token available, otherwise dry-run
+          if [ -n "${{ secrets.ECOSYSTEM_SYNC_TOKEN }}" ]; then
+            echo "🚀 Running in PRODUCTION mode"
+            export GITHUB_TOKEN="${{ secrets.ECOSYSTEM_SYNC_TOKEN }}"
+            eval $CMD
+          else
+            echo "🧪 Running in DRY RUN mode (ECOSYSTEM_SYNC_TOKEN not set)"
+            eval "$CMD --dry-run"
+          fi
+      
+      - name: Generate Speed Dashboard
+        if: always()
+        run: |
+          echo "📊 Generating speed dashboard..."
+          python3 scripts/generate_speed_dashboard.py \
+            --sync-file audit/sync-progress.json \
+            --urgency-file audit/urgency-ranking.json \
+            --audit-file audit/repo-existence-check.json \
+            --html-output audit/speed-dashboard.html \
+            --metrics-output audit/speed-metrics.json \
+            --badge-output audit/sync-status-badge.svg
+      
+      - name: Propagate to Verified Repos (Legacy)
+        if: github.event.inputs.target_repos != ''
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "📤 Propagating to verified repositories (legacy mode)..."
+          
+          # Check if we should run in production mode
+          if [ -n "${{ secrets.ECOSYSTEM_SYNC_TOKEN }}" ]; then
+            echo "🚀 Running in PRODUCTION mode"
+            export GITHUB_TOKEN="${{ secrets.ECOSYSTEM_SYNC_TOKEN }}"
+            python3 scripts/ecosystem_propagator.py \
+              --config config/ecosystem-repos.json \
+              --audit-file audit/repo-existence-check.json
+          else
+            echo "🧪 Running in DRY RUN mode (ECOSYSTEM_SYNC_TOKEN not set)"
+            python3 scripts/ecosystem_propagator.py \
+              --config config/ecosystem-repos.json \
+              --audit-file audit/repo-existence-check.json \
+              --dry-run
+          fi
+      
+      - name: Generate Summary Report
+        if: always()
+        run: |
+          echo "📊 Generating summary report..."
+          
+          REPORT_DATE=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          MODE="${{ steps.sync_mode.outputs.mode }}"
+          
+          cat > audit/PROPAGATION_SUMMARY.md << EOF
+          # Ecosystem Propagation Summary
+          
+          **Date:** ${REPORT_DATE}
+          **Trigger:** ${{ github.event_name }}
+          **Sync Mode:** ${MODE}
+          
+          ## Audit Results
+          
+          ### Repository Existence
+          - See: \`audit/repo-existence-check.json\`
+          
+          ### CodeNest Connections
+          - See: \`audit/codenest-connection-status.json\`
+          
+          ### Priority Sync Results
+          - Sync Progress: \`audit/sync-progress.json\`
+          - Urgency Rankings: \`audit/urgency-ranking.json\`
+          - Speed Dashboard: \`audit/speed-dashboard.html\`
+          - Speed Metrics: \`audit/speed-metrics.json\`
+          - Status Badge: \`audit/sync-status-badge.svg\`
+          
+          ### Propagation Results (Legacy)
+          - See: \`ecosystem_propagation_report.json\`
+          
+          ## Next Steps
+          
+          1. Review sync status in \`audit/speed-dashboard.html\`
+          2. Check urgency rankings in \`audit/urgency-ranking.json\`
+          3. Review disconnected repositories in \`audit/codenest-connection-status.json\`
+          4. Follow integration roadmap in \`docs/CODENEST-INTEGRATION-ROADMAP.md\`
+          5. Update \`config/ecosystem-repos.json\` to remove non-existent repos
+          
+          ---
+          
+          *Unified Ecosystem Propagation v2.0 with Priority Sync Engine | OmniGrid Automation*
+          EOF
+          
+          echo "✅ Summary report generated"
+      
+      - name: Upload Audit Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: ecosystem-audit-results-${{ github.run_number }}
+          path: |
+            audit/
+            ecosystem_propagation_report.json
+          retention-days: 90
+      
+      - name: Commit Audit Results
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "Ecosystem Audit Bot"
+          
+          # Add audit results
+          git add -f audit/
+          
+          # Only commit if there are changes
+          git diff --quiet && git diff --staged --quiet || \
+            git commit -m "📊 Ecosystem audit: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" && \
+            git push
+      
+      - name: Post Summary Comment
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            // Read audit results
+            let auditSummary = '## 🔍 Ecosystem Audit Complete\n\n';
+            
+            try {
+              const repoCheck = JSON.parse(fs.readFileSync('audit/repo-existence-check.json', 'utf8'));
+              auditSummary += `### Repository Existence\n`;
+              auditSummary += `- Total listed: ${repoCheck.repos_listed_in_config}\n`;
+              auditSummary += `- Verified exist: ${repoCheck.repos_verified_exist}\n`;
+              auditSummary += `- Not found: ${repoCheck.repos_not_found.length}\n`;
+              auditSummary += `- Private/No access: ${repoCheck.repos_private_no_access.length}\n\n`;
+            } catch (e) {
+              auditSummary += '⚠️ Could not read repository audit results\n\n';
+            }
+            
+            try {
+              const connectionCheck = JSON.parse(fs.readFileSync('audit/codenest-connection-status.json', 'utf8'));
+              auditSummary += `### CodeNest Connections\n`;
+              auditSummary += `- Total in CodeNest: ${connectionCheck.total_repos_in_codenest}\n`;
+              auditSummary += `- Connected: ${connectionCheck.connected_repos.length}\n`;
+              auditSummary += `- Disconnected: ${connectionCheck.disconnected_repos.length}\n\n`;
+            } catch (e) {
+              auditSummary += '⚠️ Could not read connection status\n\n';
+            }
+            
+            try {
+              const syncProgress = JSON.parse(fs.readFileSync('audit/sync-progress.json', 'utf8'));
+              const summary = syncProgress.sync_summary || {};
+              auditSummary += `### Priority Sync Results\n`;
+              auditSummary += `- Mode: ${syncProgress.mode}\n`;
+              auditSummary += `- Synced: ${summary.synced || 0}\n`;
+              auditSummary += `- In Progress: ${summary.in_progress || 0}\n`;
+              auditSummary += `- Pending: ${summary.pending || 0}\n`;
+              auditSummary += `- Failed: ${summary.failed || 0}\n\n`;
+            } catch (e) {
+              auditSummary += '⚠️ Could not read sync progress\n\n';
+            }
+            
+            auditSummary += '### 📦 Artifacts\n';
+            auditSummary += `- [View Audit Results](${context.payload.repository.html_url}/actions/runs/${context.runId})\n`;
+            auditSummary += `- [Speed Dashboard](${context.payload.repository.html_url}/blob/${context.ref}/audit/speed-dashboard.html)\n`;
+            
+            console.log(auditSummary);
