@@ -6,6 +6,7 @@ Analyzes which repositories are connected to the CodeNest monorepo
 
 import json
 import sys
+import traceback
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Set
@@ -38,7 +39,10 @@ class CodeNestConnectionChecker:
             with open(manifest_file) as f:
                 manifest = json.load(f)
         else:
-            print("⚠️  CodeNest manifest not found, using known structure")
+            print("⚠️  CodeNest manifest not found, using fallback structure")
+            print("ℹ️  Note: This hardcoded structure may become outdated and needs manual updates")
+            # FALLBACK: Known CodeNest structure as of 2026-01-01
+            # This should be kept in sync with actual CodeNest manifest or moved to a config file
             manifest = {
                 "packages": {
                     "apps": [
@@ -302,7 +306,6 @@ def main():
         
     except Exception as e:
         print(f"\n❌ Check failed: {e}")
-        import traceback
         traceback.print_exc()
         return 1
 

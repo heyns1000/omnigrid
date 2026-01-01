@@ -59,11 +59,13 @@ jobs:
             echo "🚀 Running in PRODUCTION mode"
             export GITHUB_TOKEN="${{ secrets.ECOSYSTEM_SYNC_TOKEN }}"
             python3 scripts/ecosystem_propagator.py \
-              --config config/ecosystem-repos.json
+              --config config/ecosystem-repos.json \
+              --audit-file audit/repo-existence-check.json
           else
             echo "🧪 Running in DRY RUN mode (ECOSYSTEM_SYNC_TOKEN not set)"
             python3 scripts/ecosystem_propagator.py \
               --config config/ecosystem-repos.json \
+              --audit-file audit/repo-existence-check.json \
               --dry-run
           fi
       
@@ -72,10 +74,12 @@ jobs:
         run: |
           echo "📊 Generating summary report..."
           
-          cat > audit/PROPAGATION_SUMMARY.md << 'EOF'
+          REPORT_DATE=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          
+          cat > audit/PROPAGATION_SUMMARY.md << EOF
           # Ecosystem Propagation Summary
           
-          **Date:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          **Date:** ${REPORT_DATE}
           **Trigger:** ${{ github.event_name }}
           
           ## Audit Results
