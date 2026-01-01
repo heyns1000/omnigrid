@@ -1,4 +1,28 @@
 {
+  "name": "omnigrid-eho-memory",
+  "version": "1.0.0",
+  "description": "EHO Memory Architecture with Post-Quantum Indexing for VaultMesh",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "eho",
+    "elephant-herding-optimization",
+    "post-quantum",
+    "ml-dsa",
+    "vaultmesh",
+    "fips-204"
+  ],
+  "dependencies": {
+    "@noble/post-quantum": "^0.2.0"
+  },
+  "devDependencies": {
+    "vitest": "^1.0.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
   "devDependencies": {
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
