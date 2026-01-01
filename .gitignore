@@ -8,6 +8,20 @@ __pycache__/
 dist/
 build/
 
+# Generated reports (from CI/CD scripts)
+mr_actuary_gpr_report.json
+risk_harmonics_report.json
+revenue_projection_report.json
+celestial_payroll_report.txt
+ecosystem_sync_report.md
+ecosystem_sync_status.json
+merge_gatekeeper_validation.json
+faa_inline_verification_report.json
+ecosystem_propagation_report.json
+# Node.js
+node_modules/
+package-lock.json
+
 # Logs
 logs/
 *.log
@@ -39,6 +53,11 @@ scroll_sealed_temp/
 .DS_Store
 Thumbs.db
 
+# Research System
+.research-cache/
+research-dashboard.json
+lib/standards/*.json
+components/global/generated-*
 # Node.js
 node_modules/
 package-lock.json
