@@ -6,8 +6,23 @@ on:
         description: 'Comma-separated list of repos (leave empty for all)'
         required: false
         default: ''
+      sync_mode:
+        description: 'Sync mode: top12, urgent, all'
+        required: false
+        default: 'top12'
+        type: choice
+        options:
+          - top12
+          - urgent
+          - all
+      force_repos:
+        description: 'Force sync specific repos (comma-separated)'
+        required: false
+        default: ''
   schedule:
-    - cron: '0 2 * * 0'  # Weekly Sunday 2 AM UTC
+    - cron: '0 */2 * * *'   # Every 2 hours: Top 12 sync
+    - cron: '0 */6 * * *'   # Every 6 hours: Top 12 + urgent repos
+    - cron: '0 2 * * 0'     # Weekly Sunday 2 AM: Full ecosystem sync
 
 jobs:
   audit-and-propagate:
@@ -48,11 +63,66 @@ jobs:
             --audit-file audit/repo-existence-check.json \
             --output audit/codenest-connection-status.json
       
-      - name: Propagate to Verified Repos
+      - name: Determine Sync Mode
+        id: sync_mode
+        run: |
+          # Determine sync mode based on trigger
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            MODE="${{ github.event.inputs.sync_mode || 'top12' }}"
+          elif [ "${{ github.event.schedule }}" = "0 */2 * * *" ]; then
+            MODE="top12"
+          elif [ "${{ github.event.schedule }}" = "0 */6 * * *" ]; then
+            MODE="urgent"
+          else
+            MODE="all"
+          fi
+          echo "mode=$MODE" >> $GITHUB_OUTPUT
+          echo "🎯 Sync mode: $MODE"
+      
+      - name: Run Priority Sync Engine
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "📤 Propagating to verified repositories..."
+          echo "🚀 Running priority sync engine..."
+          
+          MODE="${{ steps.sync_mode.outputs.mode }}"
+          FORCE_REPOS="${{ github.event.inputs.force_repos }}"
+          
+          # Build command
+          CMD="python3 scripts/priority_sync_engine.py --mode $MODE"
+          
+          if [ -n "$FORCE_REPOS" ]; then
+            CMD="$CMD --force $FORCE_REPOS"
+          fi
+          
+          # Run in production mode if token available, otherwise dry-run
+          if [ -n "${{ secrets.ECOSYSTEM_SYNC_TOKEN }}" ]; then
+            echo "🚀 Running in PRODUCTION mode"
+            export GITHUB_TOKEN="${{ secrets.ECOSYSTEM_SYNC_TOKEN }}"
+            eval $CMD
+          else
+            echo "🧪 Running in DRY RUN mode (ECOSYSTEM_SYNC_TOKEN not set)"
+            eval "$CMD --dry-run"
+          fi
+      
+      - name: Generate Speed Dashboard
+        if: always()
+        run: |
+          echo "📊 Generating speed dashboard..."
+          python3 scripts/generate_speed_dashboard.py \
+            --sync-file audit/sync-progress.json \
+            --urgency-file audit/urgency-ranking.json \
+            --audit-file audit/repo-existence-check.json \
+            --html-output audit/speed-dashboard.html \
+            --metrics-output audit/speed-metrics.json \
+            --badge-output audit/sync-status-badge.svg
+      
+      - name: Propagate to Verified Repos (Legacy)
+        if: github.event.inputs.target_repos != ''
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "📤 Propagating to verified repositories (legacy mode)..."
           
           # Check if we should run in production mode
           if [ -n "${{ secrets.ECOSYSTEM_SYNC_TOKEN }}" ]; then
@@ -75,33 +145,44 @@ jobs:
           echo "📊 Generating summary report..."
           
           REPORT_DATE=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          MODE="${{ steps.sync_mode.outputs.mode }}"
           
           cat > audit/PROPAGATION_SUMMARY.md << EOF
           # Ecosystem Propagation Summary
           
           **Date:** ${REPORT_DATE}
           **Trigger:** ${{ github.event_name }}
+          **Sync Mode:** ${MODE}
           
           ## Audit Results
           
           ### Repository Existence
-          - See: `audit/repo-existence-check.json`
+          - See: \`audit/repo-existence-check.json\`
           
           ### CodeNest Connections
-          - See: `audit/codenest-connection-status.json`
+          - See: \`audit/codenest-connection-status.json\`
           
-          ### Propagation Results
-          - See: `ecosystem_propagation_report.json`
+          ### Priority Sync Results
+          - Sync Progress: \`audit/sync-progress.json\`
+          - Urgency Rankings: \`audit/urgency-ranking.json\`
+          - Speed Dashboard: \`audit/speed-dashboard.html\`
+          - Speed Metrics: \`audit/speed-metrics.json\`
+          - Status Badge: \`audit/sync-status-badge.svg\`
+          
+          ### Propagation Results (Legacy)
+          - See: \`ecosystem_propagation_report.json\`
           
           ## Next Steps
           
-          1. Review disconnected repositories in `audit/codenest-connection-status.json`
-          2. Follow integration roadmap in `docs/CODENEST-INTEGRATION-ROADMAP.md`
-          3. Update `config/ecosystem-repos.json` to remove non-existent repos
+          1. Review sync status in \`audit/speed-dashboard.html\`
+          2. Check urgency rankings in \`audit/urgency-ranking.json\`
+          3. Review disconnected repositories in \`audit/codenest-connection-status.json\`
+          4. Follow integration roadmap in \`docs/CODENEST-INTEGRATION-ROADMAP.md\`
+          5. Update \`config/ecosystem-repos.json\` to remove non-existent repos
           
           ---
           
-          *Unified Ecosystem Propagation v1.0 | OmniGrid Automation*
+          *Unified Ecosystem Propagation v2.0 with Priority Sync Engine | OmniGrid Automation*
           EOF
           
           echo "✅ Summary report generated"
@@ -159,7 +240,21 @@ jobs:
               auditSummary += '⚠️ Could not read connection status\n\n';
             }
             
+            try {
+              const syncProgress = JSON.parse(fs.readFileSync('audit/sync-progress.json', 'utf8'));
+              const summary = syncProgress.sync_summary || {};
+              auditSummary += `### Priority Sync Results\n`;
+              auditSummary += `- Mode: ${syncProgress.mode}\n`;
+              auditSummary += `- Synced: ${summary.synced || 0}\n`;
+              auditSummary += `- In Progress: ${summary.in_progress || 0}\n`;
+              auditSummary += `- Pending: ${summary.pending || 0}\n`;
+              auditSummary += `- Failed: ${summary.failed || 0}\n\n`;
+            } catch (e) {
+              auditSummary += '⚠️ Could not read sync progress\n\n';
+            }
+            
             auditSummary += '### 📦 Artifacts\n';
             auditSummary += `- [View Audit Results](${context.payload.repository.html_url}/actions/runs/${context.runId})\n`;
+            auditSummary += `- [Speed Dashboard](${context.payload.repository.html_url}/blob/${context.ref}/audit/speed-dashboard.html)\n`;
             
             console.log(auditSummary);
