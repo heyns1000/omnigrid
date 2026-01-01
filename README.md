@@ -30,6 +30,28 @@
    └─ 64 Technologies      └─ OmniGrid™           └─ PM2 Production      └─ Real-time Sync
 ```
 
+### 🌊 NEW: Eternal Evolution Engine
+
+**Self-Sustaining Research System** that processes code snippets and generates PRs automatically.
+
+```bash
+# Activate the eternal engine
+./scripts/activate-eternal-research.sh
+
+# Monitor live dashboard
+# https://eternal-research-engine.heynsschoeman.workers.dev/dashboard
+```
+
+**Key Features:**
+- 🔄 **Never Stops:** Runs continuously with 9-second pulse intervals
+- 🦏 **Self-Correcting:** Rhino strike protocol (0.08s collapse) for misalignments
+- 🧠 **Adaptive:** Syncs with latest ecosystem knowledge every pulse
+- 📊 **Live Dashboard:** Real-time monitoring with auto-refresh
+- 📬 **Data Requests:** Creates GitHub issues when stuck but keeps pulsing
+- 💾 **Persistent:** Cloudflare Durable Objects for state across restarts
+
+**Documentation:** [ETERNAL_EVOLUTION.md](docs/ETERNAL_EVOLUTION.md)
+
 ---
 
 ## ⚡ Quick Start
@@ -415,6 +437,17 @@ npm run dev
 | [**CONSOLIDATION_MASTER_GUIDE.md**](CONSOLIDATION_MASTER_GUIDE.md) | Complete consolidation overview | 600+ |
 | [**TOYNEST_INTEGRATION.md**](TOYNEST_INTEGRATION.md) | ToyNest integration guide | 400+ |
 | [**CLAUDE_IMPORT_README.md**](CLAUDE_IMPORT_README.md) | Data import system guide | 300+ |
+
+### 🌊 Eternal Evolution Engine Documentation
+
+| Document | Description | Lines |
+|----------|-------------|-------|
+| [**ETERNAL_EVOLUTION.md**](docs/ETERNAL_EVOLUTION.md) | Complete architecture & API reference | 400+ |
+| [**RHINO_STRIKE_PROTOCOL.md**](docs/RHINO_STRIKE_PROTOCOL.md) | 0.08s collapse self-correction mechanics | 350+ |
+| [**9_SECOND_PULSE_DESIGN.md**](docs/9_SECOND_PULSE_DESIGN.md) | Pulse cycle architecture & timing | 300+ |
+| [**DATA_REQUEST_SYSTEM.md**](docs/DATA_REQUEST_SYSTEM.md) | Never-stop data request flow | 300+ |
+| [**GIT_BRANCHING_STRATEGY.md**](docs/GIT_BRANCHING_STRATEGY.md) | Trunk-based development guide | 250+ |
+| [**GROK_ALIGNMENT.md**](docs/GROK_ALIGNMENT.md) | Grok AI verification & citations | 250+ |
 
 ### System-Specific Documentation
 
