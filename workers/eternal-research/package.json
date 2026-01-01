@@ -1,0 +1,26 @@
+{
+  "name": "eternal-research-engine",
+  "version": "1.0.0",
+  "description": "Self-Sustaining Research System with Data Request Capability",
+  "main": "eternal-engine.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail"
+  },
+  "keywords": [
+    "cloudflare",
+    "workers",
+    "durable-objects",
+    "eternal-engine",
+    "research",
+    "omnigrid"
+  ],
+  "author": "Fruitful Holdings (Pty) Ltd",
+  "license": "PROPRIETARY",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20231218.0",
+    "typescript": "^5.3.3",
+    "wrangler": "^3.22.1"
+  }
+}
