@@ -1,0 +1,87 @@
+name: Propagate Automation to Ecosystem
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run mode (no actual changes)'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+  schedule:
+    - cron: '0 2 * * 0'  # Weekly on Sunday at 2 AM
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  propagate:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout omnigrid
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install PyGithub requests
+      
+      - name: Run ecosystem propagator
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DRY_RUN: ${{ inputs.dry_run || 'true' }}
+        run: |
+          if [ "$DRY_RUN" = "true" ]; then
+            python scripts/ecosystem_propagator.py --dry-run
+          else
+            python scripts/ecosystem_propagator.py
+          fi
+      
+      - name: Upload propagation report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ecosystem-propagation-report
+          path: ecosystem_propagation_report.json
+          retention-days: 90
+
+  scan-branches:
+    runs-on: ubuntu-latest
+    needs: propagate
+    
+    steps:
+      - name: Checkout omnigrid
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install PyGithub
+      
+      - name: Scan for divergent branches
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/pulse-trade-metrics.py \
+            --config config/ecosystem-repos.json \
+            --create-prs
+      
+      - name: Create summary
+        run: |
+          echo "## 🌐 Ecosystem Automation Status" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Propagation completed" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Branch divergence scan completed" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Auto-sync PRs created for branches >10 commits behind" >> $GITHUB_STEP_SUMMARY

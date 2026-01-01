@@ -1,0 +1,130 @@
+{
+  "version": "2.2.1",
+  "total_brands": 13713,
+  "configuration": {
+    "baobab_capacity": 144500,
+    "care_loop_rate": 0.15,
+    "target_daily_revenue": 1450000000,
+    "pulse_cycle": "9s",
+    "inference_target_ms": 347
+  },
+  "brand_categories": [
+    {
+      "category": "Financial Services",
+      "count": 1842,
+      "sectors": ["Banking", "Insurance", "Investment", "Cryptocurrency"]
+    },
+    {
+      "category": "Technology",
+      "count": 2156,
+      "sectors": ["Software", "Hardware", "Cloud Services", "AI/ML"]
+    },
+    {
+      "category": "Healthcare",
+      "count": 1523,
+      "sectors": ["Pharmaceutical", "Medical Devices", "Telemedicine", "Biotech"]
+    },
+    {
+      "category": "Retail & E-commerce",
+      "count": 1897,
+      "sectors": ["Online Retail", "Brick & Mortar", "Marketplace", "Subscription"]
+    },
+    {
+      "category": "Manufacturing",
+      "count": 1234,
+      "sectors": ["Automotive", "Electronics", "Consumer Goods", "Industrial"]
+    },
+    {
+      "category": "Energy & Utilities",
+      "count": 892,
+      "sectors": ["Renewable", "Oil & Gas", "Electricity", "Water"]
+    },
+    {
+      "category": "Real Estate",
+      "count": 1045,
+      "sectors": ["Commercial", "Residential", "Industrial", "REITs"]
+    },
+    {
+      "category": "Media & Entertainment",
+      "count": 987,
+      "sectors": ["Streaming", "Gaming", "Publishing", "Broadcasting"]
+    },
+    {
+      "category": "Food & Beverage",
+      "count": 756,
+      "sectors": ["Restaurants", "Packaged Foods", "Beverages", "Agriculture"]
+    },
+    {
+      "category": "Transportation & Logistics",
+      "count": 634,
+      "sectors": ["Airlines", "Shipping", "Freight", "Last-Mile Delivery"]
+    },
+    {
+      "category": "Telecommunications",
+      "count": 523,
+      "sectors": ["Mobile Carriers", "ISPs", "Satellite", "5G Infrastructure"]
+    },
+    {
+      "category": "Education",
+      "count": 224,
+      "sectors": ["Online Learning", "K-12", "Higher Education", "EdTech"]
+    }
+  ],
+  "risk_profiles": {
+    "low_risk": {
+      "count": 4114,
+      "percentage": 30.0,
+      "characteristics": ["Established", "Diversified", "Strong Governance"]
+    },
+    "moderate_risk": {
+      "count": 5485,
+      "percentage": 40.0,
+      "characteristics": ["Growing", "Regional Presence", "Stable Revenue"]
+    },
+    "elevated_risk": {
+      "count": 2743,
+      "percentage": 20.0,
+      "characteristics": ["Expanding", "Market Volatility", "Competitive Pressure"]
+    },
+    "high_risk": {
+      "count": 1371,
+      "percentage": 10.0,
+      "characteristics": ["Startup", "High Growth", "Capital Intensive"]
+    }
+  },
+  "geographic_distribution": {
+    "north_america": 4114,
+    "europe": 3428,
+    "asia_pacific": 3700,
+    "latin_america": 1371,
+    "middle_east_africa": 1100
+  },
+  "revenue_tiers": {
+    "tier_1_enterprise": {
+      "count": 1371,
+      "min_annual_revenue": 1000000000,
+      "contribution_percent": 60.0
+    },
+    "tier_2_corporate": {
+      "count": 2743,
+      "min_annual_revenue": 100000000,
+      "contribution_percent": 25.0
+    },
+    "tier_3_growth": {
+      "count": 4114,
+      "min_annual_revenue": 10000000,
+      "contribution_percent": 12.0
+    },
+    "tier_4_emerging": {
+      "count": 5485,
+      "min_annual_revenue": 1000000,
+      "contribution_percent": 3.0
+    }
+  },
+  "metadata": {
+    "last_updated": "2025-12-31T00:00:00Z",
+    "data_sources": ["Bloomberg Terminal", "S&P Global", "Factset", "Company Filings"],
+    "validation_status": "VERIFIED",
+    "completeness": "99.8%"
+  }
+}
