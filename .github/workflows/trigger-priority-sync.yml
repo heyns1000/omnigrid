@@ -78,7 +78,7 @@ jobs:
             echo "No changes to commit"
           else
             TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
-            git commit -m "🔥 First priority sync run: $TIMESTAMP"
+            git commit -m "🔥 Priority sync run: $TIMESTAMP"
             git push
           fi
       
@@ -97,3 +97,4 @@ jobs:
           echo "**Check files:**" >> $GITHUB_STEP_SUMMARY
           echo "- \`audit/sync-progress.json\`" >> $GITHUB_STEP_SUMMARY
           echo "- \`audit/speed-dashboard.html\`" >> $GITHUB_STEP_SUMMARY
+
