@@ -1,0 +1,76 @@
+{
+  "research": {
+    "pulse_interval_seconds": 9,
+    "github_api_rate_limit": 5000,
+    "cache_duration_seconds": 300,
+    "max_parallel_requests": 10,
+    "supported_languages": 111
+  },
+  "repositories": {
+    "core_systems": [
+      "heyns1000/omnigrid",
+      "heyns1000/codenest",
+      "heyns1000/buildnest",
+      "heyns1000/hotstack",
+      "heyns1000/fruitful",
+      "heyns1000/baobab-bush-portal",
+      "heyns1000/seedwave",
+      "heyns1000/vaultmesh",
+      "heyns1000/banimal",
+      "heyns1000/faa.zone",
+      "heyns1000/nexus-nair",
+      "heyns1000/LicenseVault"
+    ],
+    "sector_hubs": [
+      "heyns1000/agriculture.seedwave.faa.zone",
+      "heyns1000/banking.seedwave.faa.zone",
+      "heyns1000/creative.seedwave.faa.zone",
+      "heyns1000/education.seedwave.faa.zone",
+      "heyns1000/energy.seedwave.faa.zone",
+      "heyns1000/entertainment.seedwave.faa.zone",
+      "heyns1000/finance.seedwave.faa.zone",
+      "heyns1000/healthcare.seedwave.faa.zone",
+      "heyns1000/hospitality.seedwave.faa.zone",
+      "heyns1000/insurance.seedwave.faa.zone",
+      "heyns1000/legal.seedwave.faa.zone",
+      "heyns1000/logistics.seedwave.faa.zone",
+      "heyns1000/manufacturing.seedwave.faa.zone",
+      "heyns1000/marketing.seedwave.faa.zone",
+      "heyns1000/media.seedwave.faa.zone",
+      "heyns1000/mining.seedwave.faa.zone",
+      "heyns1000/nonprofit.seedwave.faa.zone",
+      "heyns1000/professional-services.seedwave.faa.zone",
+      "heyns1000/real-estate.seedwave.faa.zone",
+      "heyns1000/retail.seedwave.faa.zone",
+      "heyns1000/technology.seedwave.faa.zone",
+      "heyns1000/telecommunications.seedwave.faa.zone",
+      "heyns1000/tourism.seedwave.faa.zone",
+      "heyns1000/transportation.seedwave.faa.zone",
+      "heyns1000/utilities.seedwave.faa.zone",
+      "heyns1000/construction.seedwave.faa.zone",
+      "heyns1000/automotive.seedwave.faa.zone",
+      "heyns1000/aviation.seedwave.faa.zone",
+      "heyns1000/maritime.seedwave.faa.zone",
+      "heyns1000/pharma.seedwave.faa.zone",
+      "heyns1000/sports.seedwave.faa.zone",
+      "heyns1000/government.seedwave.faa.zone"
+    ]
+  },
+  "patterns": {
+    "file_extensions": [".html", ".tsx", ".jsx", ".ts", ".js", ".vue", ".svelte"],
+    "extract_elements": ["footer", "header", "nav", "a[href]"],
+    "verify_hrefs": true,
+    "detect_hardcoded_text": true
+  },
+  "i18n": {
+    "target_languages": 111,
+    "primary_languages": ["en", "af", "zu", "xh", "st", "tn", "ss", "ts", "ve", "nr", "nso"],
+    "extract_patterns": ["hardcoded strings", "text content", "placeholders", "titles"]
+  },
+  "output": {
+    "cache_directory": ".research-cache",
+    "standards_directory": "lib/standards",
+    "components_directory": "components/global",
+    "dashboard_file": "research-dashboard.html"
+  }
+}
