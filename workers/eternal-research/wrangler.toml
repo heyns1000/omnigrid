@@ -1,0 +1,23 @@
+name = "eternal-research-engine"
+main = "eternal-engine.ts"
+compatibility_date = "2025-01-01"
+
+[durable_objects]
+bindings = [
+  { name = "RESEARCH_ENGINE", class_name = "EternalResearchEngine" }
+]
+
+[[migrations]]
+tag = "v1"
+new_classes = ["EternalResearchEngine"]
+
+[[kv_namespaces]]
+binding = "RESEARCH_KV"
+id = "placeholder_kv_namespace_id"
+preview_id = "placeholder_kv_namespace_id"
+
+[vars]
+PULSE_INTERVAL = "9000"
+BATCH_SIZE = "10"
+MAX_RHINO_RETRIES = "10"
+KNOWLEDGE_API_URL = "https://knowledge.seedwave.faa.zone/api/latest"
