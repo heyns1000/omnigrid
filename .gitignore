@@ -8,6 +8,10 @@ __pycache__/
 dist/
 build/
 
+# Node.js
+node_modules/
+package-lock.json
+
 # Logs
 logs/
 *.log
