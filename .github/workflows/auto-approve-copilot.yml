@@ -25,8 +25,10 @@ jobs:
     steps:
       - name: Check PAT Token
         id: check-token
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
-          if [ -z "${{ secrets.PAT_TOKEN }}" ]; then
+          if [ -z "$PAT_TOKEN" ]; then
             echo "has_token=false" >> $GITHUB_OUTPUT
             echo "::warning::PAT_TOKEN secret is not set. Please configure it to enable auto-approval."
             echo "::warning::See docs/AUTO-APPROVE-PAT-SETUP.md for setup instructions."
