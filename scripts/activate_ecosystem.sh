@@ -19,7 +19,7 @@ echo "✅ GitHub token configured"
 echo "📦 Checking dependencies..."
 python3 -c "import github" 2>/dev/null || {
     echo "⚠️  Installing PyGithub..."
-    pip install PyGithub requests
+    python3 -m pip install PyGithub requests
 }
 
 echo "✅ Dependencies installed"

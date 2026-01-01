@@ -113,8 +113,9 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "Ecosystem Sync Bot"
           
-          # Force add files that might be in .gitignore
-          git add -f ecosystem_sync_report.md ecosystem_sync_status.json || true
+          # Force add files that might be in .gitignore (only if they exist)
+          [ -f ecosystem_sync_report.md ] && git add -f ecosystem_sync_report.md
+          [ -f ecosystem_sync_status.json ] && git add -f ecosystem_sync_status.json
           
           git diff --quiet && git diff --staged --quiet || \
             git commit -m "🔄 Ecosystem sync: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" && \
