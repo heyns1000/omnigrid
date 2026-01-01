@@ -44,6 +44,44 @@ See `.github/workflows/` for complete automation framework:
 
 **Status**: 🌌 IMMORTALIZED - System is eternally self-sustaining.
 
+### 🌐 Ecosystem Automation
+
+This repository is the central hub for **94-repository ecosystem automation**.
+
+#### Quick Start
+
+1. **Activate ecosystem automation:**
+   ```bash
+   export GITHUB_TOKEN=your_github_token
+   bash scripts/activate_ecosystem.sh
+   ```
+
+2. **Manual propagation:**
+   ```bash
+   # Dry run
+   python scripts/ecosystem_propagator.py --dry-run
+   
+   # Actual propagation
+   python scripts/ecosystem_propagator.py
+   ```
+
+3. **Scan for divergent branches:**
+   ```bash
+   python scripts/pulse-trade-metrics.py \
+     --config config/ecosystem-repos.json \
+     --create-prs
+   ```
+
+#### Automation Features
+
+- ✅ Auto-mark PRs ready (60s delay)
+- ✅ Auto-approve bot PRs
+- ✅ Auto-merge with safety checks
+- ✅ AI conflict resolution
+- ✅ Ecosystem sync (15min interval)
+- ✅ Pulse heartbeat (9s interval)
+- ✅ Auto-sync branches >10 commits behind
+
 ---
 
 ## 🎯 What is OmniGrid?
@@ -54,7 +92,7 @@ See `.github/workflows/` for complete automation framework:
 
 ```
 📊 Data Intelligence     🏗️ System Builder      🚀 Auto Deploy         🔗 Ecosystem Sync
-   ├─ 122 Conversations     ├─ HotStack™           ├─ 180s Deploy         ├─ 12 Repositories
+   ├─ 122 Conversations     ├─ HotStack™           ├─ 180s Deploy         ├─ 94 Repositories
    ├─ 162 Brands           ├─ VaultMesh™          ├─ Multi-Cloud         ├─ 162 Brands
    ├─ 4,558 Code Snippets  ├─ ToyNest™            ├─ Docker Ready        ├─ 7 Systems
    └─ 64 Technologies      └─ OmniGrid™           └─ PM2 Production      └─ Real-time Sync

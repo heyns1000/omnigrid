@@ -20,7 +20,17 @@ class EcosystemPropagator:
         self.propagation_results = []
     
     def load_ecosystem_repos(self) -> List[str]:
-        """Load list of 94 ecosystem repositories"""
+        """Load list of ecosystem repositories from config file"""
+        script_dir = Path(__file__).resolve().parent
+        repo_root = script_dir.parent
+        config_path = repo_root / "config" / "ecosystem-repos.json"
+        
+        if config_path.exists():
+            with open(config_path) as f:
+                config = json.load(f)
+                return config.get("repositories", [])
+        
+        # Fallback to hardcoded list if config not found
         # Core repository
         repos = ["heyns1000/omnigrid"]
         
@@ -180,21 +190,106 @@ class EcosystemPropagator:
             return result
         
         try:
-            # In production, this would:
-            # 1. Clone the repository
-            # 2. Create a new branch
-            # 3. Copy the workflow file
-            # 4. Commit and push
-            # 5. Open a PR
+            from github import Github
+            import os
             
-            # Simulated for now
+            token = os.environ.get("GITHUB_TOKEN")
+            if not token:
+                raise Exception("GITHUB_TOKEN not found in environment")
+            
+            g = Github(token)
+            target_repo = g.get_repo(repo)
+            
+            # Read workflow content
+            workflow_content = workflow_path.read_text()
+            
+            # Create branch
+            default_branch = target_repo.default_branch
+            branch_name = f"automation/propagate-workflows-{datetime.now().strftime('%Y%m%d')}"
+            
+            try:
+                # Get default branch ref
+                source = target_repo.get_branch(default_branch)
+                target_repo.create_git_ref(
+                    ref=f"refs/heads/{branch_name}",
+                    sha=source.commit.sha
+                )
+                print(f"   ✅ Created branch: {branch_name}")
+            except Exception as branch_error:
+                if "already exists" in str(branch_error):
+                    print(f"   ⚠️  Branch {branch_name} already exists, using existing")
+                else:
+                    raise
+            
+            # Create/update workflow file
+            workflow_file_path = f".github/workflows/{workflow_path.name}"
+            
+            try:
+                # Try to get existing file
+                existing_file = target_repo.get_contents(workflow_file_path, ref=branch_name)
+                target_repo.update_file(
+                    workflow_file_path,
+                    f"Update {workflow_path.name} from omnigrid automation",
+                    workflow_content,
+                    existing_file.sha,
+                    branch=branch_name
+                )
+                print(f"   ✅ Updated workflow file")
+            except Exception:
+                # File doesn't exist, create it
+                target_repo.create_file(
+                    workflow_file_path,
+                    f"Add {workflow_path.name} from omnigrid automation",
+                    workflow_content,
+                    branch=branch_name
+                )
+                print(f"   ✅ Created workflow file")
+            
+            # Create PR
+            pr = target_repo.create_pull(
+                title=f"🤖 Ecosystem Automation: Add {workflow_path.name}",
+                body=f"""## 🌐 Automated Workflow Propagation
+
+This PR adds the `{workflow_path.name}` workflow from the omnigrid hub to enable ecosystem-wide automation.
+
+### 🚀 Features
+- ✅ Auto-mark PRs ready for review
+- ✅ Auto-approve Copilot PRs
+- ✅ Auto-merge with safety checks
+- ✅ AI-driven conflict resolution
+- ✅ Ecosystem sync monitoring
+- ✅ Pulse heartbeat tracking
+
+### 🔒 Security
+- Bot detection via user ID (not username)
+- Required approvals respected
+- Branch protection honored
+- Clean mergeable state required
+
+**Source:** heyns1000/omnigrid (PR #35)
+**Propagated by:** Ecosystem Propagator v2.2.1
+""",
+                head=branch_name,
+                base=default_branch
+            )
+            
+            # Add labels
+            try:
+                pr.add_to_labels("automation", "ecosystem-sync", "automerge")
+            except Exception:
+                pass  # Labels might not exist in target repo
+            
             result["status"] = "SUCCESS"
-            result["branch"] = f"ci/auto-merge-propagation"
-            result["pr_url"] = f"https://github.com/{repo}/pull/NEW"
+            result["branch"] = branch_name
+            result["pr_url"] = pr.html_url
+            result["pr_number"] = pr.number
+            
+            print(f"   ✅ Created PR #{pr.number}: {pr.html_url}")
             
         except Exception as e:
             result["status"] = "FAILED"
             result["error"] = str(e)
+            print(f"   ❌ Failed: {e}")
         
         return result
     
