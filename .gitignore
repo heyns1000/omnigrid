@@ -18,6 +18,9 @@ ecosystem_sync_status.json
 merge_gatekeeper_validation.json
 faa_inline_verification_report.json
 ecosystem_propagation_report.json
+# Node.js
+node_modules/
+package-lock.json
 
 # Logs
 logs/
@@ -49,3 +52,24 @@ scroll_sealed_temp/
 # OS
 .DS_Store
 Thumbs.db
+
+# Research System
+.research-cache/
+research-dashboard.json
+lib/standards/*.json
+components/global/generated-*
+# Node.js
+node_modules/
+package-lock.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Cloudflare Workers
+.dev.vars
+.wrangler/
+wrangler.toml.bak
+
+# Build artifacts
+*.js.map
+dist/
