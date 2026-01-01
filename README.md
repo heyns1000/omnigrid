@@ -46,7 +46,7 @@ See `.github/workflows/` for complete automation framework:
 
 ### 🌐 Ecosystem Automation
 
-This repository is the central hub for **94-repository ecosystem automation**.
+This repository is the central hub for **101-repository ecosystem automation**.
 
 #### Quick Start
 

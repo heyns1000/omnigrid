@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Activating 94-Repository Ecosystem Automation"
+echo "🚀 Activating 101-Repository Ecosystem Automation"
 echo "=================================================="
 echo ""
 

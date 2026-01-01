@@ -1,18 +1,24 @@
 #!/usr/bin/env python3
 """
 Ecosystem Auto-Propagation Script
-Propagates auto-merge.yml workflow to all 94 repositories
+Propagates auto-merge.yml workflow to all ecosystem repositories
 """
 
 import json
+import os
 import subprocess
 from pathlib import Path
 from datetime import datetime, timezone
 from typing import Dict, List
 
+try:
+    from github import Github
+except ImportError:
+    Github = None  # Will be checked when needed
+
 
 class EcosystemPropagator:
-    """Propagates CI/CD workflows across 94 repositories"""
+    """Propagates CI/CD workflows across ecosystem repositories"""
     
     def __init__(self, dry_run: bool = True):
         self.dry_run = dry_run
@@ -190,8 +196,8 @@ class EcosystemPropagator:
             return result
         
         try:
-            from github import Github
-            import os
+            if Github is None:
+                raise Exception("PyGithub not installed. Run: pip install PyGithub")
             
             token = os.environ.get("GITHUB_TOKEN")
             if not token:
@@ -254,7 +260,7 @@ This PR adds the `{workflow_path.name}` workflow from the omnigrid hub to enable
 
 ### 🚀 Features
 - ✅ Auto-mark PRs ready for review
-- ✅ Auto-approve Copilot PRs
+- ✅ Auto-approve bot PRs (user ID: 41898282)
 - ✅ Auto-merge with safety checks
 - ✅ AI-driven conflict resolution
 - ✅ Ecosystem sync monitoring
@@ -276,8 +282,10 @@ This PR adds the `{workflow_path.name}` workflow from the omnigrid hub to enable
             # Add labels
             try:
                 pr.add_to_labels("automation", "ecosystem-sync", "automerge")
-            except Exception:
-                pass  # Labels might not exist in target repo
+                print(f"   ✅ Added labels")
+            except Exception as label_error:
+                print(f"   ⚠️  Could not add labels: {label_error}")
+                # Labels might not exist in target repo - not critical
             
             result["status"] = "SUCCESS"
             result["branch"] = branch_name
