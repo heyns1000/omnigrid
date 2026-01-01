@@ -43,6 +43,11 @@ scroll_sealed_temp/
 .DS_Store
 Thumbs.db
 
+# Research System
+.research-cache/
+research-dashboard.json
+lib/standards/*.json
+components/global/generated-*
 # Node.js
 node_modules/
 package-lock.json
