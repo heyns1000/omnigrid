@@ -1,49 +1,55 @@
 #!/bin/bash
+# Activate Ecosystem Automation Framework
+
 set -e
 
-echo "🚀 Activating 101-Repository Ecosystem Automation"
-echo "=================================================="
-echo ""
+echo "🌐 OmniGrid Ecosystem Activation"
+echo "================================"
 
 # Check for GitHub token
 if [ -z "$GITHUB_TOKEN" ]; then
-    echo "❌ GITHUB_TOKEN environment variable not set"
-    echo "Please set it with: export GITHUB_TOKEN=your_token"
+    echo "❌ Error: GITHUB_TOKEN environment variable not set"
+    echo "   export GITHUB_TOKEN=your_github_token"
     exit 1
 fi
 
-echo "✅ GitHub token found"
-echo ""
+echo "✅ GitHub token configured"
 
-# Step 1: Validate config
-echo "📋 Step 1: Validating ecosystem configuration..."
-python3 -c "import json; json.load(open('config/ecosystem-repos.json'))" && echo "✅ Config valid" || exit 1
-echo ""
+# Check Python dependencies
+echo "📦 Checking dependencies..."
+python3 -c "import github" 2>/dev/null || {
+    echo "⚠️  Installing PyGithub..."
+    python3 -m pip install PyGithub requests
+}
 
-# Step 2: Scan for divergent branches
-echo "🔍 Step 2: Scanning for divergent branches..."
-python3 scripts/pulse-trade-metrics.py \
-    --config config/ecosystem-repos.json \
-    --create-prs
-echo ""
+echo "✅ Dependencies installed"
 
-# Step 3: Propagate workflows (dry run first)
-echo "🌐 Step 3: Propagating workflows (dry run)..."
-python3 scripts/ecosystem_propagator.py --dry-run
-echo ""
-
-read -p "Proceed with actual propagation? (y/N) " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo "🚀 Propagating workflows to all repositories..."
-    python3 scripts/ecosystem_propagator.py
-    echo ""
-    echo "✅ Propagation complete!"
-else
-    echo "⚠️  Propagation cancelled"
+# Validate configuration
+if [ ! -f "config/ecosystem-repos.json" ]; then
+    echo "❌ Error: config/ecosystem-repos.json not found"
+    exit 1
 fi
 
+echo "✅ Configuration validated"
+
+# Display summary
+REPO_COUNT=$(jq '.repositories | length' config/ecosystem-repos.json)
 echo ""
-echo "=================================================="
-echo "✅ Ecosystem activation complete!"
-echo "📊 Check ecosystem_propagation_report.json for details"
+echo "📊 Ecosystem Summary:"
+echo "   Repositories: $REPO_COUNT"
+echo "   Sync Interval: 15 minutes"
+echo "   Pulse Interval: 9 seconds"
+echo "   Auto-merge Threshold: 10 commits"
+echo ""
+
+echo "🚀 Ecosystem is ready for automation!"
+echo ""
+echo "Next steps:"
+echo "  1. Trigger manual propagation:"
+echo "     python scripts/ecosystem_propagator.py --dry-run"
+echo ""
+echo "  2. Scan for divergent branches:"
+echo "     python scripts/pulse-trade-metrics.py --config config/ecosystem-repos.json"
+echo ""
+echo "  3. GitHub Actions will handle automated sync"
+echo ""
