@@ -1,0 +1,12 @@
+{
+  "api_version": "v1",
+  "base_url": "https://codenest.faa.zone/api/v1",
+  "endpoints": {
+    "query_template": "/query-template",
+    "get_brand": "/brands/{brand_id}",
+    "get_sector": "/sectors/{sector_name}",
+    "list_templates": "/templates"
+  },
+  "authentication": "Bearer token required",
+  "rate_limit": "1000 requests/hour"
+}
