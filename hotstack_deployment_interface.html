@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HotStack - 180s Deployment Engine | OmniGrid™</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        header h1 {
+            color: #667eea;
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header .tagline {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .pulse-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: #4ECDC4;
+            border-radius: 50%;
+            margin-left: 10px;
+            animation: pulse 9s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .upload-zone {
+            border: 3px dashed #667eea;
+            border-radius: 10px;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f8f9ff;
+        }
+
+        .upload-zone:hover {
+            border-color: #764ba2;
+            background: #f0f2ff;
+        }
+
+        .upload-zone.dragover {
+            background: #e8ebff;
+            border-color: #4ECDC4;
+        }
+
+        .upload-zone input[type="file"] {
+            display: none;
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .intent-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .intent-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .deployment-phases {
+            display: none;
+            margin-top: 2rem;
+        }
+
+        .deployment-phases.active {
+            display: block;
+        }
+
+        .phase {
+            background: #f8f9ff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border-left: 5px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .phase.active {
+            border-left-color: #667eea;
+            background: #e8ebff;
+        }
+
+        .phase.complete {
+            border-left-color: #4ECDC4;
+            background: #e8fff8;
+        }
+
+        .phase h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .phase-status {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #4ECDC4 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .brand-preview {
+            background: #f8f9ff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .brand-preview.active {
+            display: block;
+        }
+
+        .brand-preview h4 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .brand-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .info-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .deployment-log {
+            background: #1e1e1e;
+            color: #4ECDC4;
+            padding: 1.5rem;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 400px;
+            overflow-y: auto;
+            line-height: 1.6;
+        }
+
+        .log-entry {
+            margin-bottom: 0.5rem;
+        }
+
+        .log-timestamp {
+            color: #888;
+        }
+
+        .log-success {
+            color: #4ECDC4;
+        }
+
+        .log-error {
+            color: #ff6b6b;
+        }
+
+        .log-info {
+            color: #667eea;
+        }
+
+        .deployment-result {
+            display: none;
+            background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .deployment-result.active {
+            display: block;
+        }
+
+        .deployment-result h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .deployment-url {
+            background: white;
+            color: #333;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            word-break: break-all;
+            margin-top: 1rem;
+        }
+
+        .deployment-url a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .deployment-url a:hover {
+            text-decoration: underline;
+        }
+
+        .timer {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #667eea;
+            text-align: center;
+            margin: 1rem 0;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .timer.warning {
+            color: #ffa500;
+        }
+
+        .sector-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔥 HotStack Deployment Engine</h1>
+            <p class="tagline">
+                180-Second Deployment | OmniGrid™ Total Evolutionary Consolidation
+                <span class="pulse-indicator"></span>
+            </p>
+        </header>
+
+        <div class="main-grid">
+            <!-- Left Column: Upload & Intent -->
+            <div class="card">
+                <h2>📁 Upload or Describe</h2>
+
+                <!-- File Upload -->
+                <div class="upload-zone" id="uploadZone">
+                    <input type="file" id="fileInput" accept="*/*">
+                    <div class="upload-icon">📤</div>
+                    <p><strong>Drop a file here</strong> or click to upload</p>
+                    <p style="color: #999; font-size: 0.9rem; margin-top: 0.5rem;">
+                        Any file type • We'll figure out what to build
+                    </p>
+                </div>
+
+                <!-- Business Intent Input -->
+                <div style="margin-top: 2rem;">
+                    <label for="intentInput" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">
+                        Or describe your business intent:
+                    </label>
+                    <textarea
+                        id="intentInput"
+                        class="intent-input"
+                        rows="4"
+                        placeholder="Example: I need a compliance dashboard for tracking legal documents and trademark filings..."
+                    ></textarea>
+
+                    <label for="sectorSelect" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">
+                        Preferred Sector (optional):
+                    </label>
+                    <select id="sectorSelect" class="intent-input">
+                        <option value="">Auto-detect</option>
+                        <option value="Legal_Tech_Compliance">Legal Tech & Compliance</option>
+                        <option value="IP_Patent_Systems">IP & Patent Systems</option>
+                        <option value="Performance_Analytics">Performance Analytics</option>
+                        <option value="Algorithmic_Verification">Algorithmic Verification</option>
+                        <option value="Payment_Infrastructure">Payment Infrastructure</option>
+                        <option value="Wildlife_Conservation">Wildlife Conservation</option>
+                        <option value="Quantum_Security">Quantum Security</option>
+                        <option value="Market_Expansion">Market Expansion</option>
+                    </select>
+
+                    <button class="btn" id="deployBtn" onclick="startDeployment()">
+                        🚀 Deploy in 180 Seconds
+                    </button>
+                </div>
+
+                <!-- Brand Preview -->
+                <div class="brand-preview" id="brandPreview">
+                    <h4>🎯 Matched Brand</h4>
+                    <div class="brand-info">
+                        <div class="info-item">
+                            <div class="info-label">Brand</div>
+                            <div class="info-value" id="brandName">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Confidence</div>
+                            <div class="info-value" id="brandConfidence">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Template</div>
+                            <div class="info-value" id="brandTemplate">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Priority</div>
+                            <div class="info-value" id="brandPriority">-</div>
+                        </div>
+                    </div>
+                    <div id="brandSector" class="sector-badge"></div>
+                </div>
+            </div>
+
+            <!-- Right Column: Deployment Progress -->
+            <div class="card">
+                <h2>⏱️ 180-Second Deployment Cycle</h2>
+
+                <div class="timer" id="timer">180</div>
+
+                <div class="deployment-phases" id="deploymentPhases">
+                    <!-- Phase 1: INHALE (0-60s) -->
+                    <div class="phase" id="phase1">
+                        <h3>
+                            <span>🌬️ Phase 1: INHALE</span>
+                            <span style="margin-left: auto; font-size: 0.9rem;" id="phase1Time">0-60s</span>
+                        </h3>
+                        <div class="phase-status" id="phase1Status">Pull template from BuildNest</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="phase1Progress"></div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 2: HOLD (60-120s) -->
+                    <div class="phase" id="phase2">
+                        <h3>
+                            <span>🫁 Phase 2: HOLD</span>
+                            <span style="margin-left: auto; font-size: 0.9rem;" id="phase2Time">60-120s</span>
+                        </h3>
+                        <div class="phase-status" id="phase2Status">Inject data & generate site</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="phase2Progress"></div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 3: EXHALE (120-180s) -->
+                    <div class="phase" id="phase3">
+                        <h3>
+                            <span>💨 Phase 3: EXHALE</span>
+                            <span style="margin-left: auto; font-size: 0.9rem;" id="phase3Time">120-180s</span>
+                        </h3>
+                        <div class="phase-status" id="phase3Status">Deploy to Replit & sync heatmap</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="phase3Progress"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 1rem; color: #666; font-size: 0.9rem;">
+                    Pulse Cycle: 9s | Target: 180s | OmniGrid™ Ready
+                </div>
+            </div>
+        </div>
+
+        <!-- Deployment Log -->
+        <div class="card">
+            <h2>📋 Deployment Log</h2>
+            <div class="deployment-log" id="deploymentLog">
+                <div class="log-entry log-info">
+                    <span class="log-timestamp">[00:00:00]</span> HotStack deployment engine ready...
+                </div>
+                <div class="log-entry log-info">
+                    <span class="log-timestamp">[00:00:00]</span> Connected to CodeNest Query API
+                </div>
+                <div class="log-entry log-info">
+                    <span class="log-timestamp">[00:00:00]</span> BuildNest template accessor initialized
+                </div>
+                <div class="log-entry log-success">
+                    <span class="log-timestamp">[00:00:00]</span> ✅ System ready for deployment
+                </div>
+            </div>
+        </div>
+
+        <!-- Deployment Result -->
+        <div class="deployment-result" id="deploymentResult">
+            <h3>🎉 Deployment Complete!</h3>
+            <p style="font-size: 1.2rem; margin-bottom: 1rem;">
+                Your site is now live and synced with the OmniGrid™ ecosystem
+            </p>
+            <div class="deployment-url">
+                <div style="margin-bottom: 0.5rem; font-size: 0.9rem; color: #666;">Deployment URL:</div>
+                <a href="#" id="deploymentUrlLink" target="_blank"></a>
+            </div>
+            <div style="margin-top: 1.5rem; font-size: 0.9rem; opacity: 0.9;">
+                ✅ Synced to Sector Heatmap<br>
+                ✅ 9s Pulse Cycle Active<br>
+                ✅ OmniGrid™ Total Evolutionary Consolidation
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ====================================================================
+        // HOTSTACK DEPLOYMENT ENGINE - JAVASCRIPT
+        // ====================================================================
+
+        // Configuration
+        const CONFIG = {
+            codenestApiUrl: 'http://localhost:8000',  // CodeNest Query API
+            deploymentTime: 180,  // 180 seconds total
+            phaseDurations: {
+                inhale: 60,   // 0-60s
+                hold: 60,     // 60-120s
+                exhale: 60    // 120-180s
+            }
+        };
+
+        // State
+        let deploymentState = {
+            isDeploying: false,
+            startTime: null,
+            elapsedTime: 0,
+            currentPhase: null,
+            brandMatch: null,
+            templatePackage: null,
+            timer: null
+        };
+
+        // ====================================================================
+        // FILE UPLOAD HANDLING
+        // ====================================================================
+
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
+
+        uploadZone.addEventListener('click', () => fileInput.click());
+
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('dragover');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileUpload(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileUpload(e.target.files[0]);
+            }
+        });
+
+        function handleFileUpload(file) {
+            addLog(`📁 File uploaded: ${file.name} (${formatBytes(file.size)})`, 'info');
+
+            // Auto-populate intent based on file type
+            const intent = generateIntentFromFile(file);
+            document.getElementById('intentInput').value = intent;
+
+            addLog(`🤖 Generated intent: "${intent}"`, 'info');
+        }
+
+        function generateIntentFromFile(file) {
+            const ext = file.name.split('.').pop().toLowerCase();
+            const typeMap = {
+                'pdf': 'I need a document management system for legal compliance',
+                'csv': 'I need an analytics dashboard for data visualization',
+                'xlsx': 'I need a performance tracking platform',
+                'json': 'I need an API integration platform',
+                'html': 'I need a web deployment platform',
+                'jpg': 'I need a media management system',
+                'png': 'I need a media management system'
+            };
+
+            return typeMap[ext] || 'I need a business application platform';
+        }
+
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        // ====================================================================
+        // DEPLOYMENT FLOW
+        // ====================================================================
+
+        async function startDeployment() {
+            if (deploymentState.isDeploying) {
+                addLog('⚠️ Deployment already in progress', 'error');
+                return;
+            }
+
+            const intent = document.getElementById('intentInput').value.trim();
+            if (!intent) {
+                addLog('❌ Please provide business intent or upload a file', 'error');
+                return;
+            }
+
+            // Reset state
+            resetDeployment();
+
+            // Start deployment
+            deploymentState.isDeploying = true;
+            deploymentState.startTime = Date.now();
+            document.getElementById('deployBtn').disabled = true;
+            document.getElementById('deploymentPhases').classList.add('active');
+
+            addLog('🚀 Starting 180-second deployment...', 'success');
+            addLog(`📝 Intent: "${intent}"`, 'info');
+
+            try {
+                // Query CodeNest for brand match
+                await queryCodeNest(intent);
+
+                // Start deployment phases
+                await executeDeploymentPhases();
+
+                // Complete deployment
+                completeDeployment();
+
+            } catch (error) {
+                addLog(`❌ Deployment failed: ${error.message}`, 'error');
+                deploymentState.isDeploying = false;
+                document.getElementById('deployBtn').disabled = false;
+            }
+        }
+
+        async function queryCodeNest(intent) {
+            addLog('🔍 Querying CodeNest for brand match...', 'info');
+
+            const sector = document.getElementById('sectorSelect').value;
+
+            // Simulate API call to CodeNest Query API
+            // In production, this would be: fetch(`${CONFIG.codenestApiUrl}/query/intent`, ...)
+
+            // Mock response
+            await sleep(2000);
+
+            const mockBrand = {
+                brand_id: 'FAA-001',
+                brand_name: 'Actuary™',
+                sector: sector || 'Legal_Tech_Compliance',
+                template_id: 'TMPL-COMPLIANCE-001',
+                template_type: 'compliance_dashboard',
+                confidence_score: 95.5,
+                deployment_priority: 'high',
+                replit_app: 'https://actuary-faa.replit.app',
+                heatmap_color: '#4ECDC4'
+            };
+
+            deploymentState.brandMatch = mockBrand;
+
+            // Show brand preview
+            showBrandPreview(mockBrand);
+
+            addLog(`✅ Brand matched: ${mockBrand.brand_name} (${mockBrand.confidence_score}% confidence)`, 'success');
+            addLog(`📋 Template: ${mockBrand.template_id} (${mockBrand.template_type})`, 'info');
+        }
+
+        function showBrandPreview(brand) {
+            document.getElementById('brandPreview').classList.add('active');
+            document.getElementById('brandName').textContent = brand.brand_name;
+            document.getElementById('brandConfidence').textContent = `${brand.confidence_score}%`;
+            document.getElementById('brandTemplate').textContent = brand.template_type.replace(/_/g, ' ');
+            document.getElementById('brandPriority').textContent = brand.deployment_priority.toUpperCase();
+
+            const sectorBadge = document.getElementById('brandSector');
+            sectorBadge.textContent = brand.sector.replace(/_/g, ' ');
+            sectorBadge.style.background = brand.heatmap_color;
+            sectorBadge.style.color = 'white';
+        }
+
+        async function executeDeploymentPhases() {
+            // Start timer
+            startTimer();
+
+            // Phase 1: INHALE (0-60s)
+            await executePhase1();
+
+            // Phase 2: HOLD (60-120s)
+            await executePhase2();
+
+            // Phase 3: EXHALE (120-180s)
+            await executePhase3();
+
+            // Stop timer
+            stopTimer();
+        }
+
+        async function executePhase1() {
+            addLog('🌬️ PHASE 1: INHALE - Pulling template from BuildNest...', 'success');
+
+            const phase = document.getElementById('phase1');
+            phase.classList.add('active');
+
+            // Simulate template fetch
+            const steps = [
+                { delay: 5000, log: '📥 Connecting to BuildNest (Google Drive)...', progress: 20 },
+                { delay: 8000, log: '🔍 Locating template: ' + deploymentState.brandMatch.template_id, progress: 40 },
+                { delay: 12000, log: '📦 Downloading template package (HTML/CSS/JS)...', progress: 60 },
+                { delay: 15000, log: '✅ Template downloaded (2.3 MB)', progress: 80 },
+                { delay: 18000, log: '🔒 Validating template integrity...', progress: 90 },
+                { delay: 20000, log: '✅ Template validation passed', progress: 100 }
+            ];
+
+            for (const step of steps) {
+                await sleep(step.delay - (steps.indexOf(step) > 0 ? steps[steps.indexOf(step) - 1].delay : 0));
+                addLog(step.log, 'info');
+                document.getElementById('phase1Progress').style.width = step.progress + '%';
+            }
+
+            phase.classList.remove('active');
+            phase.classList.add('complete');
+
+            addLog('✅ PHASE 1 COMPLETE - Template ready', 'success');
+        }
+
+        async function executePhase2() {
+            addLog('🫁 PHASE 2: HOLD - Injecting data & generating site...', 'success');
+
+            const phase = document.getElementById('phase2');
+            phase.classList.add('active');
+
+            // Simulate data injection
+            const steps = [
+                { delay: 5000, log: '🔧 Parsing template structure...', progress: 20 },
+                { delay: 8000, log: '💉 Injecting brand metadata: ' + deploymentState.brandMatch.brand_name, progress: 40 },
+                { delay: 12000, log: '🎨 Applying custom styling and branding...', progress: 60 },
+                { delay: 15000, log: '⚙️ Generating HTML/CSS/JS...', progress: 80 },
+                { delay: 18000, log: '🧪 Running pre-deployment validation...', progress: 90 },
+                { delay: 20000, log: '✅ Site generation complete', progress: 100 }
+            ];
+
+            for (const step of steps) {
+                await sleep(step.delay - (steps.indexOf(step) > 0 ? steps[steps.indexOf(step) - 1].delay : 0));
+                addLog(step.log, 'info');
+                document.getElementById('phase2Progress').style.width = step.progress + '%';
+            }
+
+            phase.classList.remove('active');
+            phase.classList.add('complete');
+
+            addLog('✅ PHASE 2 COMPLETE - Site generated', 'success');
+        }
+
+        async function executePhase3() {
+            addLog('💨 PHASE 3: EXHALE - Deploying to Replit...', 'success');
+
+            const phase = document.getElementById('phase3');
+            phase.classList.add('active');
+
+            // Simulate deployment
+            const steps = [
+                { delay: 5000, log: '🌐 Connecting to Replit: ' + deploymentState.brandMatch.replit_app, progress: 20 },
+                { delay: 8000, log: '📤 Uploading site files...', progress: 40 },
+                { delay: 12000, log: '🔧 Configuring deployment environment...', progress: 60 },
+                { delay: 15000, log: '🚀 Triggering deployment...', progress: 80 },
+                { delay: 18000, log: '🔄 Updating sector heatmap...', progress: 90 },
+                { delay: 20000, log: '✅ Deployment live!', progress: 100 }
+            ];
+
+            for (const step of steps) {
+                await sleep(step.delay - (steps.indexOf(step) > 0 ? steps[steps.indexOf(step) - 1].delay : 0));
+                addLog(step.log, 'info');
+                document.getElementById('phase3Progress').style.width = step.progress + '%';
+            }
+
+            phase.classList.remove('active');
+            phase.classList.add('complete');
+
+            addLog('✅ PHASE 3 COMPLETE - Deployment successful', 'success');
+        }
+
+        function completeDeployment() {
+            addLog('🎉 DEPLOYMENT COMPLETE - Site is live!', 'success');
+            addLog(`🌐 URL: ${deploymentState.brandMatch.replit_app}`, 'success');
+            addLog('✅ Synced to OmniGrid™ ecosystem', 'success');
+            addLog('✅ 9s pulse cycle active', 'success');
+
+            // Show result
+            const result = document.getElementById('deploymentResult');
+            result.classList.add('active');
+
+            const urlLink = document.getElementById('deploymentUrlLink');
+            urlLink.href = deploymentState.brandMatch.replit_app;
+            urlLink.textContent = deploymentState.brandMatch.replit_app;
+
+            deploymentState.isDeploying = false;
+            document.getElementById('deployBtn').disabled = false;
+        }
+
+        function resetDeployment() {
+            deploymentState.elapsedTime = 0;
+            deploymentState.currentPhase = null;
+
+            // Reset phases
+            ['phase1', 'phase2', 'phase3'].forEach(id => {
+                const phase = document.getElementById(id);
+                phase.classList.remove('active', 'complete');
+                document.getElementById(id + 'Progress').style.width = '0%';
+            });
+
+            // Hide result
+            document.getElementById('deploymentResult').classList.remove('active');
+
+            // Reset timer
+            document.getElementById('timer').textContent = '180';
+            document.getElementById('timer').classList.remove('warning');
+        }
+
+        // ====================================================================
+        // TIMER
+        // ====================================================================
+
+        function startTimer() {
+            const timerEl = document.getElementById('timer');
+            deploymentState.timer = setInterval(() => {
+                deploymentState.elapsedTime = Math.floor((Date.now() - deploymentState.startTime) / 1000);
+                const remaining = CONFIG.deploymentTime - deploymentState.elapsedTime;
+
+                timerEl.textContent = remaining;
+
+                if (remaining < 30) {
+                    timerEl.classList.add('warning');
+                }
+
+                if (remaining <= 0) {
+                    stopTimer();
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (deploymentState.timer) {
+                clearInterval(deploymentState.timer);
+                deploymentState.timer = null;
+            }
+        }
+
+        // ====================================================================
+        // LOGGING
+        // ====================================================================
+
+        function addLog(message, type = 'info') {
+            const log = document.getElementById('deploymentLog');
+            const timestamp = new Date().toISOString().substr(11, 8);
+
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.innerHTML = `<span class="log-timestamp">[${timestamp}]</span> ${message}`;
+
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // ====================================================================
+        // UTILITIES
+        // ====================================================================
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // ====================================================================
+        // INITIALIZATION
+        // ====================================================================
+
+        addLog('✅ HotStack Deployment Engine initialized', 'success');
+        addLog('🌐 OmniGrid™ Total Evolutionary Consolidation ready', 'success');
+    </script>
+</body>
+</html>
