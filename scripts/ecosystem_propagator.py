@@ -20,10 +20,49 @@ except ImportError:
 class EcosystemPropagator:
     """Propagates CI/CD workflows across ecosystem repositories"""
     
-    def __init__(self, dry_run: bool = True):
+    def __init__(self, dry_run: bool = True, audit_file: str = None):
         self.dry_run = dry_run
+        self.audit_file = audit_file
+        self.audit_data = self.load_audit_data() if audit_file else None
         self.repositories = self.load_ecosystem_repos()
         self.propagation_results = []
+    
+    def load_audit_data(self) -> Dict:
+        """Load audit data if available"""
+        if not self.audit_file:
+            return None
+        
+        audit_path = Path(self.audit_file)
+        if not audit_path.exists():
+            print(f"⚠️  Audit file not found: {self.audit_file}")
+            return None
+        
+        try:
+            with open(audit_path) as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"⚠️  Could not load audit file: {e}")
+            return None
+    
+    def is_repo_accessible(self, repo_name: str) -> bool:
+        """Check if repo is accessible based on audit data"""
+        if not self.audit_data:
+            return True  # No audit data, assume accessible
+        
+        existing_repos = self.audit_data.get("existing_repos", [])
+        for repo in existing_repos:
+            if repo.get("name") == repo_name and repo.get("exists"):
+                return True
+        
+        # Check if in not_found list
+        if repo_name in self.audit_data.get("repos_not_found", []):
+            return False
+        
+        # Check if in private/no access list
+        if repo_name in self.audit_data.get("repos_private_no_access", []):
+            return False
+        
+        return True  # Default to accessible
     
     def load_ecosystem_repos(self) -> List[str]:
         """Load list of ecosystem repositories from config file"""
@@ -34,7 +73,17 @@ class EcosystemPropagator:
         if config_path.exists():
             with open(config_path) as f:
                 config = json.load(f)
-                return config.get("repositories", [])
+                repos = config.get("repositories", [])
+                
+                # Filter based on audit data if available
+                if self.audit_data:
+                    original_count = len(repos)
+                    repos = [r for r in repos if self.is_repo_accessible(r)]
+                    skipped = original_count - len(repos)
+                    if skipped > 0:
+                        print(f"ℹ️  Skipping {skipped} non-accessible repos based on audit data")
+                
+                return repos
         
         # Fallback to hardcoded list if config not found
         # Core repository
@@ -392,11 +441,29 @@ This PR adds the `{workflow_path.name}` workflow from the omnigrid hub to enable
 def main():
     """Main propagation execution"""
     import sys
+    import argparse
     
-    # Check for dry-run flag
-    dry_run = "--dry-run" in sys.argv or "-n" in sys.argv
+    parser = argparse.ArgumentParser(
+        description="Propagate workflows to ecosystem repositories"
+    )
+    parser.add_argument(
+        "--dry-run", "-n",
+        action="store_true",
+        help="Run in dry-run mode (no actual changes)"
+    )
+    parser.add_argument(
+        "--config",
+        default="config/ecosystem-repos.json",
+        help="Path to ecosystem repos config"
+    )
+    parser.add_argument(
+        "--audit-file",
+        help="Path to audit results JSON (skips non-existent repos)"
+    )
     
-    propagator = EcosystemPropagator(dry_run=dry_run)
+    args = parser.parse_args()
+    
+    propagator = EcosystemPropagator(dry_run=args.dry_run, audit_file=args.audit_file)
     
     # Use relative path for portability
     script_dir = Path(__file__).resolve().parent
