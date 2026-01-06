@@ -133,11 +133,11 @@ export async function generateCrossVaultProof(
   const proofHash = createHash('sha256')
     .update(JSON.stringify(proof))
     .update(JSON.stringify(publicSignals))
-    .update(params.quantumEntropy)
+    .update(params.quantumEntropy || '')
     .digest('hex');
 
   // Calculate quantum fidelity (simulated)
-  const quantumFidelity = calculateQuantumFidelity(params.quantumEntropy);
+  const quantumFidelity = calculateQuantumFidelity(params.quantumEntropy || '');
 
   const generationTime = Date.now() - startTime;
 
