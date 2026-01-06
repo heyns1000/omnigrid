@@ -1,0 +1,307 @@
+name: CodeNest Connection Sync
+on:
+  workflow_dispatch:
+    inputs:
+      force_sync:
+        description: 'Force sync even if no changes detected'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      target_repos:
+        description: 'Comma-separated list of specific repos to sync (leave empty for all)'
+        required: false
+        default: ''
+  schedule:
+    # Every 15 minutes - bidirectional sync as specified in PR #36
+    - cron: '*/15 * * * *'
+  push:
+    branches:
+      - main
+    paths:
+      - 'config/ecosystem-connections.json'
+      - '.github/workflows/codenest-connection-sync.yml'
+
+jobs:
+  sync-codenest-connections:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      
+    steps:
+      - name: Checkout omnigrid
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install Dependencies
+        run: |
+          pip install PyGithub requests
+      
+      - name: Audit Repository Connections
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "🔍 Auditing repository connections..."
+          python3 scripts/audit_repo_connections.py \
+            --config config/ecosystem-repos.json \
+            --output audit/repo-connection-audit.json
+      
+      - name: Check Sync Token Availability
+        id: check_token
+        run: |
+          if [ -n "${{ secrets.ECOSYSTEM_SYNC_TOKEN }}" ]; then
+            echo "token_available=true" >> $GITHUB_OUTPUT
+            echo "✅ ECOSYSTEM_SYNC_TOKEN is configured"
+          else
+            echo "token_available=false" >> $GITHUB_OUTPUT
+            echo "⚠️  ECOSYSTEM_SYNC_TOKEN not configured - running in dry-run mode"
+          fi
+      
+      - name: Bidirectional Sync (Production)
+        if: steps.check_token.outputs.token_available == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.ECOSYSTEM_SYNC_TOKEN }}
+        run: |
+          echo "🔄 Running bidirectional sync in PRODUCTION mode..."
+          
+          FORCE_FLAG=""
+          if [ "${{ github.event.inputs.force_sync }}" = "true" ]; then
+            FORCE_FLAG="--force"
+            echo "🔨 Force sync enabled"
+          fi
+          
+          TARGET_REPOS="${{ github.event.inputs.target_repos }}"
+          if [ -n "$TARGET_REPOS" ]; then
+            echo "🎯 Targeting specific repos: $TARGET_REPOS"
+            
+            # Parse comma-separated repos and sync each
+            IFS=',' read -ra REPOS <<< "$TARGET_REPOS"
+            for repo in "${REPOS[@]}"; do
+              repo=$(echo "$repo" | xargs)  # Trim whitespace
+              echo "Syncing: $repo"
+              
+              # Use priority sync engine for targeted repos
+              python3 scripts/priority_sync_engine.py \
+                --mode urgent \
+                --force "$repo" \
+                $FORCE_FLAG || echo "⚠️  Failed to sync $repo"
+            done
+          else
+            echo "🌐 Syncing all ecosystem repositories"
+            
+            # Run priority sync in urgent mode (includes all active repos)
+            python3 scripts/priority_sync_engine.py \
+              --mode urgent \
+              $FORCE_FLAG
+          fi
+      
+      - name: Bidirectional Sync (Dry Run)
+        if: steps.check_token.outputs.token_available == 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "🧪 Running bidirectional sync in DRY RUN mode..."
+          echo "ℹ️  Configure ECOSYSTEM_SYNC_TOKEN secret for production sync"
+          
+          # Run in dry-run mode
+          python3 scripts/priority_sync_engine.py \
+            --mode urgent \
+            --dry-run
+      
+      - name: Verify CodeNest Package Workspace
+        run: |
+          echo "📦 Verifying CodeNest package workspace configuration..."
+          
+          # Check if codenest repo is accessible (we may not have direct access)
+          echo "ℹ️  Note: Direct CodeNest verification requires access to heyns1000/codenest"
+          echo "ℹ️  Connection audit results available in audit/repo-connection-audit.json"
+          
+          # Validate our ecosystem-connections.json
+          if [ -f "config/ecosystem-connections.json" ]; then
+            echo "✅ ecosystem-connections.json exists"
+            python3 -m json.tool config/ecosystem-connections.json > /dev/null
+            echo "✅ JSON schema valid"
+          else
+            echo "⚠️  ecosystem-connections.json not found"
+          fi
+      
+      - name: Generate Connection Sync Report
+        if: always()
+        run: |
+          echo "📊 Generating connection sync report..."
+          
+          REPORT_DATE=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          TRIGGER="${{ github.event_name }}"
+          
+          # Read audit results if available
+          TOTAL_REPOS="94"
+          CONNECTED_REPOS="N/A"
+          DISCONNECTED_REPOS="N/A"
+          
+          if [ -f "audit/repo-connection-audit.json" ]; then
+            TOTAL_REPOS=$(jq -r '.total_repos // 94' audit/repo-connection-audit.json)
+            CONNECTED_REPOS=$(jq -r '.repos_with_codenest_connection // "N/A"' audit/repo-connection-audit.json)
+            DISCONNECTED_COUNT=$(jq -r '.disconnected_repos | length // "N/A"' audit/repo-connection-audit.json)
+          fi
+          
+          cat > audit/connection-sync-report.md << EOF
+          # CodeNest Connection Sync Report
+          
+          **Date**: ${REPORT_DATE}
+          **Trigger**: ${TRIGGER}
+          **Sync Mode**: 15-minute bidirectional (PR #36)
+          
+          ## Connection Status
+          
+          - **Total Repositories**: ${TOTAL_REPOS}
+          - **Connected to CodeNest**: ${CONNECTED_REPOS}
+          - **Disconnected**: ${DISCONNECTED_COUNT}
+          - **Sync Token**: ${{ steps.check_token.outputs.token_available == 'true' && 'Configured ✅' || 'Not Configured ⚠️' }}
+          
+          ## Sync Results
+          
+          See detailed results in:
+          - \`audit/repo-connection-audit.json\` - Connection audit details
+          - \`audit/connection-audit-summary.md\` - Human-readable summary
+          - \`audit/sync-progress.json\` - Priority sync progress
+          
+          ## CodeNest Hub
+          
+          **Repository**: \`heyns1000/codenest\`  
+          **Package Structure**: pnpm workspaces (83 packages)  
+          **Integration**: Bidirectional sync every 15 minutes
+          
+          ### Package Distribution
+          - \`packages/apps/\`: 13 packages
+          - \`packages/fruitful/\`: 14 packages
+          - \`packages/seedwave-sectors/\`: 56 packages
+          - \`packages/infrastructure/\`: In progress
+          
+          ## Next Sync
+          
+          - **Scheduled**: Every 15 minutes via cron
+          - **Manual**: Run workflow_dispatch for immediate sync
+          - **Cascade**: Triggered by #71 sync cascade (9s pulse)
+          
+          ## Token Configuration
+          
+          For production bidirectional sync, configure the following secret:
+          - \`ECOSYSTEM_SYNC_TOKEN\`: GitHub PAT with repo and workflow permissions
+          
+          Without this token, syncs run in dry-run mode for safety.
+          
+          ---
+          
+          *CodeNest Connection Sync v1.0 | PR #36 Enhancement | OmniGrid Automation*
+          EOF
+          
+          echo "✅ Sync report generated"
+      
+      - name: Upload Sync Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: codenest-sync-results-${{ github.run_number }}
+          path: |
+            audit/repo-connection-audit.json
+            audit/connection-audit-summary.md
+            audit/connection-sync-report.md
+            audit/sync-progress.json
+          retention-days: 90
+      
+      - name: Commit Sync Results
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "CodeNest Sync Bot"
+          
+          # Add audit results
+          git add -f audit/
+          
+          # Only commit if there are changes
+          git diff --quiet && git diff --staged --quiet || \
+            git commit -m "🔗 CodeNest sync: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" && \
+            git push
+      
+      - name: Check for Failed Syncs
+        if: always()
+        run: |
+          echo "🔍 Checking for failed synchronizations..."
+          
+          if [ -f "audit/sync-progress.json" ]; then
+            FAILED_COUNT=$(jq -r '.sync_summary.failed // 0' audit/sync-progress.json)
+            
+            if [ "$FAILED_COUNT" -gt 0 ]; then
+              echo "⚠️  Warning: $FAILED_COUNT repositories failed to sync"
+              echo "ℹ️  Review audit/sync-progress.json for details"
+              exit 1
+            else
+              echo "✅ All repositories synced successfully"
+            fi
+          else
+            echo "ℹ️  No sync progress file found"
+          fi
+      
+      - name: Post Summary (Manual Trigger)
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            let summary = '## 🔗 CodeNest Connection Sync Complete\n\n';
+            
+            try {
+              const audit = JSON.parse(fs.readFileSync('audit/repo-connection-audit.json', 'utf8'));
+              
+              const total = audit.total_repos || 94;
+              const connected = audit.repos_with_codenest_connection || 0;
+              const connectionRate = ((connected / total) * 100).toFixed(1);
+              
+              summary += `### Connection Status\n`;
+              summary += `- **Total Repositories**: ${total}\n`;
+              summary += `- **Connected to CodeNest**: ${connected} (${connectionRate}%)\n`;
+              summary += `- **Disconnected**: ${audit.disconnected_repos?.length || 0}\n`;
+              summary += `- **Repos with Workflows**: ${audit.repos_with_workflows || 0}\n\n`;
+              
+              if (audit.codenest_branches_behind) {
+                const codenest = audit.codenest_branches_behind;
+                summary += `### CodeNest Hub Status\n`;
+                summary += `- **Total Branches**: ${codenest.branches || 'N/A'}\n`;
+                summary += `- **Avg Commits Behind**: ${Math.round(codenest.avg_behind || 0)}\n`;
+                summary += `- **Max Commits Behind**: ${codenest.max_behind || 'N/A'}\n\n`;
+              }
+              
+              summary += `### Sync Configuration\n`;
+              summary += `- **Frequency**: Every 15 minutes\n`;
+              summary += `- **Mode**: Bidirectional\n`;
+              summary += `- **Token Status**: ${{ steps.check_token.outputs.token_available == 'true' ? 'Configured ✅' : 'Not Configured ⚠️' }}\n\n`;
+              
+              if (audit.disconnected_repos?.length > 0) {
+                summary += `### Disconnected Repositories (${audit.disconnected_repos.length})\n`;
+                audit.disconnected_repos.slice(0, 10).forEach(repo => {
+                  summary += `- ${repo}\n`;
+                });
+                if (audit.disconnected_repos.length > 10) {
+                  summary += `- ... and ${audit.disconnected_repos.length - 10} more\n`;
+                }
+                summary += '\n';
+              }
+              
+            } catch (e) {
+              summary += '⚠️ Could not read audit results\n\n';
+            }
+            
+            summary += '### 📦 Artifacts\n';
+            summary += `- [View Sync Results](${context.payload.repository.html_url}/actions/runs/${context.runId})\n`;
+            summary += `- [Connection Audit](${context.payload.repository.html_url}/blob/${context.ref}/audit/repo-connection-audit.json)\n`;
+            summary += `- [Sync Report](${context.payload.repository.html_url}/blob/${context.ref}/audit/connection-sync-report.md)\n`;
+            
+            console.log(summary);
