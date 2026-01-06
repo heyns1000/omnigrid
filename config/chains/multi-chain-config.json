@@ -1,0 +1,52 @@
+{
+  "chains": {
+    "ethereum-sepolia": {
+      "chainId": 11155111,
+      "name": "Ethereum Sepolia",
+      "rpcUrl": "https://sepolia.infura.io/v3/YOUR_INFURA_KEY",
+      "explorer": "https://sepolia.etherscan.io",
+      "oracleContract": "0x0000000000000000000000000000000000000000",
+      "chainlinkAutomationRegistry": "0x86EFBD0b6736Bed994962f9797049422A3A8E8Ad",
+      "nativeCurrency": {
+        "name": "Sepolia Ether",
+        "symbol": "ETH",
+        "decimals": 18
+      }
+    },
+    "polygon-mumbai": {
+      "chainId": 80001,
+      "name": "Polygon Mumbai",
+      "rpcUrl": "https://rpc-mumbai.maticvigil.com",
+      "explorer": "https://mumbai.polygonscan.com",
+      "oracleContract": "0x0000000000000000000000000000000000000000",
+      "chainlinkAutomationRegistry": "0x02777053d6764996e594c3E88AF1D58D5363a2e6",
+      "nativeCurrency": {
+        "name": "MATIC",
+        "symbol": "MATIC",
+        "decimals": 18
+      }
+    },
+    "solana-devnet": {
+      "chainId": "devnet",
+      "name": "Solana Devnet",
+      "rpcUrl": "https://api.devnet.solana.com",
+      "explorer": "https://explorer.solana.com/?cluster=devnet",
+      "oracleProgram": "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS",
+      "nativeCurrency": {
+        "name": "SOL",
+        "symbol": "SOL",
+        "decimals": 9
+      }
+    }
+  },
+  "pulseConfig": {
+    "intervalSeconds": 9,
+    "fidelityThreshold": 80,
+    "maxRepositories": 94
+  },
+  "hotstackIntegration": {
+    "version": "v4",
+    "quantumNodesEnabled": true,
+    "dashboardEndpoint": "https://hotstack.faa.zone/quantum-nodes/v4"
+  }
+}
