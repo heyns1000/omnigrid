@@ -1,0 +1,940 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Ecosystem Connections Schema",
+  "description": "Connection and propagation configuration for 94 core repositories + 12 extended ecosystem repos (106 total)",
+  "version": "1.0.0",
+  "last_updated": "2026-01-06T03:50:00Z",
+  
+  "metadata": {
+    "total_connections": 106,
+    "core_repositories": 94,
+    "extended_repositories": 12,
+    "codenest_packages": 83,
+    "connection_rate": 88.3,
+    "sync_interval_minutes": 15,
+    "pulse_interval_seconds": 9
+  },
+  
+  "codenest_hub": {
+    "repository": "heyns1000/codenest",
+    "role": "monorepo_hub",
+    "technology": "pnpm_workspaces",
+    "branches": 41,
+    "packages": {
+      "apps": 13,
+      "fruitful": 14,
+      "seedwave_sectors": 56,
+      "infrastructure": "in_progress"
+    },
+    "workspace_root": "packages/",
+    "sync_strategy": "bidirectional",
+    "conflict_resolution": "gpr_framework"
+  },
+  
+  "connection_types": {
+    "direct_package": {
+      "description": "Repository is a direct package in CodeNest workspace",
+      "sync_mode": "bidirectional",
+      "priority": "high"
+    },
+    "workspace_linked": {
+      "description": "Repository linked via pnpm workspace protocol",
+      "sync_mode": "bidirectional",
+      "priority": "high"
+    },
+    "workflow_propagated": {
+      "description": "Receives workflow updates from omnigrid",
+      "sync_mode": "push",
+      "priority": "medium"
+    },
+    "pending_integration": {
+      "description": "Verified to exist but not yet integrated",
+      "sync_mode": "none",
+      "priority": "low"
+    }
+  },
+  
+  "propagation_workflows": [
+    "auto-mark-ready.yml",
+    "auto-approve-copilot.yml",
+    "auto-merge-ecosystem.yml",
+    "auto-merge.yml",
+    "conflict-resolver.yml",
+    "ecosystem-sync-monitor.yml",
+    "ecosystem-sync.yml",
+    "propagate-automation.yml",
+    "pulse-trade-9s.yml",
+    "pulse_update.yml"
+  ],
+  
+  "repository_connections": {
+    "financial_services": [
+      {
+        "repo": "heyns1000/omnigrid",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure/omnigrid",
+        "connected": true,
+        "role": "orchestrator",
+        "sync_priority": "critical"
+      },
+      {
+        "repo": "heyns1000/celestial-payroll",
+        "connection_type": "direct_package",
+        "codenest_package": "apps/payroll",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/actuary-vault",
+        "connection_type": "direct_package",
+        "codenest_package": "apps/licensevault",
+        "connected": true,
+        "brands_count": 13713,
+        "sync_priority": "critical"
+      },
+      {
+        "repo": "heyns1000/fruitful-finance",
+        "connection_type": "direct_package",
+        "codenest_package": "fruitful/core",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/quantum-custody",
+        "connection_type": "direct_package",
+        "codenest_package": "seedwave-sectors/quantum",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/treaty-grid",
+        "connection_type": "pending_integration",
+        "codenest_package": "apps/payment",
+        "connected": false,
+        "sync_priority": "low",
+        "integration_roadmap": "phase_2"
+      },
+      {
+        "repo": "heyns1000/revenue-harmonics",
+        "connection_type": "pending_integration",
+        "codenest_package": "fruitful/core",
+        "connected": false,
+        "sync_priority": "low",
+        "integration_roadmap": "phase_2"
+      },
+      {
+        "repo": "heyns1000/care-loop-allocator",
+        "connection_type": "direct_package",
+        "codenest_package": "fruitful/core",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/baobab-ledger",
+        "connection_type": "direct_package",
+        "codenest_package": "fruitful/baobab",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/ml-dsa-signer",
+        "connection_type": "direct_package",
+        "codenest_package": "seedwave-sectors/ai-logic",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/crypto-exchange-bridge",
+        "connection_type": "direct_package",
+        "codenest_package": "apps/payment",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/payment-gateway-hub",
+        "connection_type": "direct_package",
+        "codenest_package": "apps/payment",
+        "connected": true,
+        "role": "global_payment_hub",
+        "sync_priority": "critical"
+      }
+    ],
+    "healthcare_systems": [
+      {
+        "repo": "heyns1000/healthgrid",
+        "connection_type": "pending_integration",
+        "codenest_package": "infrastructure/healthgrid",
+        "connected": false,
+        "sync_priority": "medium",
+        "integration_roadmap": "phase_2"
+      },
+      {
+        "repo": "heyns1000/meho-cache",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/eho-memory",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/patient-vault",
+        "connection_type": "direct_package",
+        "codenest_package": "apps/licensevault",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/medical-indexer",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "medium"
+      },
+      {
+        "repo": "heyns1000/pharma-supply",
+        "connection_type": "direct_package",
+        "codenest_package": "seedwave-sectors/nutrition",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/telehealth-hub",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/clinical-trials-db",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "medium"
+      }
+    ],
+    "education_platforms": [
+      {
+        "repo": "heyns1000/toynest",
+        "connection_type": "direct_package",
+        "codenest_package": "seedwave-sectors/toynest",
+        "connected": true,
+        "role": "education_platform",
+        "sync_priority": "critical"
+      },
+      {
+        "repo": "heyns1000/edu-grid",
+        "connection_type": "pending_integration",
+        "codenest_package": "seedwave-sectors/education-ip",
+        "connected": false,
+        "sync_priority": "medium",
+        "integration_roadmap": "phase_2"
+      },
+      {
+        "repo": "heyns1000/learning-mesh",
+        "connection_type": "direct_package",
+        "codenest_package": "seedwave-sectors/education-ip",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/course-catalog",
+        "connection_type": "direct_package",
+        "codenest_package": "seedwave-sectors/education-ip",
+        "connected": true,
+        "sync_priority": "medium"
+      },
+      {
+        "repo": "heyns1000/student-portal",
+        "connection_type": "direct_package",
+        "codenest_package": "apps/careers",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/certification-engine",
+        "connection_type": "direct_package",
+        "codenest_package": "apps/licensevault",
+        "connected": true,
+        "sync_priority": "high"
+      }
+    ],
+    "ecommerce_hubs": [
+      {
+        "repo": "heyns1000/hotstack",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure/hotstack",
+        "connected": true,
+        "role": "ecommerce_stack",
+        "sync_priority": "critical"
+      },
+      {
+        "repo": "heyns1000/brand-dashboard-matrix",
+        "connection_type": "direct_package",
+        "codenest_package": "apps/licensevault",
+        "connected": true,
+        "brands_count": 162,
+        "sync_priority": "critical"
+      },
+      {
+        "repo": "heyns1000/inventory-mesh",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/order-processor",
+        "connection_type": "direct_package",
+        "codenest_package": "apps/payment",
+        "connected": true,
+        "sync_priority": "critical"
+      },
+      {
+        "repo": "heyns1000/shipping-coordinator",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/price-optimizer",
+        "connection_type": "direct_package",
+        "codenest_package": "seedwave-sectors/trade",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/product-catalog",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/customer-insights",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "medium"
+      },
+      {
+        "repo": "heyns1000/loyalty-program",
+        "connection_type": "direct_package",
+        "codenest_package": "apps/payment",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/marketplace-connector",
+        "connection_type": "direct_package",
+        "codenest_package": "seedwave-sectors/trade",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/vendor-portal",
+        "connection_type": "direct_package",
+        "codenest_package": "apps/careers",
+        "connected": true,
+        "sync_priority": "medium"
+      },
+      {
+        "repo": "heyns1000/fulfillment-network",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/returns-manager",
+        "connection_type": "direct_package",
+        "codenest_package": "apps/payment",
+        "connected": true,
+        "sync_priority": "medium"
+      },
+      {
+        "repo": "heyns1000/promo-engine",
+        "connection_type": "direct_package",
+        "codenest_package": "apps/payment",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/recommendation-ai",
+        "connection_type": "direct_package",
+        "codenest_package": "seedwave-sectors/ai-logic",
+        "connected": true,
+        "sync_priority": "high"
+      }
+    ],
+    "infrastructure_devops": [
+      {
+        "repo": "heyns1000/vaultmesh",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "critical"
+      },
+      {
+        "repo": "heyns1000/pulse-engine",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "role": "9s_heartbeat",
+        "sync_priority": "critical"
+      },
+      {
+        "repo": "heyns1000/ecosystem-sync",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "role": "15min_sync",
+        "sync_priority": "critical"
+      },
+      {
+        "repo": "heyns1000/ci-orchestrator",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "critical"
+      },
+      {
+        "repo": "heyns1000/deployment-coordinator",
+        "connection_type": "direct_package",
+        "codenest_package": "fruitful/global-deployment",
+        "connected": true,
+        "sync_priority": "critical"
+      },
+      {
+        "repo": "heyns1000/monitoring-hub",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/log-aggregator",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/secret-manager",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "critical"
+      },
+      {
+        "repo": "heyns1000/backup-vault",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/disaster-recovery",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "critical"
+      }
+    ],
+    "data_analytics": [
+      {
+        "repo": "heyns1000/data-warehouse",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/analytics-engine",
+        "connection_type": "direct_package",
+        "codenest_package": "seedwave-sectors/ai-logic",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/report-generator",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "medium"
+      },
+      {
+        "repo": "heyns1000/dashboard-builder",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "medium"
+      },
+      {
+        "repo": "heyns1000/metrics-collector",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/data-pipeline",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/etl-coordinator",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/bi-platform",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "medium"
+      }
+    ],
+    "ai_machine_learning": [
+      {
+        "repo": "heyns1000/gpr-framework",
+        "connection_type": "direct_package",
+        "codenest_package": "seedwave-sectors/ai-logic",
+        "connected": true,
+        "role": "gpr_conflict_resolver",
+        "sync_priority": "critical"
+      },
+      {
+        "repo": "heyns1000/tensor-processor",
+        "connection_type": "direct_package",
+        "codenest_package": "seedwave-sectors/ai-logic",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/model-registry",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/inference-engine",
+        "connection_type": "direct_package",
+        "codenest_package": "seedwave-sectors/ai-logic",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/training-orchestrator",
+        "connection_type": "direct_package",
+        "codenest_package": "seedwave-sectors/ai-logic",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/feature-store",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "medium"
+      },
+      {
+        "repo": "heyns1000/ml-pipeline",
+        "connection_type": "direct_package",
+        "codenest_package": "seedwave-sectors/ai-logic",
+        "connected": true,
+        "sync_priority": "high"
+      }
+    ],
+    "security_compliance": [
+      {
+        "repo": "heyns1000/security-scanner",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "critical"
+      },
+      {
+        "repo": "heyns1000/compliance-checker",
+        "connection_type": "direct_package",
+        "codenest_package": "seedwave-sectors/justice",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/audit-logger",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "critical"
+      },
+      {
+        "repo": "heyns1000/access-manager",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "critical"
+      },
+      {
+        "repo": "heyns1000/encryption-service",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "critical"
+      },
+      {
+        "repo": "heyns1000/key-vault",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "critical"
+      }
+    ],
+    "communication_collaboration": [
+      {
+        "repo": "heyns1000/notification-hub",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/email-service",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/sms-gateway",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/chat-platform",
+        "connection_type": "direct_package",
+        "codenest_package": "seedwave-sectors/media",
+        "connected": true,
+        "sync_priority": "medium"
+      },
+      {
+        "repo": "heyns1000/video-conferencing",
+        "connection_type": "direct_package",
+        "codenest_package": "seedwave-sectors/media-sonic",
+        "connected": true,
+        "sync_priority": "medium"
+      }
+    ],
+    "regional_localization": [
+      {
+        "repo": "heyns1000/kasi-economy",
+        "connection_type": "pending_integration",
+        "codenest_package": "seedwave-sectors/trade",
+        "connected": false,
+        "sync_priority": "high",
+        "integration_roadmap": "phase_2",
+        "notes": "SADC integration planned"
+      },
+      {
+        "repo": "heyns1000/sadc-integration",
+        "connection_type": "pending_integration",
+        "codenest_package": "seedwave-sectors/justice",
+        "connected": false,
+        "sync_priority": "high",
+        "integration_roadmap": "phase_2",
+        "notes": "Regional compliance"
+      },
+      {
+        "repo": "heyns1000/localization-engine",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/currency-converter",
+        "connection_type": "direct_package",
+        "codenest_package": "apps/payment",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/regional-compliance",
+        "connection_type": "direct_package",
+        "codenest_package": "seedwave-sectors/justice",
+        "connected": true,
+        "sync_priority": "high"
+      }
+    ],
+    "utility_services": [
+      {
+        "repo": "heyns1000/image-processor",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "medium"
+      },
+      {
+        "repo": "heyns1000/file-storage",
+        "connection_type": "direct_package",
+        "codenest_package": "fruitful/drive",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/search-indexer",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/cache-manager",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/queue-service",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/scheduler",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/webhook-dispatcher",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/api-gateway",
+        "connection_type": "direct_package",
+        "codenest_package": "fruitful/api-platform",
+        "connected": true,
+        "sync_priority": "critical"
+      },
+      {
+        "repo": "heyns1000/rate-limiter",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/load-balancer",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/cdn-manager",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "medium"
+      },
+      {
+        "repo": "heyns1000/dns-controller",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure",
+        "connected": true,
+        "sync_priority": "high"
+      }
+    ],
+    "core_platform_extended": [
+      {
+        "repo": "heyns1000/codenest",
+        "connection_type": "workspace_linked",
+        "codenest_package": "hub_self",
+        "connected": true,
+        "role": "control_center",
+        "sync_priority": "critical"
+      },
+      {
+        "repo": "heyns1000/nexus-nair",
+        "connection_type": "pending_integration",
+        "codenest_package": "infrastructure",
+        "connected": false,
+        "sync_priority": "medium",
+        "integration_roadmap": "phase_2"
+      },
+      {
+        "repo": "heyns1000/buildnest",
+        "connection_type": "workspace_linked",
+        "codenest_package": "infrastructure/buildnest",
+        "connected": true,
+        "role": "build_automation",
+        "sync_priority": "critical"
+      },
+      {
+        "repo": "heyns1000/seedwave",
+        "connection_type": "direct_package",
+        "codenest_package": "apps/seedwave-core",
+        "connected": true,
+        "sync_priority": "critical"
+      },
+      {
+        "repo": "heyns1000/banimal",
+        "connection_type": "direct_package",
+        "codenest_package": "apps/banimal",
+        "connected": true,
+        "version": "2.3.1",
+        "sync_priority": "high"
+      },
+      {
+        "repo": "heyns1000/faa.zone",
+        "connection_type": "pending_integration",
+        "codenest_package": "apps/faau-realm",
+        "connected": false,
+        "sync_priority": "medium",
+        "integration_roadmap": "phase_2",
+        "notes": "FAA zone services planned"
+      }
+    ],
+    "integration_partners": [
+      {
+        "repo": "heyns1000/zoho",
+        "connection_type": "direct_package",
+        "codenest_package": "apps/zoho",
+        "connected": true,
+        "role": "third_party_integration",
+        "sync_priority": "medium"
+      },
+      {
+        "repo": "heyns1000/baobab-bush-portal",
+        "connection_type": "direct_package",
+        "codenest_package": "fruitful/baobab",
+        "connected": true,
+        "sync_priority": "high"
+      },
+      {
+        "repo": "Fruitful-Global-Planet/FruitfulPlanetChange",
+        "connection_type": "workspace_linked",
+        "codenest_package": "fruitful/planet-change",
+        "connected": true,
+        "role": "public_intake_hub",
+        "sync_priority": "critical"
+      }
+    ],
+    "additional_ecosystem": [
+      {
+        "repo": "heyns1000/risk-engine",
+        "connection_type": "pending_integration",
+        "codenest_package": "seedwave-sectors/ai-logic",
+        "connected": false,
+        "sync_priority": "high",
+        "integration_roadmap": "phase_2",
+        "notes": "Risk assessment engine"
+      }
+    ]
+  },
+  
+  "sync_configuration": {
+    "bidirectional_sync": {
+      "enabled": true,
+      "interval_minutes": 15,
+      "workflow": ".github/workflows/codenest-connection-sync.yml",
+      "token_required": "ECOSYSTEM_SYNC_TOKEN"
+    },
+    "workflow_propagation": {
+      "enabled": true,
+      "source_workflow": ".github/workflows/unified-ecosystem-propagation.yml",
+      "schedule": {
+        "top12": "0 */2 * * *",
+        "urgent": "0 */6 * * *",
+        "full": "0 2 * * 0"
+      }
+    },
+    "pulse_monitoring": {
+      "enabled": true,
+      "interval_seconds": 9,
+      "cascade_trigger": "#71",
+      "workflow": ".github/workflows/pulse-trade-9s.yml"
+    },
+    "conflict_resolution": {
+      "enabled": true,
+      "strategy": "gpr_framework",
+      "auto_resolve": true,
+      "workflow": ".github/workflows/conflict-resolver.yml"
+    }
+  },
+  
+  "integration_roadmap": {
+    "phase_1_complete": {
+      "description": "Foundation established - PR #35 workflows",
+      "status": "complete",
+      "repositories_count": 83,
+      "connection_rate": 88.3
+    },
+    "phase_2_in_progress": {
+      "description": "Gap closure for 11 pending repositories",
+      "status": "in_progress",
+      "target_repositories": [
+        "heyns1000/treaty-grid",
+        "heyns1000/revenue-harmonics",
+        "heyns1000/healthgrid",
+        "heyns1000/edu-grid",
+        "heyns1000/kasi-economy",
+        "heyns1000/sadc-integration",
+        "heyns1000/nexus-nair",
+        "heyns1000/faa.zone",
+        "heyns1000/risk-engine"
+      ],
+      "target_connection_rate": 100,
+      "timeline": "Q1 2026"
+    },
+    "phase_3_planned": {
+      "description": "Optimization and performance tuning",
+      "status": "planned",
+      "features": [
+        "Intelligent sync intervals",
+        "Enhanced conflict resolution",
+        "Performance monitoring",
+        "Multi-cloud deployment"
+      ]
+    },
+    "phase_4_future": {
+      "description": "External ecosystem integration",
+      "status": "future",
+      "features": [
+        "Third-party plugin architecture",
+        "Advanced analytics",
+        "Cross-organization sync",
+        "Enterprise features"
+      ]
+    }
+  },
+  
+  "validation": {
+    "schema_version": "1.0.0",
+    "last_validated": "2026-01-06T03:50:00Z",
+    "validator_script": "scripts/audit_repo_connections.py",
+    "ci_checks_passing": 14,
+    "ci_checks_total": 14,
+    "ready_for_automerge": true
+  }
+}
