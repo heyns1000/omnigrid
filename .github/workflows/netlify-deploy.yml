@@ -40,18 +40,35 @@ jobs:
         run: |
           mkdir -p build
           
-          # Copy HTML files
-          cp -r public/* build/ 2>/dev/null || echo "No public directory"
-          cp *.html build/ 2>/dev/null || echo "No root HTML files"
+          # Copy public directory if it exists
+          if [ -d "public" ]; then
+            echo "Copying public directory..."
+            cp -r public/* build/
+          else
+            echo "No public directory found"
+          fi
           
-          # Ensure quantum dashboard is in build
+          # Copy HTML files from root
+          if ls *.html 1> /dev/null 2>&1; then
+            echo "Copying root HTML files..."
+            cp *.html build/
+          else
+            echo "No root HTML files found"
+          fi
+          
+          # Ensure quantum dashboard is in build and set as index
           if [ -f quantum-resilient-dashboard-v3.html ]; then
+            echo "Setting up quantum dashboard as index..."
             cp quantum-resilient-dashboard-v3.html build/
             cp quantum-resilient-dashboard-v3.html build/index.html
+          else
+            echo "Warning: quantum-resilient-dashboard-v3.html not found!"
+            exit 1
           fi
           
           # Copy assets if they exist
           if [ -d "public/assets" ]; then
+            echo "Copying assets..."
             mkdir -p build/assets
             cp -r public/assets/* build/assets/
           fi
