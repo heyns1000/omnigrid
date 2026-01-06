@@ -227,8 +227,9 @@ The following repositories are **verified to exist** but not yet integrated into
 7. **heyns1000/nexus-nair** - Nexus connector (planned: Infrastructure)
 8. **heyns1000/faa.zone** - FAA zone services (planned: apps/faau-realm)
 9. **heyns1000/risk-engine** - Risk assessment (planned: seedwave-sectors/ai-logic)
-10. **heyns1000/payment-gateway-hub** - Already in integration (apps/payment)
-11. **Additional integration slots** for future growth
+10. **Additional integration slots** for future growth
+
+**Note**: heyns1000/payment-gateway-hub is already connected (see Financial Services table).
 
 ### Gap Closure Strategy
 ✅ **Automated via**: `.github/workflows/unified-ecosystem-propagation.yml`  

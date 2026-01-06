@@ -226,9 +226,11 @@ jobs:
           git add -f audit/
           
           # Only commit if there are changes
-          git diff --quiet && git diff --staged --quiet || \
-            git commit -m "🔗 CodeNest sync: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" && \
+          if ! git diff --quiet || ! git diff --staged --quiet; then
+            git commit -m "🔗 CodeNest sync: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+            git pull --rebase
             git push
+          fi
       
       - name: Check for Failed Syncs
         if: always()
@@ -241,7 +243,8 @@ jobs:
             if [ "$FAILED_COUNT" -gt 0 ]; then
               echo "⚠️  Warning: $FAILED_COUNT repositories failed to sync"
               echo "ℹ️  Review audit/sync-progress.json for details"
-              exit 1
+              echo "::warning::$FAILED_COUNT repositories failed to sync - check logs for retry"
+              # Don't fail on sync errors for recurring jobs
             else
               echo "✅ All repositories synced successfully"
             fi

@@ -111,7 +111,7 @@
         "connection_type": "pending_integration",
         "codenest_package": "apps/payment",
         "connected": false,
-        "sync_priority": "medium",
+        "sync_priority": "low",
         "integration_roadmap": "phase_2"
       },
       {
@@ -119,7 +119,7 @@
         "connection_type": "pending_integration",
         "codenest_package": "fruitful/core",
         "connected": false,
-        "sync_priority": "medium",
+        "sync_priority": "low",
         "integration_roadmap": "phase_2"
       },
       {

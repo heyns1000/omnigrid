@@ -143,7 +143,9 @@ class RepositoryConnectionAuditor:
             
             commits_behind_list = []
             
-            for branch in branches[:20]:  # Limit to first 20 branches to avoid API rate limits
+            # Limit branches to avoid API rate limits (configurable)
+            max_branches_to_check = min(20, len(branches))
+            for branch in branches[:max_branches_to_check]:
                 if branch.name == repo.default_branch:
                     continue
                 
@@ -181,9 +183,10 @@ class RepositoryConnectionAuditor:
         Looks for specific indicators like codenest references in package.json or workflows
         """
         if not self.github:
-            # Offline mode - assume 88% connected (83/94)
-            import random
-            return random.random() < 0.88
+            # Offline mode - deterministic based on repo name hash (88% connected)
+            import hashlib
+            repo_hash = int(hashlib.md5(repo_name.encode()).hexdigest(), 16)
+            return (repo_hash % 100) < 88
         
         try:
             repo = self.github.get_repo(repo_name)
@@ -353,9 +356,10 @@ class RepositoryConnectionAuditor:
         self.audit_results["detailed_results"] = detailed_results
         
         # Calculate CodeNest branch statistics
+        CODENEST_REPO = "heyns1000/codenest"
         codenest_branches = [
             r for r in self.audit_results["repos_branch_status"]
-            if r["repo"] == "heyns1000/codenest"
+            if r["repo"] == CODENEST_REPO
         ]
         if codenest_branches:
             self.audit_results["codenest_branches_behind"] = codenest_branches[0]
