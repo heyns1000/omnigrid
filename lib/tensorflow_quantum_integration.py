@@ -43,12 +43,16 @@ class QuantumCircuitSimulator:
         # Pad to quantum state dimension (2^n_qubits)
         state_dim = 2 ** self.n_qubits
         if len(quantum_state) < state_dim:
-            padded = np.zeros(state_dim)
+            padded = np.zeros(state_dim, dtype=np.complex128)
             padded[:len(quantum_state)] = quantum_state
             quantum_state = padded / np.linalg.norm(padded)
         elif len(quantum_state) > state_dim:
             quantum_state = quantum_state[:state_dim]
             quantum_state = quantum_state / np.linalg.norm(quantum_state)
+        
+        # Ensure complex dtype
+        if quantum_state.dtype != np.complex128:
+            quantum_state = quantum_state.astype(np.complex128)
             
         return quantum_state
     
@@ -71,6 +75,9 @@ class QuantumCircuitSimulator:
         """Apply single-qubit rotation gate"""
         # Simplified rotation using phase shift
         rotated = state.copy()
+        # Ensure state is complex
+        if rotated.dtype != np.complex128:
+            rotated = rotated.astype(np.complex128)
         mask = self._get_qubit_mask(qubit)
         rotated[mask] *= np.exp(1j * theta)
         return rotated
@@ -228,26 +235,26 @@ class QuantumPredictiveModel:
         pred = self.predict(features)
         loss = (pred["prediction"] - target) ** 2
         
-        # Parameter shift rule for gradient estimation
-        shift = np.pi / 2
-        gradients = np.zeros_like(self.circuit_params)
+        # Simplified gradient update (using finite differences)
+        epsilon = 0.01
         
-        for i in range(len(self.circuit_params)):
-            # Shift parameter up
-            params_plus = self.circuit_params.copy()
-            params_plus[i] += shift
-            pred_plus = self.quantum_circuit.quantum_prediction(features, params_plus)
+        for i in range(min(len(self.circuit_params), 10)):  # Update first 10 params for speed
+            # Save current param
+            original = self.circuit_params[i]
             
-            # Shift parameter down
-            params_minus = self.circuit_params.copy()
-            params_minus[i] -= shift
-            pred_minus = self.quantum_circuit.quantum_prediction(features, params_minus)
+            # Forward perturbation
+            self.circuit_params[i] = original + epsilon
+            pred_plus = self.quantum_circuit.quantum_prediction(features, self.circuit_params)
             
-            # Gradient via parameter shift rule
-            gradients[i] = (pred_plus - pred_minus) / 2
-        
-        # Update parameters
-        self.circuit_params -= self.learning_rate * gradients * (pred["prediction"] - target)
+            # Backward perturbation
+            self.circuit_params[i] = original - epsilon
+            pred_minus = self.quantum_circuit.quantum_prediction(features, self.circuit_params)
+            
+            # Gradient estimation
+            gradient = (pred_plus - pred_minus) / (2 * epsilon)
+            
+            # Update parameter
+            self.circuit_params[i] = original - self.learning_rate * gradient * (pred["prediction"] - target)
         
         # Record training history
         self.training_history.append({

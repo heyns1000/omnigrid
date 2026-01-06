@@ -141,9 +141,10 @@ class QuantumOracleFeed:
         # Extract real prediction
         prediction = np.mean(np.abs(phase_shifted))
         
-        # Add quantum noise based on coherence time
+        # Add quantum noise based on coherence time (use absolute value)
         coherence_factor = oracle["coherence_time"] / self.cycle_seconds
-        noise = np.random.normal(0, 0.01 * (1 - coherence_factor))
+        noise_scale = abs(0.01 * (1 - coherence_factor))
+        noise = np.random.normal(0, max(noise_scale, 0.001))
         
         return float(np.clip(prediction + noise, 0, 1))
     
