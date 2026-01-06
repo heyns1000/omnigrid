@@ -8,6 +8,13 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "deploy:oracles": "./scripts/oracles/deploy-multi-chain-oracles.sh"
+    "compile": "hardhat compile",
+    "test:contracts": "hardhat test",
+    "test:contracts:coverage": "hardhat coverage",
+    "deploy:oracle": "hardhat run scripts/phase37/deploy-oracle.js --network sepolia",
+    "deploy:local": "hardhat run scripts/phase37/deploy-oracle.js --network hardhat",
+    "integration:phase37": "ts-node scripts/phase37/integration-example.ts",
+    "verify:oracle": "hardhat verify --network sepolia"
   },
   "keywords": [
     "eho",
@@ -31,10 +38,16 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "vitest": "^1.0.0",
+    "@chainlink/contracts": "^1.4.0",
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@types/node": "^20.0.0",
-    "typescript": "^5.9.3",
     "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.2.3"
+    "@types/react-dom": "^19.2.3",
+    "dotenv": "^17.2.3",
+    "ethers": "^6.16.0",
+    "hardhat": "^3.1.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "vitest": "^1.0.0"
   }
 }

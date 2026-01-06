@@ -73,3 +73,19 @@ wrangler.toml.bak
 # Build artifacts
 *.js.map
 dist/
+
+# Hardhat / Blockchain
+cache/
+artifacts/
+coverage/
+coverage.json
+typechain/
+typechain-types/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Deployment artifacts (keep deployment info in deployments/ but ignore sensitive data)
+deployments/*.private.json
