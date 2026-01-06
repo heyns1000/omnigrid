@@ -20,6 +20,15 @@ from datetime import datetime, timezone
 # Import Phase 38 components
 sys.path.append(os.path.dirname(__file__))
 
+# Import with proper handling
+try:
+    from tensorflow_quantum_integration import QuantumPredictiveModel
+    from oracle_feed_quantum import QuantumOracleFeed
+except ImportError:
+    # Fallback imports
+    QuantumPredictiveModel = None
+    QuantumOracleFeed = None
+
 
 class FAAActuaryQuantumCore:
     """
@@ -77,7 +86,9 @@ class FAAActuaryQuantumCore:
     
     def initialize_quantum_model(self):
         """Initialize quantum predictive model"""
-        from lib.tensorflow_quantum_integration import QuantumPredictiveModel
+        global QuantumPredictiveModel
+        if QuantumPredictiveModel is None:
+            from tensorflow_quantum_integration import QuantumPredictiveModel
         
         self.quantum_model = QuantumPredictiveModel(
             n_qubits=self.config["quantum"]["n_qubits"],
@@ -93,7 +104,9 @@ class FAAActuaryQuantumCore:
     
     def initialize_oracle_feed(self):
         """Initialize quantum oracle feed"""
-        from lib.oracle_feed_quantum import QuantumOracleFeed
+        global QuantumOracleFeed
+        if QuantumOracleFeed is None:
+            from oracle_feed_quantum import QuantumOracleFeed
         
         self.oracle_feed = QuantumOracleFeed(
             n_oracles=self.config["oracle"]["n_oracles"],
