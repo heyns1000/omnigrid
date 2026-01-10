@@ -192,7 +192,7 @@ class DeploymentOrchestrator:
                 # Try pip3 first, fall back to pip
                 try:
                     self.run_command(["pip3", "install", "-r", "requirements.txt"], cwd=repo_path, check=False)
-                except:
+                except subprocess.CalledProcessError:
                     self.run_command(["pip", "install", "-r", "requirements.txt"], cwd=repo_path, check=False)
             elif project_type == "python-pipenv":
                 self.run_command(["pipenv", "install"], cwd=repo_path)
@@ -206,7 +206,7 @@ class DeploymentOrchestrator:
                 self.run_command(["composer", "install"], cwd=repo_path)
             elif project_type == "ruby":
                 self.run_command(["bundle", "install"], cwd=repo_path)
-        except Exception as e:
+        except (subprocess.CalledProcessError, FileNotFoundError, OSError) as e:
             self.warn(f"Dependency installation failed: {e}")
 
     def build_project(self, repo_path: Path, project_type: str):
@@ -231,7 +231,7 @@ class DeploymentOrchestrator:
                 self.run_command(["go", "build", "./..."], cwd=repo_path)
             elif project_type == "rust":
                 self.run_command(["cargo", "build", "--release"], cwd=repo_path)
-        except Exception as e:
+        except (subprocess.CalledProcessError, FileNotFoundError, json.JSONDecodeError, OSError) as e:
             self.warn(f"Build failed: {e}")
 
     def run_tests(self, repo_path: Path, project_type: str):
@@ -255,7 +255,7 @@ class DeploymentOrchestrator:
                 self.run_command(["composer", "test"], cwd=repo_path, check=False)
             elif project_type == "ruby":
                 self.run_command(["bundle", "exec", "rspec"], cwd=repo_path, check=False)
-        except Exception as e:
+        except (subprocess.CalledProcessError, FileNotFoundError, OSError) as e:
             self.warn(f"Tests failed or not available: {e}")
 
     def deploy_repository(self, config: Dict) -> bool:
