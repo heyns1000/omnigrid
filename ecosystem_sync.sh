@@ -93,15 +93,35 @@ clone_repositories() {
     log "Cloning all ecosystem repositories..."
 
     local failed=0
+    local max_retries=3
 
     for repo in "${REPOS[@]}"; do
         info "Cloning $repo..."
-
-        if git clone "https://github.com/$GITHUB_USER/$repo.git" \
-            "$ECOSYSTEM_ROOT/repos/$repo" 2>&1 | tee -a "$SYNC_LOG"; then
-            log "✓ Cloned $repo successfully"
-        else
-            error "✗ Failed to clone $repo"
+        
+        local retry=0
+        local success=false
+        
+        while [ $retry -lt $max_retries ] && [ "$success" = false ]; do
+            # Try SSH first, fall back to HTTPS
+            if git clone "git@github.com:$GITHUB_USER/$repo.git" \
+                "$ECOSYSTEM_ROOT/repos/$repo" 2>&1 | tee -a "$SYNC_LOG"; then
+                success=true
+                log "✓ Cloned $repo successfully (SSH)"
+            elif git clone "https://github.com/$GITHUB_USER/$repo.git" \
+                "$ECOSYSTEM_ROOT/repos/$repo" 2>&1 | tee -a "$SYNC_LOG"; then
+                success=true
+                log "✓ Cloned $repo successfully (HTTPS)"
+            else
+                retry=$((retry + 1))
+                if [ $retry -lt $max_retries ]; then
+                    warn "Retry $retry/$max_retries for $repo..."
+                    sleep 2
+                fi
+            fi
+        done
+        
+        if [ "$success" = false ]; then
+            error "✗ Failed to clone $repo after $max_retries attempts"
             ((failed++))
         fi
     done
