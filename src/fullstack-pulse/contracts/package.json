@@ -1,0 +1,29 @@
+{
+  "name": "realtyx-contracts",
+  "version": "1.0.0",
+  "description": "RealtyX Smart Contracts - ERC-3643 Token Implementation",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "coverage": "hardhat coverage",
+    "deploy:testnet": "hardhat run scripts/deploy.ts --network sepolia",
+    "deploy:mainnet": "hardhat run scripts/deploy.ts --network mainnet",
+    "verify": "hardhat verify"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.1",
+    "@tokenysolutions/t-rex": "^4.1.1",
+    "ethers": "^6.9.0"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "@nomicfoundation/hardhat-ethers": "^3.0.5",
+    "@typechain/hardhat": "^9.1.0",
+    "hardhat": "^2.19.4",
+    "hardhat-gas-reporter": "^1.0.9",
+    "solidity-coverage": "^0.8.5",
+    "typescript": "^5.3.3",
+    "@types/node": "^20.10.7"
+  }
+}
