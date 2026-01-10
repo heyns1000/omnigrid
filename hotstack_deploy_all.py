@@ -192,7 +192,7 @@ class DeploymentOrchestrator:
                 # Try pip3 first, fall back to pip
                 try:
                     self.run_command(["pip3", "install", "-r", "requirements.txt"], cwd=repo_path, check=False)
-                except subprocess.CalledProcessError:
+                except (subprocess.CalledProcessError, FileNotFoundError):
                     self.run_command(["pip", "install", "-r", "requirements.txt"], cwd=repo_path, check=False)
             elif project_type == "python-pipenv":
                 self.run_command(["pipenv", "install"], cwd=repo_path)
@@ -218,7 +218,7 @@ class DeploymentOrchestrator:
                 # Check if build script exists
                 package_json = repo_path / "package.json"
                 if package_json.exists():
-                    with open(package_json) as f:
+                    with open(package_json, encoding='utf-8') as f:
                         pkg_data = json.load(f)
                         if "build" in pkg_data.get("scripts", {}):
                             if project_type == "nodejs-yarn":
