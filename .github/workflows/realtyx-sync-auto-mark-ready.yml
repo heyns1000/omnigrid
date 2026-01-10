@@ -1,0 +1,60 @@
+name: RealtyX Sync Auto Mark Ready (9s Pulse Monitor)
+on:
+  pull_request:
+    types: [opened]
+  schedule:
+    - cron: '* * * * *'  # Every minute (9s monitor approximation)
+  workflow_dispatch:
+
+jobs:
+  realtyx-pulse-monitor:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+    steps:
+      - name: RealtyX 9s Pulse Check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: prs } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open'
+            });
+            
+            // Filter RealtyX PRs (containing 'realtyx' or 'RLX' in title/branch)
+            const realtyxPRs = prs.filter(pr => 
+              pr.title.toLowerCase().includes('realtyx') || 
+              pr.title.includes('RLX') ||
+              pr.head.ref.toLowerCase().includes('realtyx')
+            );
+            
+            for (const pr of realtyxPRs.filter(p => p.draft)) {
+              // 9s pulse monitor - mark ready after 9 seconds
+              const createdAt = new Date(pr.created_at);
+              const now = new Date();
+              const ageInSeconds = (now - createdAt) / 1000;
+              
+              if (ageInSeconds >= 9) {
+                await github.rest.pulls.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pr.number,
+                  draft: false
+                });
+                
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: pr.number,
+                  body: '🦁 RealtyX 9s Pulse: SYNC_HIGH (+5V) - PR marked ready for deployment\n\n**Status**: IMMEDIATELY MERGEABLE ✅'
+                });
+                
+                console.log(`✅ RealtyX PR #${pr.number} marked ready (9s pulse: ${Math.floor(ageInSeconds)}s)`);
+              } else {
+                console.log(`⏳ RealtyX PR #${pr.number} pulse charging (${Math.floor(ageInSeconds)}s < 9s)`);
+              }
+            }
+            
+            console.log(`🌊 9s Pulse Monitor Complete - ${realtyxPRs.length} RealtyX PRs monitored`);

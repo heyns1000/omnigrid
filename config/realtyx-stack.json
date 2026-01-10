@@ -1,0 +1,321 @@
+{
+  "project": {
+    "name": "RealtyX Fullstack Pulse",
+    "version": "1.0.0",
+    "description": "Luke Adamson's RealtyX Protocol - Fully Autonomous Real Estate Tokenization Platform",
+    "author": "Luke Adamson",
+    "license": "MIT"
+  },
+  "stack": {
+    "frontend": {
+      "framework": "React",
+      "version": "18.2.0",
+      "styling": {
+        "primary": "Tailwind CSS",
+        "version": "3.4.0",
+        "components": "shadcn/ui"
+      },
+      "charts": {
+        "library": "Recharts",
+        "version": "2.10.0"
+      },
+      "build_tool": "Vite",
+      "language": "TypeScript"
+    },
+    "backend": {
+      "framework": "Express",
+      "version": "4.18.0",
+      "language": "TypeScript",
+      "runtime": "Node.js 18+",
+      "orm": {
+        "name": "Drizzle ORM",
+        "version": "0.29.0",
+        "migration_tool": "Drizzle Kit"
+      },
+      "database": {
+        "provider": "Neon Postgres",
+        "version": "PostgreSQL 15",
+        "features": [
+          "Serverless",
+          "Auto-scaling",
+          "Branch-per-PR"
+        ]
+      },
+      "ledger": {
+        "type": "Double-Entry",
+        "timestamp_precision": "millisecond",
+        "audit_trail": true
+      }
+    },
+    "contracts": {
+      "standard": "ERC-3643",
+      "network": "Ethereum",
+      "framework": "Hardhat",
+      "language": "Solidity",
+      "version": "0.8.20",
+      "token": {
+        "name": "RealtyX Token",
+        "symbol": "RLX",
+        "value_usd": 1000.0,
+        "decimals": 18
+      },
+      "compliance": {
+        "kyc_required": true,
+        "transfer_restrictions": true,
+        "regulatory": "South African Property Law"
+      }
+    }
+  },
+  "authentication": {
+    "method": "SIWE",
+    "full_name": "Sign-In with Ethereum",
+    "provider": "Pretoria Lattice",
+    "features": [
+      "Wallet-based authentication",
+      "Zero-knowledge proof support",
+      "Session management",
+      "Multi-signature support"
+    ]
+  },
+  "location": {
+    "primary": "Pretoria",
+    "region": "Gauteng",
+    "country": "South Africa",
+    "timezone": "Africa/Johannesburg",
+    "currency": "ZAR",
+    "tax": {
+      "vat_rate": 0.15,
+      "description": "South African Value Added Tax (15%)"
+    }
+  },
+  "pulse": {
+    "interval_ms": 9000,
+    "description": "Eternal 9-second pulse heartbeat",
+    "sync_signal": "+5V SYNC_HIGH",
+    "monitoring": [
+      "Token metrics",
+      "Property valuations",
+      "Compliance status",
+      "Ledger integrity",
+      "Network health"
+    ]
+  },
+  "database_schema": {
+    "tables": [
+      {
+        "name": "users",
+        "description": "User accounts with SIWE authentication",
+        "columns": [
+          {"name": "id", "type": "uuid", "primary_key": true},
+          {"name": "wallet_address", "type": "varchar(42)", "unique": true},
+          {"name": "username", "type": "varchar(255)"},
+          {"name": "email", "type": "varchar(255)"},
+          {"name": "kyc_verified", "type": "boolean", "default": false},
+          {"name": "created_at", "type": "timestamp"},
+          {"name": "updated_at", "type": "timestamp"}
+        ]
+      },
+      {
+        "name": "properties",
+        "description": "Tokenized real estate properties",
+        "columns": [
+          {"name": "id", "type": "uuid", "primary_key": true},
+          {"name": "property_code", "type": "varchar(20)", "unique": true},
+          {"name": "name", "type": "varchar(255)"},
+          {"name": "location", "type": "varchar(255)"},
+          {"name": "token_allocation", "type": "integer"},
+          {"name": "value_usd", "type": "decimal(15,2)"},
+          {"name": "vat_amount", "type": "decimal(15,2)"},
+          {"name": "status", "type": "varchar(50)"},
+          {"name": "created_at", "type": "timestamp"},
+          {"name": "updated_at", "type": "timestamp"}
+        ]
+      },
+      {
+        "name": "tokens",
+        "description": "RLX token holdings and transfers",
+        "columns": [
+          {"name": "id", "type": "uuid", "primary_key": true},
+          {"name": "user_id", "type": "uuid", "foreign_key": "users.id"},
+          {"name": "property_id", "type": "uuid", "foreign_key": "properties.id"},
+          {"name": "amount", "type": "decimal(18,8)"},
+          {"name": "value_usd", "type": "decimal(15,2)"},
+          {"name": "transaction_hash", "type": "varchar(66)"},
+          {"name": "created_at", "type": "timestamp"}
+        ]
+      },
+      {
+        "name": "ledger_entries",
+        "description": "Double-entry accounting ledger with timestamp precision",
+        "columns": [
+          {"name": "id", "type": "uuid", "primary_key": true},
+          {"name": "entry_type", "type": "varchar(20)", "enum": ["debit", "credit"]},
+          {"name": "account_id", "type": "uuid"},
+          {"name": "amount", "type": "decimal(15,2)"},
+          {"name": "currency", "type": "varchar(3)", "default": "ZAR"},
+          {"name": "description", "type": "text"},
+          {"name": "reference", "type": "varchar(255)"},
+          {"name": "timestamp_ms", "type": "bigint"},
+          {"name": "created_at", "type": "timestamp"}
+        ]
+      },
+      {
+        "name": "transactions",
+        "description": "Property token transactions",
+        "columns": [
+          {"name": "id", "type": "uuid", "primary_key": true},
+          {"name": "from_user_id", "type": "uuid", "foreign_key": "users.id"},
+          {"name": "to_user_id", "type": "uuid", "foreign_key": "users.id"},
+          {"name": "property_id", "type": "uuid", "foreign_key": "properties.id"},
+          {"name": "token_amount", "type": "decimal(18,8)"},
+          {"name": "value_usd", "type": "decimal(15,2)"},
+          {"name": "value_zar", "type": "decimal(15,2)"},
+          {"name": "vat_amount", "type": "decimal(15,2)"},
+          {"name": "tx_hash", "type": "varchar(66)"},
+          {"name": "status", "type": "varchar(50)"},
+          {"name": "created_at", "type": "timestamp"}
+        ]
+      },
+      {
+        "name": "compliance_checks",
+        "description": "KYC and regulatory compliance tracking",
+        "columns": [
+          {"name": "id", "type": "uuid", "primary_key": true},
+          {"name": "user_id", "type": "uuid", "foreign_key": "users.id"},
+          {"name": "check_type", "type": "varchar(50)"},
+          {"name": "status", "type": "varchar(50)"},
+          {"name": "verified_at", "type": "timestamp"},
+          {"name": "expires_at", "type": "timestamp"},
+          {"name": "metadata", "type": "jsonb"}
+        ]
+      },
+      {
+        "name": "pulse_logs",
+        "description": "9-second pulse heartbeat monitoring",
+        "columns": [
+          {"name": "id", "type": "uuid", "primary_key": true},
+          {"name": "pulse_timestamp", "type": "timestamp"},
+          {"name": "sync_signal", "type": "varchar(20)"},
+          {"name": "metrics", "type": "jsonb"},
+          {"name": "status", "type": "varchar(50)"},
+          {"name": "created_at", "type": "timestamp"}
+        ]
+      }
+    ],
+    "indexes": [
+      {"table": "users", "columns": ["wallet_address"]},
+      {"table": "properties", "columns": ["property_code", "status"]},
+      {"table": "tokens", "columns": ["user_id", "property_id"]},
+      {"table": "ledger_entries", "columns": ["account_id", "timestamp_ms"]},
+      {"table": "transactions", "columns": ["from_user_id", "to_user_id", "tx_hash"]},
+      {"table": "pulse_logs", "columns": ["pulse_timestamp"]}
+    ]
+  },
+  "api_endpoints": {
+    "base_url": "https://api.realtyx.co.za",
+    "version": "v1",
+    "routes": [
+      {
+        "path": "/auth/siwe/challenge",
+        "method": "POST",
+        "description": "Get SIWE authentication challenge"
+      },
+      {
+        "path": "/auth/siwe/verify",
+        "method": "POST",
+        "description": "Verify SIWE signature and create session"
+      },
+      {
+        "path": "/properties",
+        "method": "GET",
+        "description": "List all tokenized properties"
+      },
+      {
+        "path": "/properties/:id",
+        "method": "GET",
+        "description": "Get property details"
+      },
+      {
+        "path": "/tokens/balance",
+        "method": "GET",
+        "description": "Get user's RLX token balance"
+      },
+      {
+        "path": "/tokens/transfer",
+        "method": "POST",
+        "description": "Transfer RLX tokens (with compliance checks)"
+      },
+      {
+        "path": "/ledger/entries",
+        "method": "GET",
+        "description": "Get ledger entries for account"
+      },
+      {
+        "path": "/transactions/history",
+        "method": "GET",
+        "description": "Get transaction history"
+      },
+      {
+        "path": "/compliance/kyc",
+        "method": "POST",
+        "description": "Submit KYC verification"
+      },
+      {
+        "path": "/pulse/status",
+        "method": "GET",
+        "description": "Get current pulse status and metrics"
+      }
+    ]
+  },
+  "environment_variables": {
+    "frontend": [
+      "VITE_REALTYX_API_URL",
+      "VITE_CHAIN_ID",
+      "VITE_CONTRACT_ADDRESS",
+      "VITE_WALLET_CONNECT_PROJECT_ID"
+    ],
+    "backend": [
+      "DATABASE_URL",
+      "JWT_SECRET",
+      "ETHEREUM_RPC_URL",
+      "CONTRACT_ADDRESS",
+      "PRIVATE_KEY",
+      "PORT"
+    ]
+  },
+  "deployment": {
+    "frontend": {
+      "platform": "Netlify",
+      "build_command": "npm run build",
+      "output_directory": "dist",
+      "cdn": true,
+      "ssl": true
+    },
+    "backend": {
+      "platform": "Railway / Fly.io",
+      "docker": true,
+      "auto_scaling": true
+    },
+    "database": {
+      "provider": "Neon",
+      "serverless": true,
+      "branches": true
+    }
+  },
+  "features": [
+    "SIWE (Sign-In with Ethereum) authentication",
+    "ERC-3643 compliant token transfers",
+    "Real-time property valuation tracking",
+    "Double-entry ledger with millisecond timestamps",
+    "South African VAT (15%) calculation",
+    "KYC/AML compliance checks",
+    "9-second pulse heartbeat monitoring",
+    "Pretoria/Gauteng property lattice",
+    "$1,000 USD backed RLX tokens",
+    "95 tokenized properties",
+    "Multi-signature wallet support",
+    "Audit trail and compliance reporting"
+  ],
+  "status": "FULLY_AUTONOMOUS",
+  "sync_signal": "+5V SYNC_HIGH"
+}
