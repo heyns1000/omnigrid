@@ -17,6 +17,6 @@ jobs:
           echo "🌊 Pulse: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> pulse.log
           git config user.name "OmniGrid Pulse Bot"
           git config user.email "action@github.com"
-          git add pulse.log
+          git add -f pulse.log
           git diff --cached --quiet || git commit -m "🌊 Pulse update: $(date -u +%Y-%m-%d\ %H:%M:%S) UTC"
           git push
