@@ -2,7 +2,7 @@
   "version": "1.0.0",
   "network": "ethereum",
   "chain_id": 1,
-  "contract_address": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+  "contract_address": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb0",
   "token": {
     "symbol": "RLX",
     "name": "RealtyX Token",

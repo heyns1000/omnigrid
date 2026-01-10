@@ -191,13 +191,17 @@ class RealtyXConflictResolver:
         head_section = []
         merge_section = []
         
+        in_merge_section = False
+        
         for line in lines:
             if line.startswith('<<<<<<< HEAD'):
                 in_conflict = True
+                in_merge_section = False
                 head_section = []
                 merge_section = []
                 continue
             elif line.startswith('======='):
+                in_merge_section = True
                 continue
             elif line.startswith('>>>>>>>'):
                 # Decide what to keep
@@ -210,16 +214,16 @@ class RealtyXConflictResolver:
                     result.extend(head_section)
                 
                 in_conflict = False
+                in_merge_section = False
                 head_section = []
                 merge_section = []
                 continue
             
             if in_conflict:
-                if not merge_section or line != '=======':
-                    if not merge_section:
-                        head_section.append(line)
-                    else:
-                        merge_section.append(line)
+                if in_merge_section:
+                    merge_section.append(line)
+                else:
+                    head_section.append(line)
             else:
                 result.append(line)
         
