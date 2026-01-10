@@ -200,9 +200,12 @@ jobs:
               # Append pulse stats
               cat ../PULSE_STATUS.md >> README.md
 
-              # Commit and push
+              # Configure git with authentication token
               git config --local user.email "action@github.com"
               git config --local user.name "OmniGrid Pulse Bot"
+              git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/heyns1000/heyns1000.git
+              
+              # Commit and push
               git add README.md
               git diff --quiet && git diff --staged --quiet || \
                 (git commit -m "🌊 Pulse update: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" && git push)
