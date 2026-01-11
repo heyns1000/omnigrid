@@ -22,6 +22,17 @@ jobs:
         run: |
           pip install requests pygithub
           
+      - name: Validate Configuration
+        run: |
+          python scripts/validate-automation-config.py \
+            --config config/ecosystem-repos.json
+          
+      - name: Run Health Check
+        run: |
+          python scripts/automation-health-check.py \
+            --output automation_health_pre.json
+        continue-on-error: true
+          
       - name: Sync Ecosystem Repositories
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -30,3 +41,46 @@ jobs:
             --config config/ecosystem-repos.json \
             --auto-sync \
             --create-prs
+            
+      - name: Upload Metrics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: automation-metrics
+          path: |
+            automation_metrics.json
+            automation_health_pre.json
+          retention-days: 30
+          
+      - name: Check Health After Run
+        if: always()
+        run: |
+          python scripts/automation-health-check.py \
+            --output automation_health_post.json \
+            --verbose
+        continue-on-error: true
+          
+      - name: Notify on Failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let metricsInfo = '';
+            
+            try {
+              if (fs.existsSync('automation_metrics.json')) {
+                const metrics = JSON.parse(fs.readFileSync('automation_metrics.json', 'utf8'));
+                metricsInfo = `
+                  - Repos scanned: ${metrics.repos_scanned || 0}
+                  - Errors: ${metrics.errors_encountered || 0}
+                  - Success rate: ${metrics.success_rate || 0}%
+                `;
+              }
+            } catch (e) {
+              metricsInfo = 'Could not read metrics';
+            }
+            
+            console.log('❌ Ecosystem sync workflow failed');
+            console.log('Metrics:', metricsInfo);
+            core.setFailed('Ecosystem sync encountered errors. Check logs and metrics for details.');
