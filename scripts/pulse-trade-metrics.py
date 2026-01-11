@@ -38,6 +38,10 @@ class MetricsCollector:
     def to_dict(self) -> Dict[str, Any]:
         """Export metrics as dictionary"""
         duration = (datetime.now() - self.start_time).total_seconds()
+        success_rate = 0
+        if (self.repos_scanned + self.errors_encountered) > 0:
+            success_rate = (self.repos_scanned / (self.repos_scanned + self.errors_encountered)) * 100
+        
         return {
             "start_time": self.start_time.isoformat(),
             "duration_seconds": duration,
@@ -47,7 +51,7 @@ class MetricsCollector:
             "errors_encountered": self.errors_encountered,
             "repos_skipped": self.repos_skipped,
             "api_calls_made": self.api_calls_made,
-            "success_rate": (self.repos_scanned / (self.repos_scanned + self.errors_encountered) * 100) if (self.repos_scanned + self.errors_encountered) > 0 else 0
+            "success_rate": success_rate
         }
     
     def save(self, output_file: str = "automation_metrics.json"):

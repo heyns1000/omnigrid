@@ -10,14 +10,15 @@ import os
 import sys
 from pathlib import Path
 from datetime import datetime, timedelta
-from typing import Dict, List, Any
+from typing import Optional, Tuple, Dict, List, Any
+from datetime import datetime
 
 try:
     from github import Github, GithubException
     GITHUB_AVAILABLE = True
 except ImportError:
     GITHUB_AVAILABLE = False
-    print("⚠️  PyGithub not available, some checks will be skipped")
+    # Will print warning when health check is actually run
 
 class HealthCheckReport:
     """Health check report per PR #35 monitoring recommendations"""
@@ -174,6 +175,7 @@ def check_metrics_file(report: HealthCheckReport):
 def check_github_access(report: HealthCheckReport):
     """Check GitHub API access and rate limits"""
     if not GITHUB_AVAILABLE:
+        print("⚠️  PyGithub not available, some checks will be skipped")
         report.add_check(
             "GitHub access",
             "warning",

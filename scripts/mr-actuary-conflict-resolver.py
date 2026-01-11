@@ -163,8 +163,9 @@ def resolve_conflicts_ai(pr_number: int, auto_resolve: bool = False, push: bool 
                 # Use a more robust pattern that handles various conflict formats
                 resolved = resolve_code_conflicts(content)
             
-            # Validate resolution
-            if '<<<<<<< ' in resolved or '=======' in resolved or '>>>>>>> ' in resolved:
+            # Validate resolution - check for conflict markers more robustly
+            conflict_pattern = re.compile(r'^(<{7}|={7}|>{7})\s')
+            if any(conflict_pattern.match(line) for line in resolved.split('\n')):
                 print(f"    ⚠️  Conflict markers still present after resolution")
                 conflicts_failed += 1
                 continue
