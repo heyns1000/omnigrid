@@ -1,0 +1,72 @@
+{
+  "timestamp": "2026-01-11T00:05:56.532194",
+  "healthy": true,
+  "checks": [
+    {
+      "name": "Config file: config/ecosystem-repos.json",
+      "status": "ok",
+      "message": "File exists",
+      "timestamp": "2026-01-11T00:05:56.532234"
+    },
+    {
+      "name": "Config file: .github/workflows/auto-approve-copilot.yml",
+      "status": "ok",
+      "message": "File exists",
+      "timestamp": "2026-01-11T00:05:56.532260"
+    },
+    {
+      "name": "Config file: .github/workflows/auto-merge-ecosystem.yml",
+      "status": "ok",
+      "message": "File exists",
+      "timestamp": "2026-01-11T00:05:56.532276"
+    },
+    {
+      "name": "Config file: .github/workflows/ecosystem-sync-monitor.yml",
+      "status": "ok",
+      "message": "File exists",
+      "timestamp": "2026-01-11T00:05:56.532291"
+    },
+    {
+      "name": "Metrics file",
+      "status": "warning",
+      "message": "No metrics file found - automation may not have run yet",
+      "timestamp": "2026-01-11T00:05:56.532317"
+    },
+    {
+      "name": "GitHub access",
+      "status": "warning",
+      "message": "PyGithub not available",
+      "timestamp": "2026-01-11T00:05:56.532321"
+    },
+    {
+      "name": "Script: scripts/pulse-trade-metrics.py",
+      "status": "ok",
+      "message": "Executable",
+      "timestamp": "2026-01-11T00:05:56.532339"
+    },
+    {
+      "name": "Script: scripts/mr-actuary-conflict-resolver.py",
+      "status": "ok",
+      "message": "Executable",
+      "timestamp": "2026-01-11T00:05:56.532354"
+    },
+    {
+      "name": "Script: scripts/validate-automation-config.py",
+      "status": "ok",
+      "message": "Executable",
+      "timestamp": "2026-01-11T00:05:56.532366"
+    }
+  ],
+  "warnings": [
+    "Metrics file: No metrics file found - automation may not have run yet",
+    "GitHub access: PyGithub not available"
+  ],
+  "errors": [],
+  "metrics": {},
+  "summary": {
+    "total_checks": 9,
+    "passed": 7,
+    "warnings": 2,
+    "errors": 0
+  }
+}

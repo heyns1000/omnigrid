@@ -1,0 +1,107 @@
+name: Automation Health Check
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/**'
+      - 'scripts/**'
+      - 'config/**'
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Install Dependencies
+        run: |
+          pip install requests pygithub
+          
+      - name: Run Health Checks
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/automation-health-check.py \
+            --output automation_health.json \
+            --verbose
+            
+      - name: Validate Configuration
+        run: |
+          python scripts/validate-automation-config.py \
+            --config config/ecosystem-repos.json
+            
+      - name: Upload Health Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: health-report-${{ github.run_number }}
+          path: automation_health.json
+          retention-days: 90
+          
+      - name: Check Permissions
+        run: |
+          echo "Checking script permissions..."
+          ls -la scripts/*.py
+          
+      - name: Create Issue on Critical Failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let healthReport = '';
+            
+            try {
+              if (fs.existsSync('automation_health.json')) {
+                const health = JSON.parse(fs.readFileSync('automation_health.json', 'utf8'));
+                
+                if (health.errors && health.errors.length > 0) {
+                  healthReport = '## Critical Errors\n\n';
+                  health.errors.forEach(error => {
+                    healthReport += `- ❌ ${error}\n`;
+                  });
+                }
+                
+                if (health.warnings && health.warnings.length > 0) {
+                  healthReport += '\n## Warnings\n\n';
+                  health.warnings.forEach(warning => {
+                    healthReport += `- ⚠️  ${warning}\n`;
+                  });
+                }
+              }
+            } catch (e) {
+              healthReport = `Could not read health report: ${e.message}`;
+            }
+            
+            // Only create issue if there are actual errors
+            if (healthReport.includes('Critical Errors')) {
+              const { data: issues } = await github.rest.issues.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                labels: 'automation-health'
+              });
+              
+              // Don't create duplicate issues
+              if (issues.length === 0) {
+                await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: '🏥 Automation Health Check Failed',
+                  body: `Automation health check failed at ${new Date().toISOString()}\n\n${healthReport}\n\nWorkflow run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+                  labels: ['automation-health', 'bug']
+                });
+                console.log('Created health check failure issue');
+              } else {
+                console.log('Health issue already exists, not creating duplicate');
+              }
+            }
