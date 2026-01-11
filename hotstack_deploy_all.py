@@ -150,16 +150,30 @@ class DeploymentOrchestrator:
 
     def detect_project_type(self, repo_path: Path) -> str:
         """Detect the type of project (Node.js, Python, Go, etc.)."""
+        # Check for package manager lock files to determine preferred tool
         if (repo_path / "package.json").exists():
-            return "nodejs"
+            if (repo_path / "pnpm-lock.yaml").exists():
+                return "nodejs-pnpm"
+            elif (repo_path / "yarn.lock").exists():
+                return "nodejs-yarn"
+            else:
+                return "nodejs"
         elif (repo_path / "requirements.txt").exists() or (repo_path / "pyproject.toml").exists():
             return "python"
+        elif (repo_path / "Pipfile").exists():
+            return "python-pipenv"
+        elif (repo_path / "poetry.lock").exists():
+            return "python-poetry"
         elif (repo_path / "go.mod").exists():
             return "go"
         elif (repo_path / "Cargo.toml").exists():
             return "rust"
         elif (repo_path / "pom.xml").exists():
             return "java"
+        elif (repo_path / "composer.json").exists():
+            return "php"
+        elif (repo_path / "Gemfile").exists():
+            return "ruby"
         else:
             return "unknown"
 
@@ -167,31 +181,58 @@ class DeploymentOrchestrator:
         """Install project dependencies based on type."""
         self.info(f"Installing dependencies ({project_type})...")
 
-        if project_type == "nodejs":
-            self.run_command(["npm", "install"], cwd=repo_path)
-        elif project_type == "python":
-            self.run_command(["pip", "install", "-r", "requirements.txt"], cwd=repo_path, check=False)
-        elif project_type == "go":
-            self.run_command(["go", "mod", "download"], cwd=repo_path)
-        elif project_type == "rust":
-            self.run_command(["cargo", "fetch"], cwd=repo_path)
+        try:
+            if project_type == "nodejs":
+                self.run_command(["npm", "install"], cwd=repo_path)
+            elif project_type == "nodejs-yarn":
+                self.run_command(["yarn", "install"], cwd=repo_path)
+            elif project_type == "nodejs-pnpm":
+                self.run_command(["pnpm", "install"], cwd=repo_path)
+            elif project_type == "python":
+                # Try pip3 first, fall back to pip
+                try:
+                    self.run_command(["pip3", "install", "-r", "requirements.txt"], cwd=repo_path, check=False)
+                except (subprocess.CalledProcessError, FileNotFoundError):
+                    self.run_command(["pip", "install", "-r", "requirements.txt"], cwd=repo_path, check=False)
+            elif project_type == "python-pipenv":
+                self.run_command(["pipenv", "install"], cwd=repo_path)
+            elif project_type == "python-poetry":
+                self.run_command(["poetry", "install"], cwd=repo_path)
+            elif project_type == "go":
+                self.run_command(["go", "mod", "download"], cwd=repo_path)
+            elif project_type == "rust":
+                self.run_command(["cargo", "fetch"], cwd=repo_path)
+            elif project_type == "php":
+                self.run_command(["composer", "install"], cwd=repo_path)
+            elif project_type == "ruby":
+                self.run_command(["bundle", "install"], cwd=repo_path)
+        except (subprocess.CalledProcessError, FileNotFoundError, OSError) as e:
+            self.warn(f"Dependency installation failed: {e}")
 
     def build_project(self, repo_path: Path, project_type: str):
         """Build the project."""
         self.info(f"Building project ({project_type})...")
 
-        if project_type == "nodejs":
-            # Check if build script exists
-            package_json = repo_path / "package.json"
-            if package_json.exists():
-                with open(package_json) as f:
-                    pkg_data = json.load(f)
-                    if "build" in pkg_data.get("scripts", {}):
-                        self.run_command(["npm", "run", "build"], cwd=repo_path)
-        elif project_type == "go":
-            self.run_command(["go", "build", "./..."], cwd=repo_path)
-        elif project_type == "rust":
-            self.run_command(["cargo", "build", "--release"], cwd=repo_path)
+        try:
+            if project_type in ["nodejs", "nodejs-yarn", "nodejs-pnpm"]:
+                # Check if build script exists
+                package_json = repo_path / "package.json"
+                if package_json.exists():
+                    with open(package_json, encoding='utf-8') as f:
+                        pkg_data = json.load(f)
+                        if "build" in pkg_data.get("scripts", {}):
+                            if project_type == "nodejs-yarn":
+                                self.run_command(["yarn", "build"], cwd=repo_path)
+                            elif project_type == "nodejs-pnpm":
+                                self.run_command(["pnpm", "build"], cwd=repo_path)
+                            else:
+                                self.run_command(["npm", "run", "build"], cwd=repo_path)
+            elif project_type == "go":
+                self.run_command(["go", "build", "./..."], cwd=repo_path)
+            elif project_type == "rust":
+                self.run_command(["cargo", "build", "--release"], cwd=repo_path)
+        except (subprocess.CalledProcessError, FileNotFoundError, json.JSONDecodeError, OSError) as e:
+            self.warn(f"Build failed: {e}")
 
     def run_tests(self, repo_path: Path, project_type: str):
         """Run project tests."""
@@ -200,13 +241,21 @@ class DeploymentOrchestrator:
         try:
             if project_type == "nodejs":
                 self.run_command(["npm", "test"], cwd=repo_path, check=False)
-            elif project_type == "python":
+            elif project_type == "nodejs-yarn":
+                self.run_command(["yarn", "test"], cwd=repo_path, check=False)
+            elif project_type == "nodejs-pnpm":
+                self.run_command(["pnpm", "test"], cwd=repo_path, check=False)
+            elif project_type in ["python", "python-pipenv", "python-poetry"]:
                 self.run_command(["pytest"], cwd=repo_path, check=False)
             elif project_type == "go":
                 self.run_command(["go", "test", "./..."], cwd=repo_path, check=False)
             elif project_type == "rust":
                 self.run_command(["cargo", "test"], cwd=repo_path, check=False)
-        except Exception as e:
+            elif project_type == "php":
+                self.run_command(["composer", "test"], cwd=repo_path, check=False)
+            elif project_type == "ruby":
+                self.run_command(["bundle", "exec", "rspec"], cwd=repo_path, check=False)
+        except (subprocess.CalledProcessError, FileNotFoundError, OSError) as e:
             self.warn(f"Tests failed or not available: {e}")
 
     def deploy_repository(self, config: Dict) -> bool:

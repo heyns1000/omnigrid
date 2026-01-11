@@ -102,11 +102,34 @@ class ContinuousPulseUpdater:
         print("\n📢 Updating GitHub profile...")
 
         try:
+            # Validate GitHub CLI is installed
+            gh_check = subprocess.run(
+                ["which", "gh"],
+                capture_output=True,
+                text=True
+            )
+            
+            if gh_check.returncode != 0:
+                print("  ⚠️  GitHub CLI (gh) not found. Skipping profile update.")
+                return
+            
+            # Verify authentication
+            auth_check = subprocess.run(
+                ["gh", "auth", "status"],
+                capture_output=True,
+                text=True
+            )
+            
+            if auth_check.returncode != 0:
+                print("  ⚠️  GitHub CLI not authenticated. Run 'gh auth login' first.")
+                return
+
             # Check if profile repo exists
             result = subprocess.run(
                 ["gh", "repo", "view", "heyns1000/heyns1000"],
                 capture_output=True,
-                text=True
+                text=True,
+                timeout=10
             )
 
             if result.returncode != 0:
@@ -118,14 +141,16 @@ class ContinuousPulseUpdater:
                 subprocess.run(
                     ["gh", "repo", "clone", "heyns1000/heyns1000", str(self.profile_repo)],
                     check=True,
-                    capture_output=True
+                    capture_output=True,
+                    timeout=30
                 )
             else:
                 subprocess.run(
                     ["git", "pull"],
                     cwd=self.profile_repo,
                     check=True,
-                    capture_output=True
+                    capture_output=True,
+                    timeout=30
                 )
 
             # Generate README content
@@ -133,14 +158,15 @@ class ContinuousPulseUpdater:
 
             # Write README
             readme_path = self.profile_repo / "README.md"
-            with open(readme_path, 'w') as f:
+            with open(readme_path, 'w', encoding='utf-8') as f:
                 f.write(readme_content)
 
             # Commit and push
             subprocess.run(
                 ["git", "add", "README.md"],
                 cwd=self.profile_repo,
-                check=True
+                check=True,
+                timeout=10
             )
 
             commit_msg = f"🌊 Pulse update: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}"
@@ -148,18 +174,22 @@ class ContinuousPulseUpdater:
                 ["git", "commit", "-m", commit_msg],
                 cwd=self.profile_repo,
                 check=True,
-                capture_output=True
+                capture_output=True,
+                timeout=10
             )
 
             subprocess.run(
                 ["git", "push"],
                 cwd=self.profile_repo,
                 check=True,
-                capture_output=True
+                capture_output=True,
+                timeout=30
             )
 
             print("  ✅ GitHub profile updated successfully!\n")
 
+        except subprocess.TimeoutExpired:
+            print(f"  ⚠️  GitHub update timed out\n")
         except subprocess.CalledProcessError as e:
             print(f"  ⚠️  GitHub update failed: {e}\n")
         except Exception as e:
