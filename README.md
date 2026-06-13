@@ -1,3 +1,60 @@
+<p align="center">
+  <img src="docs/assets/fruitful-banner.png" alt="Fruitful™" width="100%">
+</p>
+
+# OmniGrid
+
+**Ecosystem consolidation & automation platform — Fruitful™ / FAA**
+`heyns1000/omnigrid` · TypeScript · Python · HTML
+
+> Factual header added 13 June 2026, verified against live GitHub via the
+> `fruitful-ecosystem-auditor` skill. The original project README is preserved
+> in full below this divider.
+
+## Repository facts (verified)
+
+| Metric | Value |
+|---|---|
+| Default branch | `main` |
+| Branches | 64 |
+| Files on `main` | 1,112 (no committed `node_modules`) |
+| Primary languages | TypeScript (308 `.tsx`, 128 `.ts`), Python (65), HTML (30) |
+| Top areas | `rebuilt_systems/` (394), `fullstack-app-extracted/` (368), ~115 root docs |
+
+## What's verified vs. unverified in the README below
+
+**Verified — these are real:**
+- The automation framework is genuine. All claimed workflows exist in
+  `.github/workflows/`: `auto-merge.yml`, `auto-approve-copilot.yml`,
+  `auto-mark-ready.yml`, `conflict-resolver.yml`, `ecosystem-sync-monitor.yml`,
+  `pulse-trade-9s.yml`, `netlify-deploy.yml`, and more (16 total).
+- This is a substantial TypeScript codebase (1,112 files), not a stub.
+
+**Unverified — treat as aspirational until backed by a source file:**
+- **"162 Brands Mapped"** — not substantiated by any brand-registry file in the
+  repo (`ONE_GRID_TIEKIEBOKS.json` is a config manifest, not a 162-entry list).
+- **"7 Integrated Systems", oracle/chain counts, "100% self-managing"** —
+  marketing badges; the workflows exist but "100%/zero-intervention" is a claim,
+  not a measured fact.
+
+## Housekeeping (recommended)
+
+- **64 branches** against `main` — many are `copilot/*` task branches. Prune
+  merged/stale branches; confirm PR-described features actually landed on `main`.
+- **`LICENSE`** added in this pass (Fruitful Shops Proprietary v1.1, eff.
+  13 Jun 2026) — previously the repo had no root licence.
+- ~115 root-level `.md` reports overlap heavily — consider consolidating into
+  a `docs/` folder.
+
+## For agents (Claude, Perplexity, or otherwise)
+
+Verify before you repeat. The automation workflows are real and checkable; the
+brand/system counts are not currently backed by data files. Do not restate
+"162 brands" or "7 systems" as established fact without a source.
+
+---
+---
+
 <div align="center">
 
 # 🌍 OmniGrid™
