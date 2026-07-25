@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { useEffect } from "react";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/dashboard";
 import Landing from "@/pages/landing";
@@ -26,6 +27,11 @@ import PythonDeploy from "@/pages/python-deploy";
 import SecureSign from "@/pages/securesign";
 import FaaShells from "@/pages/FaaShells";
 import OmniGridCanvas from "@/pages/omnigrid-canvas";
+// Fruitful-integrated pages
+import SectorsPortal from "@/pages/sectors-portal";
+import BaobabTerminal from "@/pages/baobab";
+import VaultMeshPortal from "@/pages/vaultmesh-portal";
+import TreatySystem from "@/pages/treaty";
 import GlobalHeader from "@/components/GlobalHeader";
 import GlobalFooter from "@/components/GlobalFooter";
 
@@ -53,6 +59,11 @@ function Router() {
       <Route path="/securesign" component={SecureSign} />
       <Route path="/faa-shells" component={FaaShells} />
       <Route path="/omnigrid-canvas" component={OmniGridCanvas} />
+      {/* Fruitful-integrated routes */}
+      <Route path="/sectors-portal" component={SectorsPortal} />
+      <Route path="/baobab" component={BaobabTerminal} />
+      <Route path="/vaultmesh-portal" component={VaultMeshPortal} />
+      <Route path="/treaty" component={TreatySystem} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -83,6 +94,10 @@ function App() {
       "/securesign": "SecureSign™",
       "/faa-shells": "FAA™ Shells",
       "/omnigrid-canvas": "OmniGrid Canvas",
+      "/sectors-portal": "Sectors Portal",
+      "/baobab": "Baobab Terminal",
+      "/vaultmesh-portal": "VaultMesh™",
+      "/treaty": "Treaty System™",
     };
 
     const section = routeTitles[location] || "Platform";
@@ -93,13 +108,17 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="light" storageKey="fruitful-ui-theme">
         <TooltipProvider>
-          <div className="min-h-screen bg-background text-foreground">
-            <GlobalHeader />
-            <main>
-              <Router />
-            </main>
-            <GlobalFooter />
-          </div>
+          <ErrorBoundary>
+            <div className="min-h-screen bg-background text-foreground">
+              <GlobalHeader />
+              <main>
+                <ErrorBoundary>
+                  <Router />
+                </ErrorBoundary>
+              </main>
+              <GlobalFooter />
+            </div>
+          </ErrorBoundary>
           <Toaster />
         </TooltipProvider>
       </ThemeProvider>
