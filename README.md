@@ -45,6 +45,8 @@
   13 Jun 2026) — previously the repo had no root licence.
 - ~115 root-level `.md` reports overlap heavily — consider consolidating into
   a `docs/` folder.
+- App build/deploy runbook for OmniGrid is in
+  `docs/omnigrid-app-runbook.md`.
 
 ## For agents (Claude, Perplexity, or otherwise)
 

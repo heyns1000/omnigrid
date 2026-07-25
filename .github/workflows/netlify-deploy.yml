@@ -33,8 +33,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
+          cache-dependency-path: fullstack-app-extracted/Hello-there-What-kind-of-software-project-are-you-looking/package-lock.json
 
       - name: Install Dependencies
         run: |
@@ -81,7 +82,7 @@ jobs:
           ls -la build/
 
       - name: Deploy to Netlify (Production)
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && secrets.NETLIFY_AUTH_TOKEN != '' && secrets.NETLIFY_SITE_ID != ''
         uses: nwtgck/actions-netlify@v3.0
         with:
           publish-dir: './build'
@@ -101,7 +102,7 @@ jobs:
         timeout-minutes: 5
 
       - name: Deploy to Netlify (Preview)
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && secrets.NETLIFY_AUTH_TOKEN != '' && secrets.NETLIFY_SITE_ID != ''
         uses: nwtgck/actions-netlify@v3.0
         with:
           publish-dir: './build'
@@ -121,7 +122,7 @@ jobs:
         timeout-minutes: 5
 
       - name: HotStack Sync Notification
-        if: success()
+        if: success() && secrets.NETLIFY_AUTH_TOKEN != '' && secrets.NETLIFY_SITE_ID != ''
         run: |
           echo "✅ Netlify Deployment Complete"
           echo "📊 Dashboard: Quantum-Resilient v3.0"
@@ -134,7 +135,7 @@ jobs:
           echo "Build completed at: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
 
       - name: Deployment Failed Notification
-        if: failure()
+        if: failure() && secrets.NETLIFY_AUTH_TOKEN != '' && secrets.NETLIFY_SITE_ID != ''
         run: |
           echo "❌ Netlify Deployment Failed"
           echo "Please check the logs above for error details"
@@ -145,7 +146,7 @@ jobs:
           exit 1
 
       - name: Performance Summary
-        if: success()
+        if: success() && secrets.NETLIFY_AUTH_TOKEN != '' && secrets.NETLIFY_SITE_ID != ''
         run: |
           echo "## 🚀 Deployment Performance" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -162,3 +163,7 @@ jobs:
           echo "- 9s Pulse Cycle (GLOW + FLOW)" >> $GITHUB_STEP_SUMMARY
           echo "- 144,500 Baobab Security Nodes" >> $GITHUB_STEP_SUMMARY
           echo "- 13,713 Brand Dashboards" >> $GITHUB_STEP_SUMMARY
+      - name: Skip deploy when Netlify secrets are missing
+        if: secrets.NETLIFY_AUTH_TOKEN == '' || secrets.NETLIFY_SITE_ID == ''
+        run: |
+          echo "ℹ️ Skipping Netlify deploy: NETLIFY_AUTH_TOKEN/NETLIFY_SITE_ID are not configured."

@@ -21,7 +21,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.end(authenticDashboard);
     } catch (error) {
       console.error("❌ CRITICAL ERROR:", error);
-      res.status(500).end("Error: " + error.message);
+      res.status(500).end("Error: " + (error instanceof Error ? error.message : String(error)));
     }
   });
 
@@ -47,7 +47,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return;
     } catch (error) {
       console.error("Error loading YOUR authentic dashboard:", error);
-      res.status(500).send("Error loading YOUR authentic dashboard: " + error.message);
+      res.status(500).send("Error loading YOUR authentic dashboard: " + (error instanceof Error ? error.message : String(error)));
       return;
     }
   });
@@ -62,7 +62,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return;
     } catch (error) {
       console.error("Error loading YOUR authentic VaultMesh:", error);
-      res.status(500).send("Error loading YOUR authentic VaultMesh: " + error.message);
+      res.status(500).send("Error loading YOUR authentic VaultMesh: " + (error instanceof Error ? error.message : String(error)));
       return;
     }
   });
@@ -114,10 +114,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.delete("/api/brands/:id", async (req, res) => {
     try {
-      const success = await storage.deleteBrand(req.params.id);
-      if (!success) {
-        return res.status(404).json({ error: "Brand not found" });
-      }
+      await storage.deleteBrand(req.params.id);
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ error: "Failed to delete brand" });
@@ -478,6 +475,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Health check route
   app.get("/api/health", (req, res) => {
     res.json({ status: "healthy", timestamp: new Date().toISOString() });
+  });
+
+  // Fruitful Global Platform integration status
+  app.get("/api/platform/status", async (req, res) => {
+    try {
+      const [brands, sectors, templates, deployments] = await Promise.all([
+        storage.getAllBrands(),
+        storage.getAllSectors(),
+        storage.getAllTemplates(),
+        storage.getAllDeployments(),
+      ]);
+      res.json({
+        platform: "Fruitful Global™",
+        status: "active",
+        integration: "OmniGrid™",
+        timestamp: new Date().toISOString(),
+        brands: brands.length,
+        sectors: sectors.length,
+        templates: templates.length,
+        deployments: deployments.length,
+        coreBrands: brands.map((b) => ({ name: b.name, status: b.status })),
+      });
+    } catch (error) {
+      res.status(500).json({ status: "error", message: error instanceof Error ? error.message : String(error) });
+    }
   });
 
   const httpServer = createServer(app);

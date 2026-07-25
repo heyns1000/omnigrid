@@ -22,7 +22,7 @@ app.get("/vaultmesh-checkout", (req, res) => {
     res.end(vaultmesh);
   } catch (error) {
     console.error("❌ ERROR:", error);
-    res.status(500).end("Error: " + error.message);
+    res.status(500).end("Error: " + (error instanceof Error ? error.message : String(error)));
   }
 });
 
@@ -41,7 +41,7 @@ app.get("/sector-dashboard", (req, res) => {
     res.end(dashboard);
   } catch (error) {
     console.error("❌ ERROR:", error);
-    res.status(500).end("Error: " + error.message);
+    res.status(500).end("Error: " + (error instanceof Error ? error.message : String(error)));
   }
 });
 
@@ -54,7 +54,7 @@ app.get("/dashboard", (req, res) => {
     res.send(dashboard);
   } catch (error) {
     console.error("❌ CRITICAL ERROR:", error);
-    res.status(500).send("Error: " + error.message);
+    res.status(500).send("Error: " + (error instanceof Error ? error.message : String(error)));
   }
 });
 
@@ -67,7 +67,7 @@ app.get("/vaultmesh", (req, res) => {
     res.send(checkout);
   } catch (error) {
     console.error("❌ CRITICAL ERROR:", error);
-    res.status(500).send("Error: " + error.message);
+    res.status(500).send("Error: " + (error instanceof Error ? error.message : String(error)));
   }
 });
 
@@ -122,7 +122,7 @@ app.use((req, res, next) => {
     await seedDatabase();
     console.log("✅ Database seeding completed");
   } catch (error) {
-    console.log("⚠️ Database seeding skipped:", error.message);
+    console.log("⚠️ Database seeding skipped:", error instanceof Error ? error.message : String(error));
   }
 
   // Register routes FIRST - NO Vite interference with YOUR authentic templates

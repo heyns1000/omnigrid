@@ -1,9 +1,10 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/hooks/use-theme";
+import { useEffect } from "react";
 import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/dashboard";
 import Landing from "@/pages/landing";
@@ -24,6 +25,7 @@ import GlobalOps from "@/pages/global-ops";
 import PythonDeploy from "@/pages/python-deploy";
 import SecureSign from "@/pages/securesign";
 import FaaShells from "@/pages/FaaShells";
+import OmniGridCanvas from "@/pages/omnigrid-canvas";
 import GlobalHeader from "@/components/GlobalHeader";
 import GlobalFooter from "@/components/GlobalFooter";
 
@@ -50,12 +52,43 @@ function Router() {
       <Route path="/python-deploy" component={PythonDeploy} />
       <Route path="/securesign" component={SecureSign} />
       <Route path="/faa-shells" component={FaaShells} />
+      <Route path="/omnigrid-canvas" component={OmniGridCanvas} />
       <Route component={NotFound} />
     </Switch>
   );
 }
 
 function App() {
+  const [location] = useLocation();
+
+  useEffect(() => {
+    const routeTitles: Record<string, string> = {
+      "/": "Overview",
+      "/dashboard": "Dashboard",
+      "/admin": "Admin",
+      "/brands": "Brands",
+      "/templates": "Templates",
+      "/deployment": "Deployment Control",
+      "/analytics": "Analytics",
+      "/ai-studio": "AI Studio",
+      "/marketplace": "Marketplace",
+      "/automation": "Automation",
+      "/monitoring": "Monitoring",
+      "/workflows": "Workflows",
+      "/integrations": "Integrations",
+      "/compliance": "Compliance",
+      "/performance": "Performance",
+      "/global-ops": "Global Ops",
+      "/python-deploy": "Python Deploy",
+      "/securesign": "SecureSign™",
+      "/faa-shells": "FAA™ Shells",
+      "/omnigrid-canvas": "OmniGrid Canvas",
+    };
+
+    const section = routeTitles[location] || "Platform";
+    document.title = `${section} | OmniGrid™`;
+  }, [location]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="light" storageKey="fruitful-ui-theme">

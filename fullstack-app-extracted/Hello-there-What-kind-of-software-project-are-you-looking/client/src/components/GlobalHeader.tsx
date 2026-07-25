@@ -24,6 +24,7 @@ export default function GlobalHeader() {
     { path: "/performance", label: "Performance", icon: "⚡" },
     { path: "/global-ops", label: "Global Ops", icon: "🌍" },
     { path: "/python-deploy", label: "Python Engine", icon: "🐍" },
+    { path: "/omnigrid-canvas", label: "OmniGrid Canvas", icon: "🧬" },
     { path: "/securesign", label: "SecureSign™", icon: "🛡️" },
     { path: "/faa-shells", label: "FAA™ Shells", icon: "🌀" },
   ];
@@ -31,12 +32,12 @@ export default function GlobalHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" data-testid="header-global">
       {/* Top Brand Bar */}
-      <div className="bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 text-white py-2">
+      <div className="bg-gradient-to-r from-blue-600 via-violet-600 to-cyan-600 text-white py-2">
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <img src={fruitfulLogo} alt="Fruitful Global™" className="h-6 w-auto" data-testid="img-header-logo" />
             <span className="text-sm font-medium">Multi-Brand Orchestration Platform</span>
-            <Badge variant="secondary" className="bg-white/20 text-white border-white/30">Global™</Badge>
+            <Badge variant="secondary" className="bg-white/20 text-white border-white/30">OmniGrid™</Badge>
           </div>
           <div className="flex items-center space-x-4">
             <span className="text-xs opacity-80">29+ Sectors • 4 Core Brands</span>
