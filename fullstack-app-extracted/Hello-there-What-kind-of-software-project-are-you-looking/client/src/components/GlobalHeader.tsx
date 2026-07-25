@@ -24,6 +24,7 @@ export default function GlobalHeader() {
     { path: "/performance", label: "Performance", icon: "⚡" },
     { path: "/global-ops", label: "Global Ops", icon: "🌍" },
     { path: "/python-deploy", label: "Python Engine", icon: "🐍" },
+    { path: "/omnigrid-canvas", label: "OmniGrid Canvas", icon: "🧬" },
     { path: "/securesign", label: "SecureSign™", icon: "🛡️" },
     { path: "/faa-shells", label: "FAA™ Shells", icon: "🌀" },
   ];
