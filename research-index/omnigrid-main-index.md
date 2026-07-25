@@ -2,6 +2,8 @@
 
 Audit of `heyns1000/omnigrid`: every file category on `main` (including all 17/17 `code_library/` files) plus a full audit of all 63 non-`main` branches. Status: **complete**.
 
+> **Second pass available**: see [`omnigrid-second-pass-report.md`](./omnigrid-second-pass-report.md) for a full (non-truncated) extraction of the two largest `code_library/` files, a quantified unexecuted-planning inventory (196+ pending integration points), and a repo/brand-count internal-inconsistency finding.
+
 ## Capstone finding
 
 Not an outside inference — this is the project's own prior self-audit, found verbatim in `consolidated_output/code_library/bash_code.json`:
