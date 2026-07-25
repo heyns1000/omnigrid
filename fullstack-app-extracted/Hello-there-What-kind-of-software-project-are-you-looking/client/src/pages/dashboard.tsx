@@ -7,23 +7,24 @@ import AnalyticsChart from "@/components/AnalyticsChart";
 import GlobalMap from "@/components/GlobalMap";
 import SectorNavigation from "@/components/SectorNavigation";
 import { Activity, Users, Layout, Zap } from "lucide-react";
+import type { Brand, Sector, Template, TemplateDeployment } from "@shared/schema";
 
 export default function Dashboard() {
   // Template management dashboard with navigation to authentic templates
 
-  const { data: brands = [], isLoading: brandsLoading } = useQuery({
+  const { data: brands = [], isLoading: brandsLoading } = useQuery<Brand[]>({
     queryKey: ["/api/brands"],
   });
 
-  const { data: sectors = [], isLoading: sectorsLoading } = useQuery({
+  const { data: sectors = [], isLoading: sectorsLoading } = useQuery<Sector[]>({
     queryKey: ["/api/sectors"],
   });
 
-  const { data: templates = [], isLoading: templatesLoading } = useQuery({
+  const { data: templates = [], isLoading: templatesLoading } = useQuery<Template[]>({
     queryKey: ["/api/templates"],
   });
 
-  const { data: deployments = [], isLoading: deploymentsLoading } = useQuery({
+  const { data: deployments = [], isLoading: deploymentsLoading } = useQuery<TemplateDeployment[]>({
     queryKey: ["/api/deployments"],
   });
 

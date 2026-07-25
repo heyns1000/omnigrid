@@ -25,15 +25,15 @@ export default function DeploymentControl() {
   const [selectedBrand, setSelectedBrand] = useState<string>("all");
   const { toast } = useToast();
 
-  const { data: deployments = [], isLoading: deploymentsLoading } = useQuery({
+  const { data: deployments = [], isLoading: deploymentsLoading } = useQuery<TemplateDeployment[]>({
     queryKey: ["/api/deployments"],
   });
 
-  const { data: brands = [] } = useQuery({
+  const { data: brands = [] } = useQuery<Brand[]>({
     queryKey: ["/api/brands"],
   });
 
-  const { data: templates = [] } = useQuery({
+  const { data: templates = [] } = useQuery<Template[]>({
     queryKey: ["/api/templates"],
   });
 

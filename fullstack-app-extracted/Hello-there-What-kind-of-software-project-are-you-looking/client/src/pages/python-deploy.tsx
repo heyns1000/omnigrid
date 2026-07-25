@@ -330,7 +330,7 @@ export default function PythonDeploy() {
                             <XCircle className="h-4 w-4 text-red-600" />
                           )}
                           <span className="font-medium">{deployment.deploymentId}</span>
-                          <Badge variant={deployment.success ? "default" : "destructive"} size="sm">
+                          <Badge variant={deployment.success ? "default" : "destructive"}>
                             {deployment.success ? "Success" : "Failed"}
                           </Badge>
                         </div>

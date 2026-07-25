@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { RotateCcw, Play, Pause, Plus, Settings, GitBranch, Zap, CheckCircle, Clock, AlertTriangle } from "lucide-react";
 
 export default function Workflows() {
-  const [selectedWorkflow, setSelectedWorkflow] = useState(null);
+  const [selectedWorkflow, setSelectedWorkflow] = useState<number | null>(null);
 
   const workflows = [
     {

@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "client/src/**/*",
+    "shared/**/*",
+    "server/routes.ts",
+    "server/storage.ts",
+    "server/db.ts",
+    "server/paypal.ts",
+    "server/python-engine.ts",
+    "server/direct-dashboard.ts",
+    "server/vite.ts"
+  ],
+  "exclude": ["node_modules", "build", "dist", "**/*.test.ts"]
+}

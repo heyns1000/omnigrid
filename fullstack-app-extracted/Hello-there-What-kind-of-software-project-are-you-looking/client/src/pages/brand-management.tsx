@@ -18,7 +18,7 @@ export default function BrandManagement() {
   const [editingBrand, setEditingBrand] = useState<Brand | null>(null);
   const { toast } = useToast();
 
-  const { data: brands = [], isLoading } = useQuery({
+  const { data: brands = [], isLoading } = useQuery<Brand[]>({
     queryKey: ["/api/brands"],
   });
 
