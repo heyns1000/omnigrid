@@ -1,0 +1,15 @@
+name = "hotstack-payments"
+main = "src/index.js"
+compatibility_date = "2024-09-01"
+
+# Secrets — set each with `wrangler secret put <NAME>` before deploying:
+#   PAYPAL_CLIENT_ID
+#   PAYPAL_SECRET
+#   PAYPAL_WEBHOOK_ID        (from PayPal Developer Dashboard, needed for verification)
+#   PAYFAST_MERCHANT_ID
+#   PAYFAST_MERCHANT_KEY
+#   PAYFAST_PASSPHRASE
+#   STRIPE_SECRET_KEY
+#   STRIPE_WEBHOOK_SECRET
+[vars]
+PAYPAL_API_BASE = "https://api-m.paypal.com"

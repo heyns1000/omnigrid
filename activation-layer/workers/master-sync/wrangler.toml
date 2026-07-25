@@ -1,0 +1,19 @@
+name = "hotstack-master-sync"
+main = "src/index.js"
+compatibility_date = "2024-09-01"
+
+[durable_objects]
+bindings = [
+  { name = "SYNC_PULSE", class_name = "SyncPulse" }
+]
+
+[[migrations]]
+tag = "v1"
+new_classes = ["SyncPulse"]
+
+# Set these with `wrangler secret put <NAME>` before deploying:
+#   GITHUB_TOKEN            - read access to repos being watched
+# Configure these as plain vars (safe to commit, non-secret):
+[vars]
+PULSE_INTERVAL_MS = "9000"
+WATCHED_WORKER_URLS = "https://hotstack-email.<account>.workers.dev/health,https://hotstack-payments.<account>.workers.dev/health,https://hotstack-subscriptions.<account>.workers.dev/health,https://quantum-nexus.<account>.workers.dev/health,https://hotstack-dns-hook.<account>.workers.dev/health,https://hotstack-claimroot.<account>.workers.dev/health"
