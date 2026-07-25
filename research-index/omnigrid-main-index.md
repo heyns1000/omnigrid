@@ -3,6 +3,8 @@
 Audit of `heyns1000/omnigrid`: every file category on `main` (including all 17/17 `code_library/` files) plus a full audit of all 63 non-`main` branches. Status: **complete**.
 
 > **Second pass available**: see [`omnigrid-second-pass-report.md`](./omnigrid-second-pass-report.md) for a full (non-truncated) extraction of the two largest `code_library/` files, a quantified unexecuted-planning inventory (196+ pending integration points), and a repo/brand-count internal-inconsistency finding.
+>
+> **Third pass available**: [`omnigrid-file-manifest.csv`](./omnigrid-file-manifest.csv) — every file on `main` with its GitHub URL — and [`omnigrid-branch-reconciliation.md`](./omnigrid-branch-reconciliation.md), a local-git-verified, file-level (not just commit-level) confirmation that 61 of 63 branches are byte-identical to `main` and the other 2 are fully itemized; includes a correction (`HEATMAP.md` is now actually merged, not just described) and one more corroborated brand-count data point. For anyone picking this up to actually build something: [`omnigrid-build-prompt.md`](./omnigrid-build-prompt.md) is a ready-to-use implementation brief distilled from all three passes.
 
 ## Capstone finding
 
