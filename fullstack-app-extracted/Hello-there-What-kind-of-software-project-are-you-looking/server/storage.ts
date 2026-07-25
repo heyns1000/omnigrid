@@ -388,7 +388,12 @@ export class MemoryStorage implements IStorage {
   async createBrand(insertBrand: InsertBrand): Promise<Brand> {
     const brand: Brand = {
       id: this.generateId(),
-      ...insertBrand,
+      name: insertBrand.name,
+      slug: insertBrand.slug,
+      icon: insertBrand.icon,
+      primaryColor: insertBrand.primaryColor,
+      description: insertBrand.description ?? null,
+      status: insertBrand.status ?? "active",
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -422,7 +427,12 @@ export class MemoryStorage implements IStorage {
   async createSector(insertSector: InsertSector): Promise<Sector> {
     const sector: Sector = {
       id: this.generateId(),
-      ...insertSector,
+      name: insertSector.name,
+      slug: insertSector.slug,
+      icon: insertSector.icon,
+      ciColor: insertSector.ciColor,
+      description: insertSector.description ?? null,
+      status: insertSector.status ?? "active",
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -442,7 +452,11 @@ export class MemoryStorage implements IStorage {
   async createTemplate(insertTemplate: InsertTemplate): Promise<Template> {
     const template: Template = {
       id: this.generateId(),
-      ...insertTemplate,
+      name: insertTemplate.name,
+      type: insertTemplate.type,
+      version: insertTemplate.version,
+      content: insertTemplate.content,
+      isActive: insertTemplate.isActive ?? true,
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -458,7 +472,10 @@ export class MemoryStorage implements IStorage {
   async createBrandSectorMapping(insertMapping: InsertBrandSectorMapping): Promise<BrandSectorMapping> {
     const mapping: BrandSectorMapping = {
       id: this.generateId(),
-      ...insertMapping,
+      brandId: insertMapping.brandId,
+      sectorId: insertMapping.sectorId,
+      customization: insertMapping.customization ?? null,
+      isActive: insertMapping.isActive ?? true,
       createdAt: new Date()
     };
     this.brandSectorMappings.push(mapping);
@@ -473,7 +490,11 @@ export class MemoryStorage implements IStorage {
   async createDeployment(insertDeployment: InsertTemplateDeployment): Promise<TemplateDeployment> {
     const deployment: TemplateDeployment = {
       id: this.generateId(),
-      ...insertDeployment,
+      templateId: insertDeployment.templateId,
+      brandId: insertDeployment.brandId,
+      sectorId: insertDeployment.sectorId,
+      deploymentStatus: insertDeployment.deploymentStatus ?? "pending",
+      deployedAt: insertDeployment.deployedAt ?? null,
       createdAt: new Date()
     };
     this.templateDeployments.push(deployment);
@@ -520,7 +541,11 @@ export class MemoryStorage implements IStorage {
   async createConsolidatedAnalytics(insertAnalytics: InsertConsolidatedAnalytics): Promise<ConsolidatedAnalytics> {
     const analytic: ConsolidatedAnalytics = {
       id: this.generateId(),
-      ...insertAnalytics,
+      dateRange: insertAnalytics.dateRange,
+      period: insertAnalytics.period,
+      brandId: insertAnalytics.brandId ?? null,
+      sectorId: insertAnalytics.sectorId ?? null,
+      metrics: insertAnalytics.metrics,
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -577,7 +602,12 @@ export class MemoryStorage implements IStorage {
   async createCrossBrandAnalytics(insertAnalytics: InsertCrossBrandAnalytics): Promise<CrossBrandAnalytics> {
     const analytic: CrossBrandAnalytics = {
       id: this.generateId(),
-      ...insertAnalytics,
+      metric: insertAnalytics.metric,
+      seedwaveValue: insertAnalytics.seedwaveValue ?? 0,
+      vaultmeshValue: insertAnalytics.vaultmeshValue ?? 0,
+      banimalValue: insertAnalytics.banimalValue ?? 0,
+      fruitfulValue: insertAnalytics.fruitfulValue ?? 0,
+      totalValue: insertAnalytics.totalValue ?? 0,
       timestamp: new Date()
     };
     this.crossBrandAnalytics.push(analytic);
@@ -734,7 +764,22 @@ export class MemoryStorage implements IStorage {
   async createSecureSignDocument(insertDocument: InsertSecureSignDocument): Promise<SecureSignDocument> {
     const document: SecureSignDocument = {
       id: this.generateId(),
-      ...insertDocument,
+      brandId: insertDocument.brandId,
+      sectorId: insertDocument.sectorId,
+      firstName: insertDocument.firstName,
+      surname: insertDocument.surname,
+      idType: insertDocument.idType,
+      idNumber: insertDocument.idNumber,
+      nationality: insertDocument.nationality,
+      email: insertDocument.email,
+      cellNumber: insertDocument.cellNumber,
+      employment: insertDocument.employment,
+      position: insertDocument.position,
+      selectedSectors: insertDocument.selectedSectors,
+      metrics: insertDocument.metrics,
+      urlsReferences: insertDocument.urlsReferences,
+      documentUrls: insertDocument.documentUrls,
+      status: insertDocument.status ?? "pending",
       submittedAt: new Date(),
       processedAt: null
     };
@@ -769,7 +814,20 @@ export class MemoryStorage implements IStorage {
   async createFaaPlaceholderShell(insertShell: InsertFaaPlaceholderShell): Promise<FaaPlaceholderShell> {
     const shell: FaaPlaceholderShell = {
       id: this.generateId(),
-      ...insertShell,
+      documentSpineId: insertShell.documentSpineId,
+      stage: insertShell.stage ?? "Pre-Sector Apendance",
+      custodian: insertShell.custodian,
+      ecosystem: insertShell.ecosystem,
+      seedOrigin: insertShell.seedOrigin ?? null,
+      sectorAnchor: insertShell.sectorAnchor ?? null,
+      royaltyChannels: insertShell.royaltyChannels ?? "Dormant state",
+      verificationStatus: insertShell.verificationStatus ?? "FAA Inline Verification™ available but optional at shell stage",
+      expansionVector: insertShell.expansionVector ?? "Stored in vault mesh for later sector-heat grafting",
+      scrollNote: insertShell.scrollNote ?? null,
+      status: insertShell.status ?? "placeholder",
+      brandId: insertShell.brandId ?? null,
+      sectorId: insertShell.sectorId ?? null,
+      metadata: insertShell.metadata ?? null,
       createdAt: new Date(),
       updatedAt: new Date(),
       apendanceActivatedAt: null

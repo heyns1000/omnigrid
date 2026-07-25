@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
     res.end(dashboard);
   } catch (error) {
     console.error("❌ CRITICAL ERROR:", error);
-    res.status(500).end("Error loading dashboard: " + error.message);
+    res.status(500).end("Error loading dashboard: " + (error instanceof Error ? error.message : String(error)));
   }
 });
 
@@ -28,7 +28,7 @@ app.get("/dashboard", (req, res) => {
     res.end(dashboard);
   } catch (error) {
     console.error("❌ CRITICAL ERROR:", error);
-    res.status(500).end("Error: " + error.message);
+    res.status(500).end("Error: " + (error instanceof Error ? error.message : String(error)));
   }
 });
 
@@ -41,7 +41,7 @@ app.get("/vaultmesh", (req, res) => {
     res.end(checkout);
   } catch (error) {
     console.error("❌ CRITICAL ERROR:", error);
-    res.status(500).end("Error: " + error.message);
+    res.status(500).end("Error: " + (error instanceof Error ? error.message : String(error)));
   }
 });
 

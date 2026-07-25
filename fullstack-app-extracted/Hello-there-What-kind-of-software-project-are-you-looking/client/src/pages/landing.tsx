@@ -1,10 +1,22 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight, Sprout, Eye, Globe, Zap } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { ArrowRight, Sprout, Eye, Globe, Zap, CheckCircle2 } from "lucide-react";
 import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import fruitfulLogo from "@assets/Fruiful_1757075797113.png";
 
 export default function Landing() {
+  const { data: platformStatus } = useQuery<{
+    platform: string;
+    status: string;
+    brands: number;
+    sectors: number;
+    templates: number;
+  }>({
+    queryKey: ["/api/platform/status"],
+    staleTime: 60_000,
+  });
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-violet-50 to-cyan-50 dark:from-gray-900 dark:via-violet-900/20 dark:to-cyan-900/20">
       {/* Hero Section */}
@@ -21,6 +33,18 @@ export default function Landing() {
               data-testid="img-fruitful-logo"
             />
           </div>
+
+          {/* Platform Status Banner */}
+          {platformStatus?.status === "active" && (
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-green-500/10 border border-green-500/30 px-4 py-2 text-sm text-green-600 dark:text-green-400">
+              <CheckCircle2 className="h-4 w-4" />
+              <span className="font-semibold">{platformStatus.platform} — Platform Active</span>
+              <span className="opacity-70">·</span>
+              <span>{platformStatus.brands} Brands</span>
+              <span className="opacity-70">·</span>
+              <span>{platformStatus.sectors} Sectors</span>
+            </div>
+          )}
 
           {/* Main Headline */}
           <h1 className="text-6xl md:text-7xl font-black mb-6 bg-gradient-to-r from-blue-600 via-violet-500 to-cyan-500 bg-clip-text text-transparent leading-tight" data-testid="text-main-headline">
