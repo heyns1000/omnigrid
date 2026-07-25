@@ -1,97 +1,36 @@
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Star, Download, ShoppingCart, Filter, Search, Package, Zap, Crown, Users } from "lucide-react";
+import { Star, Download, ShoppingCart, Filter, Search, Package, Zap, Crown, AlertCircle } from "lucide-react";
+import { marketplaceAdapter, type MarketplaceItem, type MarketplaceListResult } from "@/services/marketplace";
 
 export default function Marketplace() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
 
-  const marketplaceItems = [
-    {
-      id: 1,
-      name: "Premium Analytics Dashboard",
-      category: "templates",
-      price: "$49",
-      rating: 4.8,
-      downloads: 1200,
-      author: "Seedwave™ Team",
-      description: "Advanced analytics with real-time insights and custom KPIs",
-      isPremium: true,
-      tags: ["Analytics", "Dashboard", "Real-time"]
-    },
-    {
-      id: 2,
-      name: "E-commerce Checkout Flow",
-      category: "templates",
-      price: "$79",
-      rating: 4.9,
-      downloads: 850,
-      author: "VaultMesh™ Team",
-      description: "Complete checkout system with payment gateway integration",
-      isPremium: true,
-      tags: ["E-commerce", "Payment", "Conversion"]
-    },
-    {
-      id: 3,
-      name: "AI Content Generator Plugin",
-      category: "plugins",
-      price: "$29",
-      rating: 4.7,
-      downloads: 2100,
-      author: "Fruitful Global™",
-      description: "Generate high-quality content using advanced AI models",
-      isPremium: false,
-      tags: ["AI", "Content", "Automation"]
-    },
-    {
-      id: 4,
-      name: "Multi-Brand Theme System",
-      category: "themes",
-      price: "$39",
-      rating: 4.6,
-      downloads: 950,
-      author: "Banimal™ Team",
-      description: "Unified theming system supporting multiple brand identities",
-      isPremium: true,
-      tags: ["Theming", "Branding", "Customization"]
-    },
-    {
-      id: 5,
-      name: "Advanced Form Builder",
-      category: "components",
-      price: "Free",
-      rating: 4.5,
-      downloads: 3200,
-      author: "Community",
-      description: "Drag-and-drop form builder with validation and styling",
-      isPremium: false,
-      tags: ["Forms", "Builder", "Validation"]
-    },
-    {
-      id: 6,
-      name: "Real-time Collaboration Kit",
-      category: "integrations",
-      price: "$59",
-      rating: 4.8,
-      downloads: 680,
-      author: "Seedwave™ Team",
-      description: "Enable real-time collaboration features across your platform",
-      isPremium: true,
-      tags: ["Collaboration", "Real-time", "Team"]
-    }
-  ];
+  const {
+    data: listResult,
+    isLoading,
+    isError,
+    error,
+  } = useQuery<MarketplaceListResult>({
+    queryKey: ["marketplace-items"],
+    queryFn: () => marketplaceAdapter.getItems(),
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const marketplaceItems: MarketplaceItem[] = listResult?.items ?? [];
 
   const categories = [
     { id: "all", name: "All Items", icon: Package, count: marketplaceItems.length },
-    { id: "templates", name: "Templates", icon: Zap, count: 2 },
-    { id: "plugins", name: "Plugins", icon: Package, count: 1 },
-    { id: "themes", name: "Themes", icon: Crown, count: 1 },
-    { id: "components", name: "Components", icon: Package, count: 1 },
-    { id: "integrations", name: "Integrations", icon: Package, count: 1 }
+    { id: "templates", name: "Templates", icon: Zap, count: marketplaceItems.filter((i) => i.category === "templates").length },
+    { id: "plugins", name: "Plugins", icon: Package, count: marketplaceItems.filter((i) => i.category === "plugins").length },
+    { id: "themes", name: "Themes", icon: Crown, count: marketplaceItems.filter((i) => i.category === "themes").length },
+    { id: "components", name: "Components", icon: Package, count: marketplaceItems.filter((i) => i.category === "components").length },
+    { id: "integrations", name: "Integrations", icon: Package, count: marketplaceItems.filter((i) => i.category === "integrations").length },
   ];
 
   const filteredItems = marketplaceItems.filter(item => {
@@ -102,13 +41,49 @@ export default function Marketplace() {
     return matchesSearch && matchesCategory;
   });
 
+  // ── Loading state ─────────────────────────────────────────────────────────
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mx-auto" />
+          <p className="text-muted-foreground">Loading marketplace…</p>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Error state ───────────────────────────────────────────────────────────
+  if (isError) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-6">
+        <Card className="max-w-md w-full">
+          <CardContent className="py-12 text-center space-y-4">
+            <AlertCircle className="h-12 w-12 text-destructive mx-auto" />
+            <h3 className="text-lg font-semibold text-destructive">Marketplace unavailable</h3>
+            <p className="text-muted-foreground text-sm">
+              {error instanceof Error ? error.message : "Unable to load marketplace items."}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-            🛒 Marketplace
-          </h1>
+          <div className="flex items-center gap-3 mb-2">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+              🛒 Marketplace
+            </h1>
+            {listResult?.source === "fallback" && (
+              <Badge variant="outline" className="text-xs text-muted-foreground">
+                offline data
+              </Badge>
+            )}
+          </div>
           <p className="text-lg text-muted-foreground">Discover and install premium templates, plugins, and integrations</p>
         </div>
 
