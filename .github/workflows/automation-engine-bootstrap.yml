@@ -1,0 +1,117 @@
+name: Automation Engine Bootstrap
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Run in dry-run mode (no writes)
+        required: true
+        type: boolean
+        default: true
+  schedule:
+    - cron: '17 * * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: automation-engine-bootstrap
+  cancel-in-progress: false
+
+env:
+  ENGINE_ENABLED: ${{ vars.ENGINE_ENABLED || 'false' }}
+  DRY_RUN_DEFAULT: ${{ vars.DRY_RUN_DEFAULT || 'true' }}
+
+jobs:
+  bootstrap:
+    name: Bootstrap and heartbeat
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Determine effective mode
+        id: mode
+        shell: bash
+        run: |
+          set -euo pipefail
+          EVENT_NAME="${{ github.event_name }}"
+          INPUT_DRY_RUN="${{ github.event.inputs.dry_run || '' }}"
+
+          if [[ "$EVENT_NAME" == "workflow_dispatch" && -n "$INPUT_DRY_RUN" ]]; then
+            EFFECTIVE_DRY_RUN="$INPUT_DRY_RUN"
+          else
+            EFFECTIVE_DRY_RUN="$DRY_RUN_DEFAULT"
+          fi
+
+          echo "effective_dry_run=$EFFECTIVE_DRY_RUN" >> "$GITHUB_OUTPUT"
+
+      - name: Guardrail check
+        id: guardrail
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$ENGINE_ENABLED" != "true" ]]; then
+            echo "run_allowed=false" >> "$GITHUB_OUTPUT"
+            echo "engine_reason=ENGINE_ENABLED is not true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run_allowed=true" >> "$GITHUB_OUTPUT"
+            echo "engine_reason=ENGINE_ENABLED is true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Heartbeat
+        shell: bash
+        run: |
+          set -euo pipefail
+          export TIMESTAMP="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          export RUN_ALLOWED="${{ steps.guardrail.outputs.run_allowed }}"
+          export EFFECTIVE_DRY_RUN="${{ steps.mode.outputs.effective_dry_run }}"
+
+          python - <<'PY'
+          import json
+          import os
+
+          status = {
+              "timestamp_utc": os.environ["TIMESTAMP"],
+              "repository": os.environ["GITHUB_REPOSITORY"],
+              "ref": os.environ["GITHUB_REF"],
+              "event_name": os.environ["GITHUB_EVENT_NAME"],
+              "engine_enabled": os.environ["ENGINE_ENABLED"],
+              "dry_run_default": os.environ["DRY_RUN_DEFAULT"],
+              "effective_dry_run": os.environ["EFFECTIVE_DRY_RUN"],
+              "run_allowed": os.environ["RUN_ALLOWED"],
+              "result": "executed" if os.environ["RUN_ALLOWED"] == "true" else "blocked"
+          }
+
+          with open("automation-engine-status.json", "w", encoding="utf-8") as f:
+              json.dump(status, f, indent=2)
+          PY
+
+      - name: Run summary
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo "## Automation Engine Bootstrap"
+            echo "- Event: \`${{ github.event_name }}\`"
+            echo "- Engine enabled: \`$ENGINE_ENABLED\`"
+            echo "- Dry-run default: \`$DRY_RUN_DEFAULT\`"
+            echo "- Effective dry-run: \`${{ steps.mode.outputs.effective_dry_run }}\`"
+            echo "- Run allowed: \`${{ steps.guardrail.outputs.run_allowed }}\`"
+            echo "- Guardrail reason: ${{ steps.guardrail.outputs.engine_reason }}"
+            echo ""
+            echo "### Safety rails"
+            echo "- This workflow runs with read-only repository permissions."
+            echo "- No force push, branch deletion, or destructive mutation commands are executed."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload status artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: automation-engine-bootstrap-status-${{ github.run_id }}
+          path: automation-engine-status.json
+          if-no-files-found: error
+          retention-days: 14
