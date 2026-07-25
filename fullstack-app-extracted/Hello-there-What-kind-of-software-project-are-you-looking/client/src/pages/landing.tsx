@@ -6,10 +6,10 @@ import fruitfulLogo from "@assets/Fruiful_1757075797113.png";
 
 export default function Landing() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-gray-900 dark:via-green-900/20 dark:to-teal-900/20">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-violet-50 to-cyan-50 dark:from-gray-900 dark:via-violet-900/20 dark:to-cyan-900/20">
       {/* Hero Section */}
       <section className="relative py-20 px-6 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-green-400/10 to-teal-400/10 animate-pulse"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-violet-400/10 to-cyan-400/10 animate-pulse"></div>
         
         <div className="relative max-w-6xl mx-auto text-center">
           {/* Logo */}
@@ -23,7 +23,7 @@ export default function Landing() {
           </div>
 
           {/* Main Headline */}
-          <h1 className="text-6xl md:text-7xl font-black mb-6 bg-gradient-to-r from-green-600 via-emerald-500 to-teal-600 bg-clip-text text-transparent leading-tight" data-testid="text-main-headline">
+          <h1 className="text-6xl md:text-7xl font-black mb-6 bg-gradient-to-r from-blue-600 via-violet-500 to-cyan-500 bg-clip-text text-transparent leading-tight" data-testid="text-main-headline">
             We Can See
             <br />
             <span className="text-amber-500">The Seed</span>
@@ -42,7 +42,7 @@ export default function Landing() {
             <Link href="/dashboard">
               <Button 
                 size="lg" 
-                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                className="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                 data-testid="button-explore-ecosystem"
               >
                 <Sprout className="mr-2 h-5 w-5" />
@@ -55,7 +55,7 @@ export default function Landing() {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="border-2 border-green-600 text-green-600 hover:bg-green-600 hover:text-white px-8 py-4 text-lg font-semibold transition-all duration-300"
+                className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-8 py-4 text-lg font-semibold transition-all duration-300"
                 data-testid="button-admin-portal"
               >
                 <Globe className="mr-2 h-5 w-5" />

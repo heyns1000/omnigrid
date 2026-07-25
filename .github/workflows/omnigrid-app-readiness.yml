@@ -1,0 +1,50 @@
+name: OmniGrid App Readiness
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "fullstack-app-extracted/Hello-there-What-kind-of-software-project-are-you-looking/**"
+      - "public/**"
+      - ".github/workflows/omnigrid-app-readiness.yml"
+  push:
+    branches: [main]
+    paths:
+      - "fullstack-app-extracted/Hello-there-What-kind-of-software-project-are-you-looking/**"
+      - "public/**"
+      - ".github/workflows/omnigrid-app-readiness.yml"
+  workflow_dispatch:
+
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: fullstack-app-extracted/Hello-there-What-kind-of-software-project-are-you-looking
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: fullstack-app-extracted/Hello-there-What-kind-of-software-project-are-you-looking/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Production build
+        run: npm run build
+
+      - name: Verify metadata + UI reference integration
+        working-directory: /home/runner/work/omnigrid/omnigrid
+        run: |
+          test -f public/omnigrid.html
+          test -f fullstack-app-extracted/Hello-there-What-kind-of-software-project-are-you-looking/client/index.html
+          grep -q "OmniGrid™" fullstack-app-extracted/Hello-there-What-kind-of-software-project-are-you-looking/client/index.html
+          grep -q -- "--omnigrid-purple" fullstack-app-extracted/Hello-there-What-kind-of-software-project-are-you-looking/client/src/index.css
+          grep -q -- "--omnigrid-cyan" fullstack-app-extracted/Hello-there-What-kind-of-software-project-are-you-looking/client/src/index.css

@@ -1,9 +1,10 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/hooks/use-theme";
+import { useEffect } from "react";
 import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/dashboard";
 import Landing from "@/pages/landing";
@@ -56,6 +57,35 @@ function Router() {
 }
 
 function App() {
+  const [location] = useLocation();
+
+  useEffect(() => {
+    const routeTitles: Record<string, string> = {
+      "/": "Overview",
+      "/dashboard": "Dashboard",
+      "/admin": "Admin",
+      "/brands": "Brands",
+      "/templates": "Templates",
+      "/deployment": "Deployment Control",
+      "/analytics": "Analytics",
+      "/ai-studio": "AI Studio",
+      "/marketplace": "Marketplace",
+      "/automation": "Automation",
+      "/monitoring": "Monitoring",
+      "/workflows": "Workflows",
+      "/integrations": "Integrations",
+      "/compliance": "Compliance",
+      "/performance": "Performance",
+      "/global-ops": "Global Ops",
+      "/python-deploy": "Python Deploy",
+      "/securesign": "SecureSign™",
+      "/faa-shells": "FAA™ Shells",
+    };
+
+    const section = routeTitles[location] || "Platform";
+    document.title = `${section} | OmniGrid™`;
+  }, [location]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="light" storageKey="fruitful-ui-theme">
