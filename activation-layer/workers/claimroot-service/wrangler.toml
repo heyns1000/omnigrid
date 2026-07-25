@@ -1,0 +1,8 @@
+name = "hotstack-claimroot"
+main = "src/index.js"
+compatibility_date = "2024-09-01"
+
+# Secrets — set with `wrangler secret put <NAME>`:
+#   LICENSEVAULT_API_KEY   (if the live service requires one — unconfirmed, see src/index.js)
+[vars]
+LICENSEVAULT_API_BASE = "https://license-vault-sepia.vercel.app/api"

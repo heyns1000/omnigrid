@@ -1,0 +1,10 @@
+name = "hotstack-dns-hook"
+main = "src/index.js"
+compatibility_date = "2024-09-01"
+
+# Secrets — set with `wrangler secret put <NAME>`:
+#   CLOUDFLARE_API_TOKEN   (needs Zone.DNS edit permission on the target zone)
+[vars]
+CLOUDFLARE_ZONE_ID = "REPLACE_WITH_REAL_ZONE_ID"
+BASE_DOMAIN = "hotstack.faa.zone"
+TARGET_CNAME = "hotstack.faa.zone"

@@ -5,6 +5,8 @@ Audit of `heyns1000/omnigrid`: every file category on `main` (including all 17/1
 > **Second pass available**: see [`omnigrid-second-pass-report.md`](./omnigrid-second-pass-report.md) for a full (non-truncated) extraction of the two largest `code_library/` files, a quantified unexecuted-planning inventory (196+ pending integration points), and a repo/brand-count internal-inconsistency finding.
 >
 > **Third pass available**: [`omnigrid-file-manifest.csv`](./omnigrid-file-manifest.csv) — every file on `main` with its GitHub URL — and [`omnigrid-branch-reconciliation.md`](./omnigrid-branch-reconciliation.md), a local-git-verified, file-level (not just commit-level) confirmation that 61 of 63 branches are byte-identical to `main` and the other 2 are fully itemized; includes a correction (`HEATMAP.md` is now actually merged, not just described) and one more corroborated brand-count data point. For anyone picking this up to actually build something: [`omnigrid-build-prompt.md`](./omnigrid-build-prompt.md) is a ready-to-use implementation brief distilled from all three passes.
+>
+> **The build prompt has now actually been executed**: see [`../activation-layer/`](../activation-layer/) — real, syntax-validated (not deployed — no credentials available to do that) Cloudflare Workers implementations of all 8 previously-undeployed pieces, plus the master sync worker and orchestrator tying them together. Read `activation-layer/README.md` for deploy instructions and an honest accounting of what's genuinely done versus explicitly left as a no-op (template application, actual deploy-to-live-host) pending real infrastructure.
 
 ## Capstone finding
 

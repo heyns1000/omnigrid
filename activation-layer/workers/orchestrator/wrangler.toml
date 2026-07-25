@@ -1,0 +1,33 @@
+name = "hotstack-orchestrator"
+main = "src/index.js"
+compatibility_date = "2024-09-01"
+
+# Service bindings — worker-to-worker calls, no public URL needed between them.
+# Requires each named worker to already be deployed under this same account.
+[[services]]
+binding = "CLAIMROOT"
+service = "hotstack-claimroot"
+
+[[services]]
+binding = "DNS_HOOK"
+service = "hotstack-dns-hook"
+
+[[services]]
+binding = "EMAIL"
+service = "hotstack-email"
+
+[[services]]
+binding = "PAYMENTS"
+service = "hotstack-payments"
+
+[[services]]
+binding = "SUBSCRIPTIONS"
+service = "hotstack-subscriptions"
+
+[[services]]
+binding = "UPLOAD_ROUTER"
+service = "quantum-nexus"
+
+[[services]]
+binding = "MASTER_SYNC"
+service = "hotstack-master-sync"
