@@ -124,6 +124,8 @@ jobs:
     needs: [install-build-type-lint, smoke-routes]
     runs-on: ubuntu-latest
     if: always()
+    permissions:
+      contents: read
     steps:
       - name: Report
         run: |
