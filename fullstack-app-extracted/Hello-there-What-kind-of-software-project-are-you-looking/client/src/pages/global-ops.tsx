@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Globe, MapPin, Clock, Users, TrendingUp, AlertCircle, CheckCircle, Activity } from "lucide-react";
+import { Globe, MapPin, Clock, Users, TrendingUp, AlertCircle, AlertTriangle, CheckCircle, Activity } from "lucide-react";
 
 export default function GlobalOps() {
   const [selectedRegion, setSelectedRegion] = useState("global");

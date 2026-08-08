@@ -9,7 +9,9 @@
     "build:prod": "npm run build",
     "start": "NODE_ENV=production node dist/index.js",
     "start:prod": "npm run start",
-    "check": "tsc",
+    "check": "tsc -p tsconfig.check.json",
+    "lint": "npm run check -- --pretty false",
+    "test": "tsx --test ./shared/marketplace.test.ts",
     "db:push": "drizzle-kit push"
   },
   "dependencies": {

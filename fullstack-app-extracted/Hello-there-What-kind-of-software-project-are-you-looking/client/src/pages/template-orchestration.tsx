@@ -13,6 +13,11 @@ import { apiRequest } from "@/lib/queryClient";
 import { Layout, Plus, Eye, Settings, Code } from "lucide-react";
 import type { Template, InsertTemplate } from "@shared/schema";
 
+type TemplateRecord = Template & {
+  description?: string | null;
+  status?: string;
+};
+
 const templateTypes = [
   { id: "all", name: "All Templates", icon: "📋", description: "View all available templates" },
   { id: "header_navigation", name: "Header/Navigation", icon: "🧭", description: "Global navigation system" },
@@ -26,11 +31,11 @@ const templateTypes = [
 export default function TemplateOrchestration() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [selectedType, setSelectedType] = useState<string>("all");
-  const [previewTemplate, setPreviewTemplate] = useState<Template | null>(null);
+  const [previewTemplate, setPreviewTemplate] = useState<TemplateRecord | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const { toast } = useToast();
 
-  const { data: templates = [], isLoading } = useQuery<Template[]>({
+  const { data: templates = [], isLoading } = useQuery<TemplateRecord[]>({
     queryKey: ["/api/templates"],
   });
 
@@ -74,16 +79,18 @@ export default function TemplateOrchestration() {
     const template: InsertTemplate = {
       name: formData.get("name") as string,
       type: formData.get("type") as string,
-      description: formData.get("description") as string || "",
-      content: formData.get("content") as string,
+      content: {
+        description: (formData.get("description") as string) || "",
+        markup: formData.get("content") as string,
+      } as InsertTemplate["content"],
       version: formData.get("version") as string,
-      status: "active",
+      isActive: true,
     };
     
     createTemplateMutation.mutate(template);
   };
 
-  const handlePreviewTemplate = (template: Template) => {
+  const handlePreviewTemplate = (template: TemplateRecord) => {
     setPreviewTemplate(template);
     setIsPreviewOpen(true);
   };
@@ -94,6 +101,35 @@ export default function TemplateOrchestration() {
       icon: "📄", 
       description: "Custom template" 
     };
+  };
+
+  const getTemplateDescription = (template: TemplateRecord) => {
+    if (typeof template.description === "string" && template.description.length > 0) {
+      return template.description;
+    }
+
+    if (template.content && typeof template.content === "object") {
+      const content = template.content as Record<string, unknown>;
+      if (typeof content.description === "string") return content.description;
+    }
+
+    return "Reusable template ready for orchestration.";
+  };
+
+  const getTemplateStatus = (template: TemplateRecord) => template.status ?? (template.isActive ? "active" : "inactive");
+
+  const getTemplatePreviewMarkup = (template: TemplateRecord) => {
+    if (template.content && typeof template.content === "object") {
+      const content = template.content as Record<string, unknown>;
+      if (typeof content.html === "string") return content.html;
+      if (typeof content.markup === "string") return content.markup;
+    }
+
+    if (typeof template.content === "string") {
+      return template.content;
+    }
+
+    return JSON.stringify(template.content, null, 2);
   };
 
   if (isLoading) {
@@ -318,11 +354,11 @@ export default function TemplateOrchestration() {
                       <span className="text-2xl">{getTemplateTypeInfo(template.type).icon}</span>
                       <div>
                         <CardTitle className="text-lg">{template.name}</CardTitle>
-                        <p className="text-sm text-muted-foreground">{template.description}</p>
+                        <p className="text-sm text-muted-foreground">{getTemplateDescription(template)}</p>
                       </div>
                     </div>
-                    <Badge variant={template.status === "active" ? "default" : "secondary"}>
-                      {template.status}
+                    <Badge variant={getTemplateStatus(template) === "active" ? "default" : "secondary"}>
+                      {getTemplateStatus(template)}
                     </Badge>
                   </div>
                 </CardHeader>
@@ -365,7 +401,7 @@ export default function TemplateOrchestration() {
                 <div>
                   <div className="text-xl font-bold">{previewTemplate?.name}</div>
                   <div className="text-sm text-muted-foreground font-normal">
-                    {previewTemplate?.description} • Version {previewTemplate?.version}
+                    {previewTemplate ? getTemplateDescription(previewTemplate) : ""} • Version {previewTemplate?.version}
                   </div>
                 </div>
               </DialogTitle>
@@ -375,13 +411,7 @@ export default function TemplateOrchestration() {
               {previewTemplate && (
                 <div className="h-[70vh] border rounded-lg mx-6 mb-6 overflow-hidden">
                   <iframe
-                    srcDoc={
-                      typeof previewTemplate.content === 'object' && previewTemplate.content && 'html' in previewTemplate.content
-                        ? previewTemplate.content.html as string
-                        : typeof previewTemplate.content === 'string'
-                        ? previewTemplate.content
-                        : JSON.stringify(previewTemplate.content, null, 2)
-                    }
+                    srcDoc={getTemplatePreviewMarkup(previewTemplate)}
                     className="w-full h-full border-0"
                     title={`Preview: ${previewTemplate.name}`}
                     sandbox="allow-scripts allow-same-origin"
@@ -392,8 +422,8 @@ export default function TemplateOrchestration() {
             
             <div className="p-6 pt-0 flex justify-between items-center border-t">
               <div className="flex items-center gap-2">
-                <Badge variant={previewTemplate?.status === "active" ? "default" : "secondary"}>
-                  {previewTemplate?.status}
+                <Badge variant={previewTemplate && getTemplateStatus(previewTemplate) === "active" ? "default" : "secondary"}>
+                  {previewTemplate ? getTemplateStatus(previewTemplate) : "inactive"}
                 </Badge>
                 <Badge variant="outline">
                   {previewTemplate ? getTemplateTypeInfo(previewTemplate.type).name : ""}

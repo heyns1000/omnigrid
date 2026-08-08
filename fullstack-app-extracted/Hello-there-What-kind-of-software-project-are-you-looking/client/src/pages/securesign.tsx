@@ -87,10 +87,7 @@ export default function SecureSignPage() {
 
   const createDocumentMutation = useMutation({
     mutationFn: (data: SecureSignFormData) =>
-      apiRequest("/api/securesign/documents", {
-        method: "POST",
-        body: JSON.stringify(data),
-      }),
+      apiRequest("POST", "/api/securesign/documents", data),
     onSuccess: () => {
       toast({
         title: "SecureSign™ Document Submitted",

@@ -28,6 +28,8 @@ Optional:
 ## Build and run
 
 ```bash
+npm run lint
+npm run test
 npm run build
 npm run start
 ```
@@ -47,7 +49,7 @@ npm run start
 3. Open `/`, `/dashboard`, `/vaultmesh`, and `/admin`.
 4. Confirm page title changes per route (`<Section> | OmniGrid™`).
 5. Confirm header/landing visual palette aligns with `public/omnigrid.html` reference tokens.
-6. Open `/marketplace` — verify items load (or "offline data" badge appears if backend unreachable).
+6. Open `/marketplace` — verify items load, detail card updates, and fallback badge appears when the remote API is unavailable.
 7. Open `/sectors-portal`, `/baobab`, `/vaultmesh-portal`, `/treaty` — confirm pages render.
 8. `GET /api/health` → `{"status":"healthy"}`.
 9. `GET /api/marketplace/items` → JSON array.
@@ -59,7 +61,7 @@ npm run start
 
 Before promoting to production, verify every item below:
 
-- [ ] `npm ci && npm run build` passes locally and in CI (`omnigrid-app-ci.yml`)
+- [ ] `npm ci`, `npm run lint`, `npm run test`, and `npm run build` pass locally and in CI (`omnigrid-app-ci.yml`)
 - [ ] `DATABASE_URL` points to the production PostgreSQL instance
 - [ ] `PAYPAL_CLIENT_ID` + `PAYPAL_CLIENT_SECRET` are set (or PayPal routes intentionally disabled)
 - [ ] `NODE_ENV=production` is set in the deployment environment
@@ -103,4 +105,3 @@ To disable only the new routes without reverting the full PR, remove the corresp
 ### Marketplace-only rollback
 
 If the marketplace adapter causes issues, set `VITE_MARKETPLACE_API_URL=` (empty) in your environment.  The `FallbackMarketplaceProvider` will take over automatically without a code change or redeploy.
-

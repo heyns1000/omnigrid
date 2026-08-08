@@ -7,23 +7,24 @@ import AnalyticsChart from "@/components/AnalyticsChart";
 import GlobalMap from "@/components/GlobalMap";
 import SectorNavigation from "@/components/SectorNavigation";
 import { Activity, Users, Layout, Zap } from "lucide-react";
+import type { Brand, Sector, Template, TemplateDeployment } from "@shared/schema";
 
 export default function Dashboard() {
   // Template management dashboard with navigation to authentic templates
 
-  const { data: brands = [], isLoading: brandsLoading } = useQuery({
+  const { data: brands = [], isLoading: brandsLoading } = useQuery<Brand[]>({
     queryKey: ["/api/brands"],
   });
 
-  const { data: sectors = [], isLoading: sectorsLoading } = useQuery({
+  const { data: sectors = [], isLoading: sectorsLoading } = useQuery<Sector[]>({
     queryKey: ["/api/sectors"],
   });
 
-  const { data: templates = [], isLoading: templatesLoading } = useQuery({
+  const { data: templates = [], isLoading: templatesLoading } = useQuery<Template[]>({
     queryKey: ["/api/templates"],
   });
 
-  const { data: deployments = [], isLoading: deploymentsLoading } = useQuery({
+  const { data: deployments = [], isLoading: deploymentsLoading } = useQuery<TemplateDeployment[]>({
     queryKey: ["/api/deployments"],
   });
 
@@ -65,17 +66,20 @@ export default function Dashboard() {
 
   if (brandsLoading || sectorsLoading || templatesLoading || deploymentsLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-violet-50 to-cyan-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-violet-50 to-cyan-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
       {/* Hero Section */}
       <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto text-center">
+          <Badge variant="outline" className="mb-4 bg-background/70">
+            Fruitful-aligned operations dashboard
+          </Badge>
           <h2 className="text-5xl font-black mb-6 gradient-text animate-fade-in">
             Complete Brand Ecosystem
             <br />
@@ -88,7 +92,7 @@ export default function Dashboard() {
           {/* Key Metrics Dashboard */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-12">
             {keyMetrics.map((metric, index) => (
-              <Card key={metric.title} className="dashboard-widget text-center animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
+              <Card key={metric.title} className="dashboard-widget bg-background/80 text-center animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
                 <CardContent className="pt-6">
                   <div className="flex items-center justify-center mb-4">
                     <metric.icon className="h-8 w-8 text-primary" />
@@ -130,7 +134,7 @@ export default function Dashboard() {
       </section>
 
       {/* Sector Navigation Section */}
-      <section className="py-16 px-6 bg-background/50">
+      <section className="py-16 px-6 bg-background/40">
         <div className="max-w-7xl mx-auto">
           <h3 className="text-3xl font-bold text-center mb-12">Sector Navigation System</h3>
           <SectorNavigation sectors={activeSectors} />
@@ -144,7 +148,7 @@ export default function Dashboard() {
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Analytics Chart */}
-            <Card className="dashboard-widget">
+            <Card className="dashboard-widget bg-background/80">
               <CardHeader>
                 <CardTitle>Deployment Analytics</CardTitle>
               </CardHeader>
@@ -154,7 +158,7 @@ export default function Dashboard() {
             </Card>
 
             {/* Sector Performance */}
-            <Card className="dashboard-widget">
+            <Card className="dashboard-widget bg-background/80">
               <CardHeader>
                 <CardTitle>Sector Performance</CardTitle>
               </CardHeader>
@@ -182,7 +186,7 @@ export default function Dashboard() {
           </div>
 
           {/* Global Map */}
-          <Card className="dashboard-widget mt-8">
+          <Card className="dashboard-widget bg-background/80 mt-8">
             <CardHeader>
               <CardTitle>Global Deployment Map</CardTitle>
             </CardHeader>

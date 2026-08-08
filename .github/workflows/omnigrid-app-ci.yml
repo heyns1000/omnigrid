@@ -13,7 +13,7 @@ defaults:
 
 jobs:
   install-build-type-lint:
-    name: Install / Build / Type-check / Lint
+    name: Install / Type-check / Lint / Test / Build
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -35,6 +35,12 @@ jobs:
 
       - name: Type-check
         run: npm run check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm run test
 
       - name: Build
         run: npm run build
@@ -133,6 +139,8 @@ jobs:
           echo "==========================="
           echo "✅ Install   — npm ci"
           echo "✅ Type-check — tsc"
+          echo "✅ Lint      — npm run lint"
+          echo "✅ Test      — npm run test"
           echo "✅ Build     — vite + esbuild"
           echo "✅ Smoke     — /api/health, /api/marketplace/items, /api/pulse, /api/platform/status"
           echo "==========================="
