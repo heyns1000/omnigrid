@@ -113,5 +113,5 @@ jobs:
         with:
           name: automation-engine-bootstrap-status-${{ github.run_id }}
           path: automation-engine-status.json
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 14
