@@ -9,6 +9,112 @@
     "elephant_memory": "infinite_trunk",
     "rhino_strikes": "tail_detection_active"
   },
+  "automation_engine": {
+    "enabled": false,
+    "_note": "Set ENGINE_ENABLED=true in GitHub Settings → Actions → Variables to activate. Nothing fires while this is false.",
+    "debrief_version": "1.0",
+    "approved_by": "heyns1000",
+    "layers": {
+      "layer_1_allowlist": {
+        "description": "Only repos explicitly listed in repo_allowlist may be auto-merged. All others are invisible to the engine.",
+        "repo_allowlist": [
+          "heyns1000/seedwave",
+          "heyns1000/fruitful",
+          "heyns1000/fruitfulapp",
+          "heyns1000/codenest",
+          "heyns1000/buildnest",
+          "heyns1000/faa.zone",
+          "heyns1000/hotstack",
+          "heyns1000/FruitfulPlanetChange",
+          "heyns1000/agriculture.seedwave.faa.zone",
+          "heyns1000/banking.seedwave.faa.zone",
+          "heyns1000/health.seedwave.faa.zone",
+          "heyns1000/quantum.seedwave.faa.zone",
+          "heyns1000/ai-logic.seedwave.faa.zone",
+          "heyns1000/zerowaste.seedwave.faa.zone",
+          "heyns1000/education-youth.seedwave.faa.zone",
+          "heyns1000/education-ip.seedwave.faa.zone",
+          "heyns1000/justice.seedwave.faa.zone",
+          "heyns1000/toynest.seedwave.faa.zone",
+          "heyns1000/nutrition.seedwave.faa.zone",
+          "heyns1000/interns.seedwave.faa.zone",
+          "heyns1000/wildlife.seedwave.faa.zone",
+          "heyns1000/trade.seedwave.faa.zone",
+          "heyns1000/ritual.seedwave.faa.zone",
+          "heyns1000/media-sonic.seedwave.faa.zone",
+          "heyns1000/logistics.seedwave.faa.zone",
+          "heyns1000/saas.seedwave.faa.zone",
+          "heyns1000/mining.seedwave.faa.zone",
+          "heyns1000/knowledge.seedwave.faa.zone",
+          "heyns1000/housing.seedwave.faa.zone",
+          "heyns1000/webless.seedwave.faa.zone",
+          "heyns1000/voice.seedwave.faa.zone",
+          "heyns1000/utilities.seedwave.faa.zone",
+          "heyns1000/packaging.seedwave.faa.zone",
+          "heyns1000/micromesh.seedwave.faa.zone",
+          "heyns1000/media.seedwave.faa.zone",
+          "heyns1000/creative.seedwave.faa.zone",
+          "heyns1000/gaming.seedwave.faa.zone",
+          "heyns1000/fashion.seedwave.faa.zone",
+          "heyns1000/professional.seedwave.faa.zone",
+          "heyns1000/payroll-mining.seedwave.faa.zone",
+          "heyns1000/baobab.faa.zone",
+          "heyns1000/omnigrid",
+          "Fruitful-Global-Planet/fruitful-platform",
+          "Fruitful-Global-Planet/cratedance"
+        ]
+      },
+      "layer_2_branch_pattern": {
+        "description": "Engine only acts on branches matching the allowed pattern. PRs targeting main directly are never auto-merged.",
+        "allowed_branch_pattern": "claude/*",
+        "blocked_targets": ["main", "master", "production", "release"]
+      },
+      "layer_3_repo_type": {
+        "description": "Repo classification controls merge gate. core_infra always requires human approval regardless of layers 1 and 2.",
+        "auto_merge": {
+          "pattern": "*.seedwave.faa.zone",
+          "repos": ["heyns1000/fruitful", "heyns1000/hotstack", "heyns1000/baobab.faa.zone", "Fruitful-Global-Planet/fruitful-platform", "Fruitful-Global-Planet/cratedance"]
+        },
+        "auto_merge_branch_pattern_only": {
+          "repos": ["heyns1000/fruitfulapp", "heyns1000/codenest", "heyns1000/buildnest", "heyns1000/faa.zone", "heyns1000/FruitfulPlanetChange", "heyns1000/seedwave", "heyns1000/omnigrid"]
+        },
+        "human_gate": {
+          "repos": [
+            "heyns1000/banimal",
+            "heyns1000/vaultmesh",
+            "heyns1000/claimroot",
+            "Fruitful-Global-Planet/ecosystem-governance-sentinel",
+            "Fruitful-Global-Planet/banimal-global-loop",
+            "Fruitful-Global-Planet/fruitful-global-movement",
+            "Fruitful-Global-Planet/fruitfulinterface",
+            "Fruitful-Global-Planet/BlockBox",
+            "Fruitful-Global-Planet/Heyns1000"
+          ],
+          "reason": "Production infrastructure, payment systems, or governance — human approval required on every PR."
+        },
+        "watch_only": {
+          "repos": ["Fruitful-Global-Planet/banimal-global-loop"],
+          "reason": "New repo, purpose not yet fully established. Engine observes but never acts."
+        },
+        "excluded": {
+          "repos": ["heyns1000/legal", "heyns1000/verdict-engine", "heyns1000/Blockbox", "heyns1000/BaobabTree"],
+          "reason": "Legal, sensitive, or private — zero automation touch."
+        }
+      },
+      "layer_4_ci_gate": {
+        "description": "Even if layers 1-3 approve, the PR must pass all CI checks before merge. A single failing check holds the PR.",
+        "required_conclusion": "success",
+        "on_failure": "hold_for_human_review",
+        "allow_skipped": true,
+        "allow_neutral": true
+      }
+    },
+    "pulse_thresholds": {
+      "commits_behind_trigger": 10,
+      "sync_pr_title_prefix": "chore(sync):",
+      "skip_bot_branches": true
+    }
+  },
   "repositories": {
     "seedwave": "heyns1000/seedwave",
     "fruitful": "heyns1000/fruitful",
