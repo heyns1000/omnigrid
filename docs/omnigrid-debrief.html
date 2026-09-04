@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Omnigrid Debrief — Fruitful™</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;0,700;0,900;1,700;1,900&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#1E9F97;--teal-bright:#47B3A8;--teal-deep:#0E7C74;
+  --amber:#FCB915;--red:#E63946;
+  --cream:#FBF4E4;--cream-soft:#FDF9EF;--sand:#F3E7CE;
+  --ink:#3A2A1B;--ink-soft:#6E5A45;
+  --bg:#241810;--surface:#2E1F14;--surface-raised:#3A2A1B;
+  --border:rgba(251,244,228,.10);--border-amber:rgba(252,185,21,.3);
+  --text:#FBF4E4;--text-soft:#B89E87;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
+body{min-height:100vh;padding:48px 24px 80px}
+.debrief{max-width:860px;margin:0 auto}
+.db-header{display:flex;flex-direction:column;gap:10px;margin-bottom:40px;border-bottom:1px solid var(--border);padding-bottom:28px}
+.db-eyebrow{font-family:'Fira Code',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:10px}
+.db-eyebrow::before{content:'';display:inline-block;width:28px;height:1.5px;background:var(--amber);opacity:.6}
+.db-title{font-style:italic;font-weight:900;font-size:clamp(26px,5vw,44px);text-transform:uppercase;letter-spacing:-.01em;line-height:1.02;text-wrap:balance}
+.db-title em{color:var(--teal-bright);font-style:inherit}
+.db-sub{font-size:14px;line-height:1.75;color:var(--text-soft);max-width:620px;margin-top:4px}
+.status-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:32px;padding:16px 18px;background:var(--surface);border:1px solid var(--border);border-radius:14px}
+.spill{font-family:'Fira Code',monospace;font-size:10.5px;font-weight:700;padding:6px 12px;border-radius:999px;display:flex;align-items:center;gap:6px;border:1px solid rgba(251,244,228,.1);color:var(--cream);background:rgba(251,244,228,.04)}
+.spill .dot{width:6px;height:6px;border-radius:50%}
+.dot-g{background:#10B981;box-shadow:0 0 0 3px rgba(16,185,129,.2)}
+.dot-a{background:var(--amber);box-shadow:0 0 0 3px rgba(252,185,21,.2)}
+.dot-t{background:var(--teal);box-shadow:0 0 0 3px rgba(30,159,151,.2)}
+.spill b{color:var(--amber)}
+.slabel{font-family:'Fira Code',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#9C8470;margin-bottom:12px}
+.plain-block{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--teal);border-radius:14px;padding:22px 24px;margin-bottom:28px}
+.plain-block h3{font-style:italic;font-weight:900;font-size:17px;text-transform:uppercase;color:var(--text);margin-bottom:10px}
+.plain-block p{font-size:13px;line-height:1.75;color:var(--text-soft)}
+.plain-block p+p{margin-top:9px}
+.plain-block strong{color:var(--text)}
+.plain-block code{font-family:'Fira Code',monospace;font-size:11px;color:var(--teal-bright)}
+.layers{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px}
+@media(max-width:580px){.layers{grid-template-columns:1fr}}
+.layer{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:9px;transition:border-color .2s}
+.layer:hover{border-color:rgba(252,185,21,.28)}
+.lnum{font-family:'Fira Code',monospace;font-size:10px;font-weight:700;color:var(--amber);display:flex;align-items:center;gap:8px}
+.badge{width:20px;height:20px;border-radius:50%;background:rgba(252,185,21,.1);border:1px solid rgba(252,185,21,.22);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--amber)}
+.ltitle{font-weight:700;font-size:14px;color:var(--text);line-height:1.2}
+.lbody{font-size:12px;line-height:1.65;color:var(--text-soft);flex:1}
+.lcode{font-family:'Fira Code',monospace;font-size:9.5px;color:var(--teal-bright);background:rgba(30,159,151,.07);border:1px solid rgba(30,159,151,.12);padding:6px 9px;border-radius:6px;word-break:break-all}
+.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px;margin-bottom:28px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead tr{border-bottom:1px solid var(--border)}
+th{font-family:'Fira Code',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#9C8470;padding:8px 12px;text-align:left;font-weight:600}
+td{padding:9px 12px;color:var(--text-soft);border-bottom:1px solid rgba(251,244,228,.03);vertical-align:top;line-height:1.5}
+td:first-child{font-family:'Fira Code',monospace;font-size:10.5px;color:var(--text)}
+tr:last-child td{border-bottom:none}
+.pill{display:inline-flex;align-items:center;font-family:'Fira Code',monospace;font-size:9px;font-weight:700;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.pill.auto{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);color:#10B981}
+.pill.human{background:rgba(252,185,21,.09);border:1px solid rgba(252,185,21,.2);color:var(--amber)}
+.pill.block{background:rgba(230,57,70,.09);border:1px solid rgba(230,57,70,.2);color:var(--red)}
+.pill.watch{background:rgba(71,179,168,.09);border:1px solid rgba(71,179,168,.2);color:var(--teal-bright)}
+.guard{background:rgba(30,159,151,.05);border:1px solid rgba(30,159,151,.17);border-radius:12px;padding:20px 22px;margin-bottom:28px}
+.guard h3{font-family:'Fira Code',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-bright);margin-bottom:12px}
+.guard ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.guard li{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;line-height:1.6;color:var(--text-soft)}
+.guard li::before{content:'→';color:var(--teal);font-family:'Fira Code',monospace;font-size:11px;flex-shrink:0;margin-top:1px}
+.guard li strong{color:var(--text);font-weight:600}
+.guard li code{font-family:'Fira Code',monospace;font-size:10.5px;color:var(--teal-bright)}
+.action{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;background:var(--surface-raised);border:1px solid var(--border-amber);border-radius:12px;padding:20px 22px}
+.action h4{font-style:italic;font-weight:900;font-size:16px;text-transform:uppercase;color:var(--text);margin-bottom:4px}
+.action p{font-size:12px;color:var(--text-soft);line-height:1.6}
+.action code{font-family:'Fira Code',monospace;font-size:10.5px;color:var(--teal-bright)}
+.wm{text-align:center;font-family:'Fira Code',monospace;font-size:9px;letter-spacing:.07em;color:rgba(251,244,228,.12);margin-top:44px;padding-top:18px;border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+<div class="debrief">
+  <header class="db-header">
+    <p class="db-eyebrow">Omnigrid Automation Engine &middot; Pre-Commit Debrief</p>
+    <h1 class="db-title">What We&rsquo;re About To<br><em>Wire Into The Grid</em></h1>
+    <p class="db-sub">A plain-language breakdown of the 4-layer automation plan &mdash; what it does, what it won&rsquo;t touch, and what needs your sign-off before a single repo changes. Nothing fires until you say go.</p>
+  </header>
+  <div class="status-bar">
+    <div class="spill"><span class="dot dot-a"></span> ENGINE_ENABLED = <b>false</b>&nbsp;(guardrail holding)</div>
+    <div class="spill"><span class="dot dot-t"></span> <b>100+</b> heyns1000 repos</div>
+    <div class="spill"><span class="dot dot-t"></span> <b>14</b> Fruitful-Global-Planet repos</div>
+    <div class="spill"><span class="dot dot-g"></span> <b>33</b> Seedwave nodes</div>
+    <div class="spill"><span class="dot dot-a"></span> 20 workflows &middot; all paused</div>
+  </div>
+  <p class="slabel">What is the engine?</p>
+  <div class="plain-block">
+    <h3>Think of it as the grid&rsquo;s nervous system</h3>
+    <p>Right now, keeping 100+ repos in sync is a manual job. Someone has to notice a branch is behind, open a PR, wait for review, merge it. The Omnigrid Automation Engine does that automatically &mdash; every 9 seconds it checks the pulse of the network, finds branches that have drifted, and brings them back in line.</p>
+    <p>It also handles the paperwork: approving Copilot&rsquo;s clean code suggestions, merging low-risk content updates, flagging anything that needs a human eye. The goal is that <strong>you only get interrupted for decisions that actually need you</strong> &mdash; not routine housekeeping.</p>
+    <p>Currently, the engine&rsquo;s main guardrail (<code>ENGINE_ENABLED</code>) is set to <strong>false</strong>. Every workflow checks this flag first. Nothing runs. This debrief is the step before flipping it.</p>
+  </div>
+  <p class="slabel">The 4-layer safety architecture</p>
+  <div class="layers">
+    <div class="layer">
+      <div class="lnum"><span class="badge">1</span> Allowlist Gate</div>
+      <div class="ltitle">Only named repos can be auto-merged</div>
+      <div class="lbody">The master config holds an explicit list of repos the engine may touch. Any repo not on the list is invisible to the automation &mdash; it can&rsquo;t be merged, synced, or modified.</div>
+      <div class="lcode">ONE_GRID_TIEKIEBOKS.json &rarr; repo allowlist</div>
+    </div>
+    <div class="layer">
+      <div class="lnum"><span class="badge">2</span> Branch Pattern Gate</div>
+      <div class="ltitle">Auto-merge only on <code style="font-size:12px">claude/*</code> branches</div>
+      <div class="lbody">Even within an allowed repo, the engine only acts on branches matching <code>claude/*</code>. A Copilot PR targeting <code>main</code> directly stays in your hands, not the engine&rsquo;s.</div>
+      <div class="lcode">branch: "claude/*" &rarr; eligible &middot; "main" &rarr; human only</div>
+    </div>
+    <div class="layer">
+      <div class="lnum"><span class="badge">3</span> Repo-Type Gate</div>
+      <div class="ltitle">Content repos auto, core infra needs you</div>
+      <div class="lbody">The 33 Seedwave content sites are low-risk. Core infrastructure (banimal, sentinel, vaultmesh, claimroot) requires human approval before anything merges.</div>
+      <div class="lcode">seedwave.faa.zone/* &rarr; AUTO &middot; banimal|sentinel|vaultmesh &rarr; HUMAN</div>
+    </div>
+    <div class="layer">
+      <div class="lnum"><span class="badge">4</span> CI Gate</div>
+      <div class="ltitle">Each repo&rsquo;s own tests are the final word</div>
+      <div class="lbody">Even if layers 1&ndash;3 approve, the PR must pass all CI checks before merge. The engine never merges a red build. Last line of defence.</div>
+      <div class="lcode">conclusion: "success" required &middot; failure &rarr; held for review</div>
+    </div>
+  </div>
+  <p class="slabel">Repo-by-repo treatment</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Repo / Group</th><th>Count</th><th>Treatment</th><th>Reason</th></tr></thead>
+      <tbody>
+        <tr><td>*.seedwave.faa.zone</td><td>33</td><td><span class="pill auto">Auto-merge</span></td><td>Content sites, low blast radius</td></tr>
+        <tr><td>fruitfulapp &middot; codenest &middot; buildnest</td><td>3</td><td><span class="pill auto">Auto (claude/* only)</span></td><td>Active dev repos, branch pattern protects main</td></tr>
+        <tr><td>banimal</td><td>1</td><td><span class="pill human">Human gate</span></td><td>Payment bridge, HMAC, production Worker</td></tr>
+        <tr><td>ecosystem-governance-sentinel</td><td>1</td><td><span class="pill human">Human gate</span></td><td>Governs the whole grid &mdash; highest risk</td></tr>
+        <tr><td>vaultmesh &middot; claimroot</td><td>2</td><td><span class="pill human">Human gate</span></td><td>Financial and identity infrastructure</td></tr>
+        <tr><td>banimal-global-loop</td><td>1</td><td><span class="pill watch">Watch only</span></td><td>New, purpose unclear &mdash; observe before acting</td></tr>
+        <tr><td>legal &middot; verdict-engine &middot; Blockbox</td><td>3</td><td><span class="pill block">Excluded</span></td><td>Legal/sensitive &mdash; no automation touch</td></tr>
+        <tr><td>Fruitful-Global-Planet (remaining)</td><td>8</td><td><span class="pill human">Human gate</span></td><td>Org-level &mdash; require explicit allowlisting</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="guard">
+    <h3>What we are NOT changing</h3>
+    <ul>
+      <li><strong>ENGINE_ENABLED stays false</strong> until you set it to <code>true</code> in GitHub &rarr; Settings &rarr; Actions &rarr; Variables.</li>
+      <li><strong>No repo&rsquo;s main branch</strong> is touched directly &mdash; only PRs on <code>claude/*</code> branches get auto-merged.</li>
+      <li><strong>banimal, sentinel, vaultmesh, claimroot</strong> require your manual approval on every PR, regardless of branch name.</li>
+      <li><strong>The allowlist in ONE_GRID_TIEKIEBOKS.json</strong> is not changed without your sign-off.</li>
+      <li><strong>All 20 workflows</strong> continue checking ENGINE_ENABLED first &mdash; one toggle pauses the entire grid instantly.</li>
+    </ul>
+  </div>
+  <div class="action">
+    <div>
+      <h4>What happens after you flip the switch?</h4>
+      <p>You set <code>ENGINE_ENABLED=true</code> in GitHub Settings &rarr; Actions Variables. The next scheduled run (top of the hour) is the first live pulse.</p>
+    </div>
+  </div>
+  <p class="wm">GC7:FSP2021121654:4400302974:VM9s:BL1501:GHOST7CHAIN:FAA13713 &middot; Omnigrid Debrief v1.0 &middot; &#x1F333; NO SIGNAL IN THE BUSH</p>
+</div>
+</body>
+</html>
